@@ -1,0 +1,1638 @@
+[
+    {
+        "type": "text",
+        "text": "MOST BIOMEDICAL PUBLICATIONS SHOW SIGNS OF LLM-ASSISTED WRITING",
+        "text_level": 1,
+        "bbox": [
+            102,
+            160,
+            894,
+            217
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Lena Holzwarth <sup>1</sup>, Rita Gonzalez-M ´ arquez ´ <sup>1</sup>, and Dmitry Kobak <sup>1,2,3</sup>",
+        "bbox": [
+            168,
+            255,
+            828,
+            274
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "<sup>1</sup>Hertie Institute for AI in Brain Health, University of T¨ubingen, Germany <sup>2</sup>Department of Mathematics, Computer Science, and Statistics, Ghent University, Belgium <sup>3</sup>VIB Center for AI and Computational Biology, VIB, Ghent, Belgium",
+        "bbox": [
+            215,
+            286,
+            781,
+            329
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "<sup>\u0000</sup> dmitry.kobak@ugent.be",
+        "bbox": [
+            401,
+            344,
+            598,
+            357
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "August 12, 2026",
+        "bbox": [
+            425,
+            372,
+            573,
+            388
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Abstract",
+        "text_level": 2,
+        "bbox": [
+            467,
+            418,
+            531,
+            431
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Over the past several years, LLM-powered chatbots and agents have become widely used as a tool for academic writing. LLM-assisted writing can be valuable by removing language barriers but at the same time causes concerns about misconduct and fraud. To inform policy decisions, it is necessary to monitor the prevalence of LLM-altered texts in scholarly publications. Despite some recent progress in this direction, no existing method can produce reliable estimates. Here we suggest and validate a new unbiased approach to estimate LLM usage in a corpus of texts based on changing word frequencies. We apply our method to the full texts of open-access biomedical papers from Pubmed Central, and show that by the end of 2025, 89% of papers show excess of LLM-associated vocabulary. We also find that LLMs are twice as likely to be used when writing a paragraph in the Discussion section (68%) compared to a paragraph in the Methods section (32%), but even inside the Methods section, the overall prevalence of LLM usage is over 50%. We believe that our estimates are crucial to shape future guidelines and policies.",
+        "bbox": [
+            179,
+            447,
+            818,
+            620
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "1 Introduction",
+        "text_level": 2,
+        "bbox": [
+            63,
+            650,
+            240,
+            667
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Since the release of OpenAI’s ChatGPT in November 2022, chatbots and agents based on large language models (LLMs) have become increasingly helpful in any workplace dealing with writing, such as academia. While LLMs can increase inclusivity and accessibility for non-native English speakers, there are concerns about hallucinations (Walters and Wilder, 2023; Topaz et al., 2026; Zhao et al., 2026) and fraud (Kendall and Silva, 2024) that can negatively impact academic publishing. To inform any policy decisions, it is important to estimate the prevalence of actual LLM usage.",
+        "bbox": [
+            60,
+            682,
+            489,
+            854
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "While LLMs produce text that can be difficult to distinguish from human-written, they introduce effects visible on the corpus level. For example, certain style words appear with higher frequency in LLM-generated texts, affecting word frequencies in a corpus of documents, as observed in publications from, e.g., linguistics (Botes et al., 2025), astronomy (Astarita et al., 2024), medicine (Matsui, 2024), and dentistry (Uribe and Maldupa, 2024). Comparing the pre-LLM and post-LLM frequencies of LLMassociated marker words, either pre-selected (Gray, 2024, 2025; Kousha and Thelwall, 2025), or optimized (Kobak et al., 2025; Siler, 2026) can yield an estimate of the overall LLM usage. However, all existing methods in this group can only provide a lower bound on the LLM usage. Another approach is to measure word frequencies in LLM-generated texts and then employ a mixture model to estimate LLM usage in a corpus (Liang et al., 2024a, 2025; Geng and Trotta, 2024). The inherent limitation here is that the results can strongly depend on the exact prompts and models used to generate LLM texts.",
+        "bbox": [
+            58,
+            856,
+            489,
+            920
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            509,
+            652,
+            941,
+            902
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "In this work, we go beyond prior literature in two respects. First, we suggest and validate a simple method to estimate LLM usage in an assumption-free way based on a large set of marker words, going beyond the lower bounds. Second, we apply this method to analyze full texts of open-access biomedical papers from PubMed Central (PMC), which allows us to compare LLM usage across different sections of the papers, such as Methods, Results, and Discussion. Our estimate of the prevalence of LLMassisted writing in PMC in the end of 2025 is 89%, which is higher than previously reported estimates.",
+        "bbox": [
+            526,
+            903,
+            939,
+            919
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "aside_text",
+        "text": "arXiv:2608.10715v1 [cs.CL] 11 Aug 2026",
+        "bbox": [
+            30,
+            363,
+            65,
+            782
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "page_number",
+        "text": "1",
+        "bbox": [
+            492,
+            940,
+            504,
+            952
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "chart",
+        "img_path": "images/fdc8a03481013761bc612d268149c656f60fe214feea024f429ea14a98493dda.jpg",
+        "content": "",
+        "chart_caption": [],
+        "chart_footnote": [],
+        "bbox": [
+            72,
+            128,
+            236,
+            253
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "chart",
+        "img_path": "images/288e2d84f4901426c491abe239d56ee7e1ae4e6a41177e2e1d03bf5e3fa17f54.jpg",
+        "content": "",
+        "chart_caption": [],
+        "chart_footnote": [],
+        "bbox": [
+            236,
+            91,
+            515,
+            286
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "chart",
+        "img_path": "images/07d3969df99b5ecfaab8f0ad17699df1838f7b4a14f789ff2e89e5637d9eee29.jpg",
+        "content": "",
+        "chart_caption": [
+            "f"
+        ],
+        "chart_footnote": [],
+        "bbox": [
+            519,
+            92,
+            642,
+            288
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "chart",
+        "img_path": "images/75e55450adf94e185bc6bc42810570596a81d4a1f68ea8038ad1b148b9705b80.jpg",
+        "content": "",
+        "chart_caption": [
+            "g"
+        ],
+        "chart_footnote": [],
+        "bbox": [
+            642,
+            99,
+            764,
+            290
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "chart",
+        "img_path": "images/d65cfbb133b6b245c8cfb502754e342b709ae9c9fda0b4a7ea8bd34fec2c5337.jpg",
+        "content": "",
+        "chart_caption": [
+            "Figure 1: Overview of the estimation and validation process. (a) Usage frequencies of 379 LLM-associated marker words in PMC abstracts before (2022) and after (2025) widespread LLM adoption. (b–d) Observed (q) and expected $( \\hat { p } _ { \\mathrm { h u m a n } } )$ frequencies for individual words in PMC abstracts. Linear regression is fit to the 60 months in 2018–2022. (e) The same for a set of 200 rarest marker words. (f) Observed and expected frequencies in 2025 PMC abstracts for different sets of marker words, each containing all marker words with frequency below a given threshold. Here $\\hat { p } _ { \\mathrm { h u m a n } }$ is computed based on yearly data with regression based on five years 2018–2022. (g) Lower bounds on the LLM usage derived from (f). Thresholds yielding standard error of $\\tilde { \\beta } _ { \\mathrm { L B } }$ above 0.025 are shown in gray and discarded. The maximum remaining value of $\\hat { \\beta } _ { \\mathrm { L B } }$ is chosen as the LLM usage estimate ${ \\hat { \\beta } } .$ (h) Validation experiment with ground-truth values of LLM usage $\\beta$ correctly retrieved by ${ \\hat { \\beta } } ,$ and strongly underestimated by the maximal frequency gap max(∆)."
+        ],
+        "chart_footnote": [],
+        "bbox": [
+            764,
+            129,
+            926,
+            249
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            57,
+            447,
+            489,
+            605
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "2 Results",
+        "text_level": 2,
+        "bbox": [
+            60,
+            633,
+            183,
+            651
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "We based our analysis on PubMed Central (PMC), a digital repository of open-access scholarly articles published in biomedical and life-science journals. We accessed PMC in early 2026 and restricted our analysis to 1,194,287 papers written in English, published in 2017–2025, and containing sections called Introduction, Methods, Results, and Discussion (or equivalent names; see Methods).",
+        "bbox": [
+            57,
+            667,
+            489,
+            777
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "In our prior work (Kobak et al., 2025), we identified 379 non-content words that showed markedly increased usage in PubMed abstracts in 2024 compared to earlier years, and attributed this excess to LLM-assisted writing or editing. These LLM markers are words that can be used in any research context, such as these, potential, or delves. We confirmed that in our PMC dataset almost all of these words saw increased usage in abstracts in 2025 (Figure 1a), so we based our subsequent analysis on this list.",
+        "bbox": [
+            57,
+            778,
+            489,
+            920
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "For any single of the marker words, we obtained its usage frequency q(t), defined as the fraction of documents containing at least one occurrence of the marker word, as a function of time (Figure 1b–d). We fit a linear regression to the five-year period (2018–2022) before the widespread adoption of LLMs (ChatGPT was released in November 2022), and extrapolated the regression line to 2023–2025 to obtain $\\hat { p } _ { \\mathrm { h u m a n } } ( t )$ , the counterfactual usage frequency of this word in human-written texts in the absence of LLMs. The frequency gap $\\Delta = q - \\hat { p } _ { \\mathrm { h u m a n } }$ gives a lower bound on LLM usage (Kobak et al., 2025): for example, for the word these in abstracts in December 2025, we have $q = 0 . 5 0$ and $\\hat { p } _ { \\mathrm { h u m a n } } = 0 . 3 3$ (Figure 1b), meaning that the excess 17% usage must be due to LLM editing.",
+        "bbox": [
+            507,
+            447,
+            939,
+            665
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "A tighter lower bound is also possible. If $p _ { \\mathrm { L L M } }$ is the (unobservable) usage frequency in LLM-edited or LLMwritten texts, and $\\beta$ is the proportion of papers written with some help of an LLM, then",
+        "bbox": [
+            507,
+            665,
+            939,
+            728
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "equation",
+        "img_path": "images/def3165926e8176686806c9b4f53f66d24887b4d527e03961bbf29c47b6cc58b.jpg",
+        "text": "$$\nq = ( 1 - \\beta ) p _ { \\mathrm { h u m a n } } + \\beta p _ { \\mathrm { L L M } } .\n$$",
+        "text_format": "latex",
+        "bbox": [
+            615,
+            736,
+            831,
+            752
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "From here we obtain",
+        "bbox": [
+            509,
+            757,
+            670,
+            771
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "equation",
+        "img_path": "images/06ac15fee8fbddabac680f21335cebe0b56d1e75b75a1464cc62e4387378cebb.jpg",
+        "text": "$$\n\\beta = \\frac { q - p _ { \\mathrm { h u m a n } } } { p _ { \\mathrm { L L M } } - p _ { \\mathrm { h u m a n } } } \\geq \\frac { q - p _ { \\mathrm { h u m a n } } } { 1 - p _ { \\mathrm { h u m a n } } } \\geq q - p _ { \\mathrm { h u m a n } } .\n$$",
+        "text_format": "latex",
+        "bbox": [
+            537,
+            774,
+            907,
+            804
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "To calculate $\\beta ,$ we would need access to $p _ { \\mathrm { h u m a n } }$ and $p _ { \\mathrm { L L M } } .$ For the former, we can plug in our estimate $\\hat { p } _ { \\mathrm { h u m a n } } ,$ but the latter cannot be inferred directly from the data. By replacing it with its upper bound $p _ { \\mathrm { L L M } } \\leq 1$ , we arrive at a lower bound that is stronger than ∆:",
+        "bbox": [
+            509,
+            808,
+            939,
+            885
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "equation",
+        "img_path": "images/ccbdb011b3c45bbc4b32bb6a2a1d5a7763ae929414c2bbf46907d01a374218c8.jpg",
+        "text": "$$\n\\beta \\geq \\hat { \\beta } _ { \\mathrm { L B } } = \\frac { q - \\hat { p } _ { \\mathrm { h u m a n } } } { 1 - \\hat { p } _ { \\mathrm { h u m a n } } } \\geq \\Delta .\n$$",
+        "text_format": "latex",
+        "bbox": [
+            615,
+            890,
+            831,
+            922
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "header",
+        "text": "Holzwarth et al.",
+        "bbox": [
+            60,
+            40,
+            173,
+            53
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "header",
+        "text": "LLM-associated vocabulary in biomedical publications",
+        "bbox": [
+            526,
+            40,
+            937,
+            54
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "page_number",
+        "text": "2",
+        "bbox": [
+            492,
+            939,
+            505,
+            952
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "table",
+        "img_path": "images/875d525b76f9926eb274a4b5465ba9e61aba2a4ea777ed8be20db9a59aa3fee1.jpg",
+        "table_caption": [
+            "Table 1: Estimated frequencies of LLM usage for each manuscript section. Each row used its own threshold T, which was optimized for 2025 (and then used for all years). Top part: entire sections. Bottom part: random 255-word crops. The row with the highest values in each part is highlighted in bold. ‘Full paper’ refers to Introduction, Methods, Results, and Discussion concatenated together. Standard errors for the last digit are shown in parentheses."
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td></td><td>2023</td><td>2024 2025</td><td></td><td>Dec 2025</td></tr><tr><td></td><td colspan=\"4\">Entire sections</td></tr><tr><td>Abstract</td><td>.09 (2)</td><td>.31 (2)</td><td>.53 (1)</td><td>.68 (2)</td></tr><tr><td>Introduction</td><td>.11 (2)</td><td>.34 (2)</td><td>.50 (2)</td><td>.63 (2)</td></tr><tr><td>Methods</td><td>.11 (2)</td><td>.29 (2)</td><td>.46 (2)</td><td>.54 (2)</td></tr><tr><td>Results</td><td>.11 (3)</td><td>.30 (3)</td><td>.47 (2)</td><td>.58 (2)</td></tr><tr><td>Discussion</td><td>.14 (2)</td><td>.43 (2)</td><td>.68 (1)</td><td>.78 (2)</td></tr><tr><td>Full paper</td><td>.19 (5)</td><td>.52 (4)</td><td>.77 (2)</td><td>.89 (3)</td></tr><tr><td></td><td></td><td>Random 255-word crops</td><td></td><td></td></tr><tr><td>Abstract</td><td>.10 (2)</td><td>.32 (2)</td><td>.54 (2)</td><td>.67 (2)</td></tr><tr><td>Introduction</td><td>.10 (2)</td><td>.30 (1)</td><td>.48 (1)</td><td>.59 (2)</td></tr><tr><td>Methods</td><td>.03 (2)</td><td>.14 (2)</td><td></td><td>.32 (4)</td></tr><tr><td>Results</td><td>.08 (1)</td><td></td><td>.28 (2)</td><td></td></tr><tr><td></td><td></td><td>.20 (1)</td><td>.35 (1)</td><td>.46 (2)</td></tr><tr><td>Discussion</td><td>.10 (2)</td><td>.35 (2)</td><td>.57 (2)</td><td>.68 (2)</td></tr><tr><td>Full paper</td><td>.07 (2)</td><td>.21 (2)</td><td>.36 (1)</td><td>.40 (3)</td></tr></table>",
+        "bbox": [
+            82,
+            82,
+            463,
+            337
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "For the same word these in PMC abstracts in December 2025, we get $\\hat { \\beta } _ { \\mathrm { L B } } = 0 . 1 7 / 0 . 6 7 = 0 . 2 5$ , implying at least 25% LLM usage.",
+        "bbox": [
+            58,
+            492,
+            487,
+            538
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "As each of the marker words is associated with LLM usage, using a set of marker words G to compute the fraction of documents $q ( t )$ containing at least one occurrence of at least one of the words from G can give higher bounds on $\\beta .$ However, making G too large can lead to $\\hat { p } _ { \\mathrm { h u m a n } } \\approx 1$ leading to unstable estimates with large standard errors (see Methods), so some selection has to be made. Following Kobak et al. (2025), we sorted all marker words by their frequency in 2024, and selected all words with $q < T$ into a set $G ( T )$ , parameterized by the threshold T. As an example, selecting $T$ to yield 200 words in PMC abstracts (Figure 1e), resulted in $\\dot { \\hat { \\beta } } _ { \\mathrm { L B } } = 0 . 1 1$ in December 2025.",
+        "bbox": [
+            58,
+            539,
+            489,
+            728
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "To find an optimal value of T, we used a grid of T values. For each T value, we found q and $\\hat { p } _ { \\mathrm { h u m a n } }$ for 2025 using regression on yearly 2018–2022 frequencies (Figure 1f), and selected $T$ with the highest $\\hat { \\beta } _ { \\mathrm { L B } }$ (Figure 1g), after discarding all T values yielding standard error above 0.025 (see Methods). As this maximum was typically achieved at $q$ close to 1 (and hence $p _ { \\mathrm { L L M } }$ close to 1, which is the approximation used in computing the lower bound), we assume that our lower bound is acceptably tight and use it as the estimate of LLM usage frequency",
+        "bbox": [
+            58,
+            728,
+            489,
+            885
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/1e7653abbba63afc28e6625415503cc280d4c3828cb63018e84f0f697dbf36bd.jpg",
+        "text": "$$\n\\hat { \\beta } = \\operatorname* { m a x } _ { T } ( \\hat { \\beta } _ { \\mathrm { L B } } ) .\n$$",
+        "text_format": "latex",
+        "bbox": [
+            213,
+            897,
+            331,
+            920
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "We used a simulation to validate our estimation procedure and could retrieve the ground-truth $\\beta$ with high accuracy (see Methods for details). The simulation assumed 100,000 documents per year, which was close to the amount of papers in our PMC sample, and realistic ranges for $p _ { \\mathrm { h u m a n } }$ and $p _ { \\mathrm { L L M } }$ (see Methods). We obtained $| \\hat { \\beta } - \\beta | < 0 . 0 2$ for all simulated values $\\beta \\in \\lbrack 0 , 1 ]$ (Figure 1h), confirming the reliability of our estimation procedure.",
+        "bbox": [
+            509,
+            85,
+            941,
+            225
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "We applied this procedure to estimate the frequency of LLM usage with yearly (Table 1) and monthly (Figure 2a) resolution for each of the PMC manuscript sections. Threshold $T$ was optimized for each section separately using the 2025 data, and then used for other years and months as well. All sections showed continually increasing estimated LLM usage starting in early 2023. For the PMC abstracts, we obtained $\\hat { \\beta } = 0 . 5 3$ in all 2025 and 0.68 in December 2025. For the full paper (Introduction, Methods, Results, and Discussion concatenated together), we obtained ${ \\hat { \\beta } } = 0 . 7 7$ in all 2025 and 0.89 in December 2025. The interpretation is that by the end of 2025, 9 out of 10 papers exhibited signs of LLM-assisted writing or editing.",
+        "bbox": [
+            507,
+            227,
+            941,
+            431
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "As expected, the estimates for the individual sections were all lower than the estimate for the full paper text, as our approach detects LLM usage in any part of the paper. Similarly, comparing different sections with each other is confounded by their average length, because a long section presents more opportunity for authors to employ LLM editing and for an LLM to use its marker words. Therefore, we repeated our estimation procedure using random 255-word crops from each section (corresponding to the median abstract length). Here, the Discussion had the highest $\\hat { \\beta }$ values in each year, reaching 0.68 in December 2025, closely followed by the abstracts reaching 0.67 (Table 1). We obtained the lowest LLM usage in the Methods section, reaching only 0.32 in December 2025. The Methods also had the biggest gap between the estimate based on the entire and on the cropped sections (0.54 vs. 0.32), indicating that LLM usage was not uniform over the length of this section.",
+        "bbox": [
+            507,
+            432,
+            941,
+            714
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Finally, we sorted all PMC papers in our sample by country of affiliation of the first author and estimated LLM usage for each of the top 20 countries in terms of the number of papers in our dataset. We found the highest $\\hat { \\beta }$ in 2025 in South Korea (0.85), followed by China (0.82) and Taiwan (0.80), while the lowest value was observed in the UK (0.28), in agreement with prior studies reporting large differences in estimated LLM usage between affiliation countries (Liao et al., 2024; Lin et al., 2025; Prakash et al., 2025; Kobak et al., 2025; Siler, 2026). Note that in this analysis we used a fixed set of marker words and did not optimize it for individual countries, so some of our estimates here can be an underestimation. The estimated LLM usage was negatively correlated with the frequency of LLM marker words before LLMs, i.e. q(2022) (Figure 3a), which can be taken as a rough proxy for the mastery of English language, as many marker words are uncommon vocabulary (e.g. exacerbating or invaluable). When grouping together all papers from countries with predominantly native English speakers (Australia, Canada, Ireland, New Zealand, South Africa, UK, USA) and the rest of the world, we obtained $\\hat { \\beta }$ values in 2025 of 0.37 and 0.72 respectively (Figure 3b). The pre-2023 frequency of LLM marker words was much lower in non-natively English-speaking countries, but it became very close to the frequency in natively English-speaking countries by 2025 (Figure 3c), indicating strong linguistic convergence driven by the LLM usage (Lin et al., 2025; Prakash et al., 2025).",
+        "bbox": [
+            507,
+            715,
+            941,
+            920
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "header",
+        "text": "Holzwarth et al.",
+        "bbox": [
+            60,
+            40,
+            173,
+            54
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "header",
+        "text": "LLM-associated vocabulary in biomedical publications",
+        "bbox": [
+            526,
+            39,
+            937,
+            55
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "page_number",
+        "text": "3",
+        "bbox": [
+            492,
+            939,
+            505,
+            952
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "chart",
+        "img_path": "images/291d0862ca1fecdae37794836dc9cd6580fc87880b94f0f260b430604b579c98.jpg",
+        "content": "",
+        "chart_caption": [],
+        "chart_footnote": [],
+        "bbox": [
+            72,
+            90,
+            277,
+            236
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "chart",
+        "img_path": "images/a7d6c504061ff9e2cc4e2930a69f95788cad3811c8e883d9f1327bd10af9684d.jpg",
+        "content": "",
+        "chart_caption": [
+            "Figure 2: Estimated LLM usage for individual sections. (a) Estimated LLM usage over time using entire sections. All estimates were computed with the section-specific optimal threshold for the year 2025. The standard errors are shown as shaded areas. (b) The same for random 255-word crops from each section."
+        ],
+        "chart_footnote": [],
+        "bbox": [
+            284,
+            90,
+            473,
+            236
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            57,
+            353,
+            489,
+            588
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "3 Discussion",
+        "text_level": 2,
+        "bbox": [
+            60,
+            618,
+            223,
+            636
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Comparison to existing estimates We found that by the end of December 2025, almost 90% of PMC papers showed signs of LLM-assisted writing or editing. Our estimates for 2023–2025 are higher than most existing estimates reported in the literature (Table S1), but are consistent with the usage ranges in existing surveys (Table S2).",
+        "bbox": [
+            58,
+            652,
+            489,
+            746
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Studies relying on word frequency gaps (Kobak et al., 2025; Gray, 2025; Kousha and Thelwall, 2025) reported estimates for 2024 ranging from 12% to 16% based on abstracts and full texts of papers from PubMed, PMC, and Dimensions databases, which is much smaller than our 2024 estimate of 31% (abstracts) and 52% (full papers). As we showed, this is because frequency gaps systematically underestimate the true fraction of LLM-assisted articles. A recent study based on the distribution of marker-word usage rates per 1000 words (Siler, 2026) found 57% in 2025. This is also an underestimation, because this method is based on the overlap of the usage rate distributions preand post-2022 and implicitly assumes non-overlapping rates for human and LLM writing, which in reality is not the case.",
+        "bbox": [
+            57,
+            746,
+            489,
+            920
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "chart",
+        "img_path": "images/3fc5f2c6063305a7d9575d6446e12c686603465416bb470a2f058339e115f193.jpg",
+        "content": "",
+        "chart_caption": [
+            "b"
+        ],
+        "chart_footnote": [],
+        "bbox": [
+            519,
+            86,
+            751,
+            287
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "chart",
+        "img_path": "images/f2068aa4aafb008725cf8f44d29eba3882cd8b5d25ff73185bf5a79798bc2d4b.jpg",
+        "content": "",
+        "chart_caption": [],
+        "chart_footnote": [],
+        "bbox": [
+            756,
+            87,
+            932,
+            181
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "chart",
+        "img_path": "images/f8033934a62f7006fbb55eaa5db6deb55076c507a750d767e0af626ac86001e4.jpg",
+        "content": "",
+        "chart_caption": [
+            "Figure 3: Estimated LLM usage for individual countries (full papers). (a) Estimated LLM usage in 2025 for some of the top 20 countries by paper count, plotted against the pre-LLM frequency of the set of selected marker words. Estimates with a standard error $\\geq 0 . 0 7$ are not shown here but can be found in Table S3. The same set of 251 marker words was used for all countries (see Methods), so some of the values can be an underestimation. Countries are colored based on whether they have a majority of native English speakers. (b–c) Estimated LLM usage and marker word frequencies for all countries in PMC with a majority of native English speakers, and all other countries. Dashed lines show the expected frequencies."
+        ],
+        "chart_footnote": [],
+        "bbox": [
+            754,
+            192,
+            932,
+            287
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            509,
+            504,
+            939,
+            567
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Studies based on measuring $p _ { \\mathrm { L L M } }$ via prompting popular LLMs (Geng and Trotta, 2024; Liang et al., 2024b) produced very different results (35% and 18% respectively) on the same data (computer-science arXiv abstracts in early 2024), illustrating strong dependence on chosen prompts and models (Dou et al., 2024). Existing studies based on LLM detectors (Akram, 2024; Liu and Bu, 2024; Picazo-Sanchez and Ortiz-Martin, 2024) estimated LLM usage in 2023 when it was much lower. Furthermore, various LLM detectors have been repeatedly found to be inaccurate (Weber-Wulff et al., 2023; Lazebnik and Rosenfeld, 2024).",
+        "bbox": [
+            509,
+            571,
+            941,
+            744
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Several surveys of scientists’ use of LLMs for academic writing have been conducted by publishing houses (Elsevier, 2024; Kwon, 2025; Nordling, 2023; Noorden and Perkel, 2023; Wiley, 2025, 2026) and independent researchers (Eppler et al., 2024; Liao et al., 2024; Mishra et al., 2024; Mohammadi et al., 2026). Many of them reported much higher usage (Table S2) than the estimation efforts reviewed above (Table S1). For example, Wiley (2026) found over 70% of survey respondents in mid-2025 using LLM for writing assistance. This is in good agreement with our estimates, especially taking into the account a possible underreporting bias in surveys. People are likely using LLMs more often than they are admitting when surveyed. Also, surveys typically ask about specific use cases, so actual LLM usage can be higher.",
+        "bbox": [
+            507,
+            746,
+            941,
+            920
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "header",
+        "text": "Holzwarth et al.",
+        "bbox": [
+            60,
+            40,
+            173,
+            53
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "header",
+        "text": "LLM-associated vocabulary in biomedical publications",
+        "bbox": [
+            526,
+            40,
+            937,
+            55
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "page_number",
+        "text": "4",
+        "bbox": [
+            492,
+            940,
+            505,
+            952
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            57,
+            85,
+            489,
+            148
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Limitations Our estimate hinges on the central assumption that $\\hat { p } _ { \\mathrm { h u m a n } }$ is a faithful estimate of $p _ { \\mathrm { h u m a n } }$ in 2025. While linear extrapolation remains reasonable for some time after the release of ChatGPT, it becomes more tenuous as we move away from this date. As people become more and more exposed to the writing style of LLMs, they may start consciously or subconsciously copying it, and indeed there is some evidence for that in spoken communication (Yakura et al., 2024). On the other hand, there is also an opposite effect of people consciously avoiding LLM-associated marker words (Geng and Trotta, 2025) (Figure 1d), and it is unclear which effect is stronger. We believe that any effects arising from changes to human vocabulary are smaller and slower than the effects arising from direct LLM-assisted editing. Reassuringly, our estimates are in broad agreement with existing surveys of LLM usage (see above).",
+        "bbox": [
+            57,
+            166,
+            490,
+            431
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Note that the same limitation applies to all other approaches estimating LLM usage, including those based on frequency gaps (Kobak et al., 2025), mixture models (Liang et al., 2025), and distribution overlaps (Siler, 2026).",
+        "bbox": [
+            57,
+            431,
+            489,
+            495
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Policy implications LLMs can be a powerful tool for increasing equity by overcoming language barriers (Berdejo-Espinola and Amano, 2023), and indeed surveyed researchers often report using LLMs for translating manuscript drafts (Kwon, 2025; Mohammadi et al., 2026; Wiley, 2025). It has also been argued that LLMs can make academic writing more efficient, allowing scientists to devote more time to research (Filimonovic et al., 2025). There is evidence that the widespread use of LLMs led to an increasing number of submissions and faster reviewing (Qi et al., 2025).",
+        "bbox": [
+            57,
+            512,
+            489,
+            684
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "On the other hand, LLM-assisted writing also carries a number of dangers. First, LLMs can hallucinate and misattribute their statements. An evidence of increased rate of hallucinated citations (Walters and Wilder, 2023; Topaz et al., 2026; Zhao et al., 2026) implies that scientists may sometimes fail to critically review LLM outputs, and suggests that LLMs can also be used for outright scientific fraud (Kendall and Silva, 2024). Second, the increase in writing efficiency can reduce the overall quality of published research by putting even stronger strains on the review process (Gray, 2026) and amplifying publish-orperish biases (Kendall and Silva, 2024). Third, the global dependency on LLMs can have a homogenizing effect not only on language but also on reasoning, threatening diversity as a source of innovation (Sourati et al., 2026;",
+        "bbox": [
+            57,
+            684,
+            489,
+            920
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Zhou et al., 2026). It does not help that many academic authors neglect already existing guidelines for ethical LLM usage (Kim, 2024) and often do not disclose it (Kousha, 2024; Kwon, 2025). All these developments could reduce societal trust in the process of science as a whole (Gray, 2026).",
+        "bbox": [
+            507,
+            85,
+            941,
+            178
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Beyond that, LLM-assisted writing can carry individual dangers as well. The process of writing is closely connected to the process of thinking, and delegating writing to an LLM and only passively proofreading their outputs can lead to less reflection and sloppier arguments staying unnoticed (Messeri and Crockett, 2024; Tang, 2025). Relying on LLMs for academic writing can also cause a loss of individual creativity (Zhou et al., 2026).",
+        "bbox": [
+            507,
+            179,
+            941,
+            305
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "In summary, while LLM-assisted writing does have its advantages such as closing the language barrier, widespread reliance on LLMs can pose serious challenges to academia. These need to be addressed, both on an individual level by critical reflection, and on an institutional level by developing guidelines and increased safeguards against fraud and misconduct.",
+        "bbox": [
+            507,
+            305,
+            941,
+            416
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "4 Methods",
+        "text_level": 2,
+        "bbox": [
+            510,
+            442,
+            652,
+            460
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "PubMed Central Pubmed Central (PMC) is a collection of open-access biomedical literature curated by the U.S. National Institutes of Health’s (NIH) National Library of Medicine. In this work we used the PMC Open Access Subset (https://pmc.ncbi.nlm.nih.gov/tools/ openftlist/), downloading articles with licences allowing commercial as well as non-commercial use. We used the semiannual baseline published on January 23, 2026 containing papers dated up to December 31, 2025.",
+        "bbox": [
+            507,
+            474,
+            941,
+            615
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "In our subset of 1,194,287 papers (see below), the top three journals by the number of papers were Scientific Reports (8.1%), Nature Communications (4.7%) and PLoS ONE (3.9%), all of which are multidisciplinary journals covering a wide range of topics in natural sciences. In our subset, 1.8% of papers were preprints from bioRxiv, medRxiv, arXiv, and Research Square, that had funding requirement to be uploaded to PMC. If such a preprint gets published in a journal that is part of PMC, the preprint version is not replaced, so that two versions of the same paper can exist in PMC.",
+        "bbox": [
+            507,
+            615,
+            941,
+            790
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Constructing the dataset From the downloaded XML files, each corresponding to one paper, we extracted the article type, publication date, language, affiliation country, PMC ID, Pubmed ID, journal name, title, abstract, and also titles and texts of each section. If the language was not specified, we used Polyglot’s detector module (https: //polyglot.readthedocs.io/). All non-English papers",
+        "bbox": [
+            507,
+            809,
+            941,
+            921
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "header",
+        "text": "Holzwarth et al.",
+        "bbox": [
+            60,
+            40,
+            173,
+            54
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "header",
+        "text": "LLM-associated vocabulary in biomedical publications",
+        "bbox": [
+            526,
+            39,
+            937,
+            55
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "page_number",
+        "text": "5",
+        "bbox": [
+            492,
+            939,
+            505,
+            952
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "were discarded.",
+        "bbox": [
+            57,
+            85,
+            183,
+            99
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Some publication dates only specified the month $( \\mathrm { e . g . }$ “Feb 2025”) or the season (e.g. “Fall 2025”), in which case we replaced them with the first day of the month/season. All papers without date information were discarded.",
+        "bbox": [
+            57,
+            103,
+            489,
+            165
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "For each section, we extracted its title and text, but sometimes some of the sections were untitled. If the first section was untitled or if there was some text in the body tag but outside of a section tag, we assumed it to be the Introduction. All other untitled sections were discarded. To standardize section titles, we renamed “Experimental results”, “Findings”, “Main results”, etc., into “Results”, and similarly “Data”, “Experimental methods”, etc., into “Methods”. If afterwards a paper had multiple sections with the same standardized title, they were concatenated. We only kept papers containing sections titled Introduction, Methods, Results, and Discussion (this was the most common paper structure in the data). Papers with any of these sections or the abstract below 250 characters were discarded. An overview of the section lengths can be found in Table S4.",
+        "bbox": [
+            57,
+            166,
+            489,
+            417
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "These steps reduced the dataset from 7,125,722 to 1,602,404 papers, 1,194,287 of which were dated 2017 or later. As the affiliation country we used the country of the first affiliation of the first author, which was available for 80.2% of the papers in our sample.",
+        "bbox": [
+            57,
+            418,
+            487,
+            498
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Standard errors Our estimator $( q \\mathrm { ~ - ~ } \\hat { p } _ { \\mathrm { h u m a n } } ) / ( 1 \\mathrm { ~ - ~ }$ $\\hat { p } _ { \\mathrm { h u m a n } } )$ depends on $\\hat { p } _ { \\mathrm { h u m a n } }$ and on $q .$ We determined their standard errors separately and then propagated them to obtain the error for ${ \\hat { \\beta } } .$",
+        "bbox": [
+            58,
+            524,
+            487,
+            587
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "The value $q$ is a fraction of papers containing a given word (or any of the set of words), and so it has binomial variance $\\operatorname { V a r } [ q ] = q ( 1 - q ) / n$ , where n is the number of papers in the current month or year.",
+        "bbox": [
+            57,
+            588,
+            487,
+            651
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "The estimate $\\hat { p } _ { \\mathrm { h u m a n } }$ is obtained by extrapolating the regression line. If X is the design matrix (consisting only of pre-ChatGPT time points on which the regression was fit and a column of ones), $X _ { \\mathrm { n e w } }$ is the predictor matrix with post-ChatGPT time points, and y the response vector containing pre-ChatGPT q values, then",
+        "bbox": [
+            57,
+            652,
+            489,
+            747
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "equation",
+        "img_path": "images/3b6d631829e1b74d56d8d6e3581ed50d3b7e08c3dec54393dbd03011cad6a7ac.jpg",
+        "text": "$$\n\\begin{array} { r } { \\operatorname { V a r } ( \\hat { p } _ { \\mathrm { h u m a n } } ) = \\hat { \\sigma } ^ { 2 } X _ { \\mathrm { n e w } } ( X ^ { T } X ) ^ { - 1 } X _ { \\mathrm { n e w } } ^ { T } + \\hat { \\sigma } ^ { 2 } . } \\end{array}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            110,
+            758,
+            435,
+            778
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Here $\\hat { \\sigma } ^ { 2 } = \\| y - X \\hat { b } \\| ^ { 2 } / \\left( k - 2 \\right)$ is the unbiased estimate of the noise variance, where k is the number of time-points in the regression (60 for monthly data and 5 for yearly data), and $\\hat { b } = ( X ^ { T } X ) ^ { - 1 } X ^ { T } y$ are the estimated regression coefficients. The first term gives the uncertainty of the mean prediction and the second term captures expected deviations from this mean.",
+        "bbox": [
+            57,
+            790,
+            487,
+            901
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "To compute the variance of ${ \\hat { \\beta } } ,$ we used the delta method",
+        "bbox": [
+            75,
+            902,
+            487,
+            920
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "assuming independence of the two variance terms:",
+        "bbox": [
+            509,
+            85,
+            894,
+            102
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "equation",
+        "img_path": "images/5065d19c88815b2aa3f14b97346075fa9bac302e1652c8f1c22b463e99cba4c0.jpg",
+        "text": "$$\n\\begin{array} { r } { \\mathrm { V a r } [ \\hat { \\beta } ] =  { \\frac { \\partial \\hat { \\beta } } { \\partial q } } \\mathrm { V a r } [ q ] + \\frac { \\partial \\hat { \\beta } } { \\partial \\hat { p } _ { \\mathrm { h u m a n } } } \\mathrm { V a r } [ \\hat { p } _ { \\mathrm { h u m a n } } ] } \\\\ { = \\frac { q ( 1 - q ) / n } { 1 - \\hat { p } _ { \\mathrm { h u m a n } } } + \\frac { \\left( q - 1 \\right) \\mathrm { V a r } [ \\hat { p } _ { \\mathrm { h u m a n } } ] } { ( 1 - \\hat { p } _ { \\mathrm { h u m a n } } ) ^ { 2 } } . } \\end{array}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            556,
+            110,
+            887,
+            180
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "When optimizing the threshold $T ,$ we excluded all estimates with standard error (square root of the variance) above 0.025. We also excluded all thresholds leading to $\\hat { p } _ { \\mathrm { h u m a n } } \\ge 0 . 9 9 9$ . Note that when the optimized threshold was applied to other years or affiliation countries, resulting standard errors sometimes got higher than 0.025 (Table 1).",
+        "bbox": [
+            507,
+            187,
+            941,
+            299
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Simulation experiment To validate our estimation procedure, we performed the same analysis on simulated data with known p<sub>LLM</sub> and $p _ { \\mathrm { h u m a n } }$ and varying $\\beta .$ We simulated data for $n = 1 0 0 , 0 0 0$ texts, which is close to the typical number of papers per year in our dataset, and for $m = 5 0 0$ words, all of which were treated as LLM marker words.",
+        "bbox": [
+            507,
+            318,
+            939,
+            428
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "For each word, its $p _ { \\mathrm { h u m a n } }$ was sampled from a gamma distribution with shape parameter 2 and scale parameter 0.02. Its $p _ { \\mathrm { L L M } }$ was set $( 1 + \\delta )$ times larger, with $\\delta \\sim U ( 0 . 5 , 5 )$ . If needed, $\\delta$ was repeatedly sampled until the resulting probability was below 1.",
+        "bbox": [
+            507,
+            428,
+            939,
+            506
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "We then sampled two binary matrices, $M _ { \\mathrm { p r e } }$ and $M _ { \\mathrm { p o s t . } }$ each with dimensions $n \\times m ,$ corresponding to data before and after the adoption of LLMs. For $M _ { \\mathrm { p r e . } }$ , each entry is a Bernoulli draw with corresponding p<sub>human</sub> (corresponding to the m-th column). For $M _ { \\mathrm { p o s t } } , ( 1 - \\beta ) n$ rows were filled in the same way, and the remaining $\\beta n$ rows used the corresponding p<sub>LLM</sub>.",
+        "bbox": [
+            507,
+            506,
+            939,
+            617
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "We then carried out our estimation procedure, treating word frequencies in $M _ { \\mathrm { p r e } }$ as $\\hat { p } _ { \\mathrm { h u m a n } } ,$ , and those in $M _ { \\mathrm { p o s t } }$ as the observed frequencies $q .$ All words were ordered by frequency in $M _ { \\mathrm { p r e } , }$ , word sets were formed for various thresholds $T ,$ and we found $\\hat { \\beta } = \\operatorname* { m a x } _ { T } ( \\hat { \\beta } _ { \\mathrm { L B } } )$ as the maximum over thresholds $T ,$ , after discarding thresholds yielding $\\hat { p } _ { \\mathrm { h u m a n } } > 0 . 9 9 9$ or standard error above 0.025. As we did not need to use regression here, the variance of $\\hat { p } _ { \\mathrm { h u m a n } }$ was computed as $\\hat { p } _ { \\mathrm { h u m a n } } \\big ( 1 - \\hat { p } _ { \\mathrm { h u m a n } } \\big ) / n$",
+        "bbox": [
+            507,
+            617,
+            939,
+            760
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Threshold grids When optimizing the threshold $T ,$ we used a grid with 12 values spaced evenly on a log-scale between 0 and 1 and added several additional values in the high-interest region between 0.03 and 0.7, resulting in 19 thresholds.",
+        "bbox": [
+            507,
+            777,
+            939,
+            854
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "When doing the analysis by country, we did not optimize the threshold T for each country separately, but used a fixed set of marker words G because otherwise the comparison in Figure 3c would not be possible. To generate the fixed set of marker words, we used the full papers in our entire dataset, but employed the threshold two steps lower in our grid compared to the threshold optimized for the full dataset. This decrease was necessary to avoid unreliable estimates with large standard errors. Note that as the result, some of our estimates for individual countries should be treated as lower bounds.",
+        "bbox": [
+            507,
+            856,
+            941,
+            920
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "header",
+        "text": "Holzwarth et al.",
+        "bbox": [
+            60,
+            40,
+            173,
+            54
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "header",
+        "text": "LLM-associated vocabulary in biomedical publications",
+        "bbox": [
+            526,
+            39,
+            937,
+            55
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "page_number",
+        "text": "6",
+        "bbox": [
+            492,
+            940,
+            505,
+            952
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            57,
+            85,
+            489,
+            195
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Cropping-based analysis To create section segments of comparable length, every sample was cropped to a randomly placed 255-word long segment. If a sample was shorter than that, it was used as is. The length of 255 words corresponds to the median abstract length in a subset of the PMC data that we used for initial exploration and is slightly larger than the median abstract length in the final dataset (248 words; Table S4).",
+        "bbox": [
+            57,
+            214,
+            489,
+            340
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "4.1 Data availability",
+        "text_level": 2,
+        "bbox": [
+            60,
+            359,
+            265,
+            375
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "All data are openly available at the PubMed Central website (https://pmc.ncbi.nlm.nih.gov/tools/ openftlist/).",
+        "bbox": [
+            58,
+            385,
+            489,
+            431
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "4.2 Code availability",
+        "text_level": 2,
+        "bbox": [
+            60,
+            451,
+            268,
+            468
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "All code is available on Github at https://github.com/ kobaklab/llm-usage-in-pmc.",
+        "bbox": [
+            58,
+            478,
+            487,
+            508
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Acknowledgments",
+        "text_level": 2,
+        "bbox": [
+            60,
+            535,
+            273,
+            554
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "The authors would like to thank Jan Lause for discussions.",
+        "bbox": [
+            58,
+            565,
+            489,
+            581
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Author contributions",
+        "text_level": 2,
+        "bbox": [
+            60,
+            606,
+            299,
+            624
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "All authors contributed to conceptualization and design, as well as editing the paper. L.H. also performed all statistical analyses and drafted the paper.",
+        "bbox": [
+            58,
+            638,
+            489,
+            687
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Competing Interests",
+        "text_level": 2,
+        "bbox": [
+            60,
+            711,
+            290,
+            731
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "The authors declare no competing interests.",
+        "bbox": [
+            58,
+            743,
+            388,
+            758
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "References",
+        "text_level": 2,
+        "bbox": [
+            60,
+            783,
+            186,
+            801
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "list",
+        "sub_type": "ref_text",
+        "list_items": [
+            "Arslan Akram. Quantitative analysis of AI-generated texts in academic research: A study of AI presence in arxiv submissions using AI detection tool. arXiv preprint arXiv:2403.13812, 2024.",
+            "Simone Astarita, Sandor Kruk, Jan Reerink, and Pablo Gomez. Delving into the utilisation of ChatGPT in ´",
+            "scientific publications in astronomy. arXiv preprint arXiv:2406.17324, 2024.",
+            "Honglin Bao, Mengyi Sun, and Misha Teplitskiy. Where there’s a will there’s a way: ChatGPT is used more for science in countries where it is prohibited. Quantitative Science Studies, 6:716–731, 8 2025.",
+            "Violeta Berdejo-Espinola and Tatsuya Amano. AI tools can improve equity in science. Science, 379:991, 3 2023.",
+            "Elouise Botes, Jean-Marc Dewaele, Joanne Colling, and Ziwen Teuber. Initial indications of generative AI writing in linguistics research publications, 2025.",
+            "Zhicheng Dou, Yuchen Guo, Ching-Chun Chang, Huy H Nguyen, and Isao Echizen. Enhancing robustness of LLM-synthetic text detectors for academic writing: A comprehensive analysis. In International Conference on Advanced Information Networking and Applications, pages 266–277. Springer, 2024.",
+            "Elsevier. Insights 2024 — attitudes toward AI — Elsevier, 2024. URL https://web. archive.org/web/20260410222804/https://www. elsevier.com/insights/attitudes-toward-ai/ the-current-ai-landscape.",
+            "Michael Eppler, Conner Ganjavi, Lorenzo Storino Ramacciotti, Pietro Piazza, Severin Rodler, Enrico Checcucci, Juan Gomez Rivas, Karl F. Kowalewski, Ines Rivero Belenchon, Stefano Puliatti, Mark Taratkin, Alessandro´ Veccia, Lo¨ıc Baekelandt, Jeremy Y.C. Teoh, Bhaskar K. Somani, Marcelo Wroclawski, Andre Abreu, Francesco Porpiglia, Inderbir S. Gill, Declan G. Murphy, David Canes, and Giovanni E. Cacciamani. Awareness and use of ChatGPT and Large Language Models: A prospective cross-sectional global survey in urology. European Urology, 85:146–153, 2 2024.",
+            "Dragan Filimonovic, Christian Rutzer, and Conny Wunsch. Can GenAI improve academic performance? evidence from the social and behavioral sciences. arXiv preprint arXiv:2510.02408, 2025.",
+            "Mingmeng Geng and Roberto Trotta. Is ChatGPT transforming academics’ writing style? arXiv preprint arXiv:2404.08627, 2024.",
+            "Mingmeng Geng and Roberto Trotta. Human-LLM coevolution: Evidence from academic writing. In Findings of the Association for Computational Linguistics: ACL 2025, pages 12689–12696, 2 2025.",
+            "Andrew Gray. ChatGPT “contamination”: estimating the prevalence of LLMs in the scholarly literature. arXiv preprint arXiv:2403.16887, 2024."
+        ],
+        "bbox": [
+            62,
+            815,
+            485,
+            876
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "header",
+        "text": "Holzwarth et al.",
+        "bbox": [
+            60,
+            40,
+            173,
+            53
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "header",
+        "text": "LLM-associated vocabulary in biomedical publications",
+        "bbox": [
+            526,
+            40,
+            937,
+            54
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "page_number",
+        "text": "7",
+        "bbox": [
+            492,
+            939,
+            505,
+            952
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "list",
+        "sub_type": "ref_text",
+        "list_items": [
+            "Andrew Gray. Estimating the prevalence of LLM-assisted text in scholarly writing. arXiv preprint arXiv:2512.01560, 2025.",
+            "Andrew Gray. How AI use in scholarly publishing threatens research integrity, lessens trust, and invites misinformation. Taylor & Francis, 82:85–88, 2026.",
+            "Graham Kendall and Jaime A Teixeira Da Silva. Risks of abuse of large language models, like ChatGPT, in scientific publishing: Authorship, predatory publishing, and paper mills. Learned Publishing, 37, 2024.",
+            "Sang-Jun Kim. Research ethics and issues regarding the use of ChatGPT-like artificial intelligence platforms by authors and reviewers: a narrative review. Science Editing, 11(2):96–106, 2024.",
+            "Dmitry Kobak, Rita Gonzalez-M ´ arquez, Em ´ oke- ˝ Agnes <sup>´</sup> Horvat, and Jan Lause. Delving into LLM-assisted writ-´ ing in biomedical publications through excess vocabulary. Science Advances, 11(27):eadt3813, 2025.",
+            "Kayvan Kousha. How is ChatGPT acknowledged in academic publications? Scientometrics, 129:7959–7969, 12 2024.",
+            "Kayvan Kousha and Mike Thelwall. How much are LLMs changing the language of academic papers after Chat-GPT? a multi-database and full text analysis. Scientometrics 2026, pages 1–21, 9 2025.",
+            "Diana Kwon. Is it OK for AI to write science papers? nature survey shows researchers are split. Nature, 641: 574–578, 5 2025.",
+            "Teddy Lazebnik and Ariel Rosenfeld. Detecting LLMassisted writing in scientific communication: Are we there yet? JDIS Journal of Data and Information Science, 2024.",
+            "Weixin Liang, Zachary Izzo, Yaohui Zhang, Haley Lepp, Hancheng Cao, Xuandong Zhao, Lingjiao Chen, Haotian Ye, Sheng Liu, Zhi Huang, et al. Monitoring AImodified content at scale: a case study on the impact of ChatGPT on AI conference peer reviews. In Proceedings of the 41st International Conference on Machine Learning, pages 29575–29620, 2024a.",
+            "Weixin Liang, Yaohui Zhang, Zhengxuan Wu, Haley Lepp, Wenlong Ji, Xuandong Zhao, Hancheng Cao, Sheng Liu, Siyu He, Zhi Huang, et al. Mapping the increasing use of LLMs in scientific papers. arXiv preprint arXiv:2404.01268, 2024b.",
+            "Weixin Liang, Yaohui Zhang, Zhengxuan Wu, Haley Lepp, Wenlong Ji, Xuandong Zhao, Hancheng Cao, Sheng Liu, Siyu He, Zhi Huang, Diyi Yang, Christopher Potts,",
+            "Christopher D. Manning, and James Zou. Quantifying large language model usage in scientific papers. Nature Human Behaviour, 9:2599–2609, 8 2025.",
+            "Zhehui Liao, Maria Antoniak, Inyoung Cheong, Evie Yu-Yen Cheng, Ai-Heng Lee, Kyle Lo, Joseph Chee Chang, and Amy X Zhang. Llms as research tools: A large scale survey of researchers’ usage and perceptions. arXiv preprint arXiv:2411.05025, 2024.",
+            "Dingkang Lin, Naixuan Zhao, Dan Tian, and Jiang Li. ChatGPT as linguistic equalizer? quantifying LLMdriven lexical shifts in academic writing. arXiv preprint arXiv:2504.12317, 2025.",
+            "Jialin Liu and Yi Bu. Towards the relationship between AIGC in manuscript writing and author profiles: evidence from preprints in LLMs. arXiv preprint arXiv:2404.15799, 2024.",
+            "Kentaro Matsui. Delving into PubMed records: Some terms in medical writing have drastically changed after the arrival of ChatGPT. MedRxiv, pages 2024–05, 2024.",
+            "Lisa Messeri and Molly J Crockett. Artificial intelligence and illusions of understanding in scientific research. Nature, 627(8002):49–58, 2024.",
+            "Tanisha Mishra, Edward Sutanto, Rini Rossanti, Nayana Pant, Anum Ashraf, Akshay Raut, Germaine Uwabareze, Ajayi Oluwatomiwa, and Bushra Zeeshan. Use of large language models as artificial intelligence tools in academic research and publishing among global clinical researchers. Scientific Reports, 14:31672, 2024.",
+            "Ehsan Mohammadi, Mike Thelwall, Yizhou Cai, Taylor Collier, Iman Tahamtan, and Azar Eftekhar. Is generative AI reshaping academic practices worldwide? a survey of adoption, benefits, and concerns. Information Processing & Management, 63:104350, 1 2026.",
+            "Jeremy Y. Ng, Sharleen G. Maduranayagam, Nirekah Suthakar, Amy Li, Cynthia Lokker, Alfonso Iorio, R. Brian Haynes, and David Moher. Attitudes and perceptions of medical researchers towards the use of artificial intelligence chatbots in the scientific process: an international cross-sectional survey. The Lancet Digital Health, 7:e94–e102, 1 2025.",
+            "Richard Van Noorden and Jeffrey M. Perkel. AI and science: what 1,600 researchers think. Nature, 621: 672–675, 9 2023. ISSN 14764687. doi: 10.1038/ D41586-023-02980-0.",
+            "Linda Nordling. How ChatGPT is transforming the postdoc experience. Nature, 622:655–657, 10 2023."
+        ],
+        "bbox": [
+            62,
+            85,
+            487,
+            130
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "header",
+        "text": "Holzwarth et al.",
+        "bbox": [
+            60,
+            40,
+            173,
+            53
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "header",
+        "text": "LLM-associated vocabulary in biomedical publications",
+        "bbox": [
+            526,
+            40,
+            937,
+            54
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "page_number",
+        "text": "8",
+        "bbox": [
+            492,
+            940,
+            505,
+            952
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "list",
+        "sub_type": "ref_text",
+        "list_items": [
+            "Pablo Picazo-Sanchez and Lara Ortiz-Martin. Analysing the impact of ChatGPT in research. Applied Intelligence, 54:4172–4188, 3 2024.",
+            "Arjun Prakash, Shruti Aggarwal, Jeevan John Varghese, and Joel John Varghese. Writing without borders: AI and cross-cultural convergence in academic writing quality. Humanities and Social Sciences Communications 2025 12:1, 12:1058–, 7 2025.",
+            "Minfeng Qi, Zhongmin Cao, Qin Wang, Ningran Li, and Tianqing Zhu. Does genai rewrite how we write? an empirical study on two-million preprints. arXiv preprint arXiv:2510.17882, 2025.",
+            "Kyle Siler. The diffusion of large language models in published academic articles. Proceedings of the National Academy of Sciences, 123(22):e2605754123, 2026.",
+            "Zhivar Sourati, Alireza S. Ziabari, and Morteza Dehghani. The homogenizing effect of large language models on human expression and thought. Trends in Cognitive Sciences, 1 2026.",
+            "Bor Luen Tang. The epistemic downside of using LLMbased generative AI in academic writing. Publications 2025, 13:63, 12 2025.",
+            "Maxim Topaz, Nir Roguin, Pallavi Gupta, Zhihong Zhang, and Laura-Maria Peltonen. Fabricated citations: an audit across 2· 5 million biomedical papers. The Lancet, 407(10541):1779–1781, 2026.",
+            "Sergio E. Uribe and Ilze Maldupa. Estimating the use of ChatGPT in dental research publications. Journal of Dentistry, 149:105275, 10 2024.",
+            "William H. Walters and Esther Isabelle Wilder. Fabrication and errors in the bibliographic citations generated by ChatGPT. Scientific Reports, 13:14045–, 9 2023.",
+            "Debora Weber-Wulff, Alla Anohina-Naumeca, Sonja Bjelobaba, Toma´s Folt ˇ ynek, Jean Guerrero-Dib, Olumide ´ Popoola, Petr Sigut, and Lorna Waddington. Testing <sup>ˇ</sup> of detection tools for AI-generated text. International Journal for Educational Integrity, 19, 12 2023.",
+            "Wiley. ExplanAItions: An AI study by wiley, 2 2025. URL https://www.wiley.com/en-de/about-us/ ai-resources/ai-study/.",
+            "Wiley. ExplanAItions 2025-2026: The evolution of AI in research., 2 2026. URL https://www.wiley.com/en-de/ about-us/ai-resources/ai-study/.",
+            "Hiromu Yakura, Ezequiel Lopez-Lopez, Levin Brinkmann, Ignacio Serna, Prateek Gupta, Ivan Soraperra, and Iyad Rahwan. Empirical evidence of large language model’s",
+            "influence on human spoken communication. arXiv preprint arXiv:2409.01754, 2024.",
+            "Zhenyue Zhao, Yihe Wang, Toby Stuart, Mathijs De Vaan, Paul Ginsparg, and Yian Yin. LLM hallucinations in the wild: Large-scale evidence from non-existent citations. arXiv preprint arXiv:2605.07723, 2026.",
+            "Yiyong Zhou, Qinghan Liu, Jihao Huang, and Guiquan Li. Creative scar without generative AI: Individual creativity fails to sustain while homogeneity keeps climbing. Technology in Society, 84:103087, 3 2026."
+        ],
+        "bbox": [
+            62,
+            85,
+            487,
+            130
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "header",
+        "text": "Holzwarth et al.",
+        "bbox": [
+            60,
+            40,
+            173,
+            53
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "header",
+        "text": "LLM-associated vocabulary in biomedical publications",
+        "bbox": [
+            526,
+            40,
+            937,
+            54
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "page_number",
+        "text": "9",
+        "bbox": [
+            492,
+            940,
+            504,
+            951
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "table",
+        "img_path": "images/dc4413049d75de3449f8b008d46d424b115d6a6d0a66f10abc62b9f33dd32585.jpg",
+        "table_caption": [
+            "Supplementary Tables",
+            "Table S1: Literature overview: Estimates of LLM usage in academia. Dimensions and OpenAlex are databases containing academic papers from diverse disciplines. All studies on LLM detectors used existing detectors, except for Bao et al. (2025), who trained their own. We excluded one of the detectors used by Liu and Bu (2024) (Sapling) because it returned high LLM usage for pre-2022 papers."
+        ],
+        "table_footnote": [
+            "Table S2: Literature overview: Surveys on LLM usage in academia. We only included surveys that explicitly mention LLM use-cases that are likely to have an effect on the published manuscript text, such as translation, editing, etc. We excluded questions about LLM usage in general, or about use-cases with limited influence on the text, such as grammar checks. The use-cases are copied verbatim from the surveys, and sometimes abbreviated."
+        ],
+        "table_body": "<table><tr><td>Period</td><td>Section</td><td>Dataset</td><td>Estimate</td><td>Method</td><td>Ref.</td></tr><tr><td>12/2022–02/2023</td><td>abstract</td><td>Various journals</td><td>0.10</td><td>Various LLM detectors</td><td>2024</td></tr><tr><td>08/2023</td><td>abstract</td><td>arXiv, bioRxiv</td><td>0.13</td><td>LLM detector (custom)</td><td>2025</td></tr><tr><td>11/2023</td><td>full paper</td><td>arXiv (CS)</td><td>0.07</td><td>LLM detector (Originality.AI)</td><td>2024</td></tr><tr><td>2023</td><td>full paper</td><td>Dimensions</td><td>0.02</td><td>frequency gap</td><td>2024</td></tr><tr><td>2023</td><td>abstract</td><td>arXiv NLP papers</td><td>0.07</td><td>LLM detector (GPTKIT)</td><td>2024</td></tr><tr><td>01/2024</td><td>abstract</td><td>arXiv (CS)</td><td>0.04 0.35</td><td>LLM detector (Smodin) mixture model</td><td>2024</td></tr><tr><td rowspan=\"4\">02/2024</td><td>abstract</td><td>arXiv (CS)</td><td></td><td></td><td></td></tr><tr><td>introduction</td><td>arxiv (CS)</td><td>0.18 0.14</td><td></td><td></td></tr><tr><td>abstract</td><td>Nature portfolio</td><td>0.06</td><td>mixture model</td><td>2024b</td></tr><tr><td>introduction</td><td>Nature portfolio</td><td>0.04</td><td></td><td></td></tr><tr><td rowspan=\"4\">09/2024</td><td>abstract</td><td>arXiv (CS)</td><td>0.23</td><td></td><td></td></tr><tr><td>introduction</td><td>arxiv (CS)</td><td>0.20</td><td></td><td></td></tr><tr><td>abstract</td><td>Nature portfolio</td><td>0.09</td><td>mixture model</td><td>2025</td></tr><tr><td>introduction</td><td>Nature portfolio</td><td>0.09</td><td></td><td></td></tr><tr><td>2024</td><td>abstract</td><td>PubMed</td><td>0.14</td><td>frequency gap</td><td>2025</td></tr><tr><td>2024</td><td>full paper</td><td>Dimensions</td><td>0.12</td><td>frequency gap</td><td>2025</td></tr><tr><td>2024</td><td>full paper</td><td>Dim., OpenAlex, PMC</td><td>0.16</td><td>frequency gap</td><td>2025</td></tr><tr><td>2023</td><td></td><td></td><td>0.12</td><td></td><td></td></tr><tr><td>2024</td><td>full paper</td><td>Elsevier, MDPI,</td><td>0.36</td><td>distribution overlap</td><td>2026</td></tr><tr><td>2025</td><td></td><td>Frontiers, PLoS</td><td>0.57</td><td></td><td></td></tr><tr><td>Period</td><td>Sample size</td><td>Sample</td><td>LLMs used for</td><td>Usage</td><td>Ref.</td></tr><tr><td>04-05/2023</td><td>456</td><td>urologists</td><td>Summarizing text</td><td>27%</td><td>2024</td></tr><tr><td>06-07/2023</td><td>3,838</td><td>postdocs</td><td>Refining text</td><td>20%</td><td>2023</td></tr><tr><td>07-08/2023</td><td>2,165</td><td>PubMed authors</td><td>Writing or editing manuscripts</td><td>22%</td><td>2025</td></tr><tr><td>?-09/2023</td><td>1,659</td><td>recent authors</td><td>To help write research manuscripts</td><td>21%</td><td>2023</td></tr><tr><td rowspan=\"4\">11/2023-04/2024</td><td rowspan=\"4\">816</td><td rowspan=\"4\">researchers (Semantic Scholar)</td><td>Fix grammar or rephrase</td><td>50%</td><td rowspan=\"4\">2024</td></tr><tr><td>Rewrite for another style</td><td>24%</td></tr><tr><td>Shorten or summarize</td><td>23%</td></tr><tr><td>Draft paragraphs from ideas</td><td>21%</td></tr><tr><td rowspan=\"3\">01-03/2024</td><td rowspan=\"3\">2,021</td><td rowspan=\"3\">researchers (Scopus)</td><td>Direct writing (overall)</td><td>43%</td><td rowspan=\"3\">2026</td></tr><tr><td>Synthesizing drafts Proofreading drafts</td><td>16% 17%</td></tr><tr><td>Translating text</td><td>18%</td></tr><tr><td>03-04/2024</td><td>1,043</td><td rowspan=\"2\">researchers</td><td>Help with translation</td><td>40%</td><td rowspan=\"2\">2025</td></tr><tr><td rowspan=\"2\">03-05/2024</td><td rowspan=\"2\">5,229 researchers</td><td rowspan=\"2\">Proofreading and editing To edit your paper</td><td>38%</td></tr><tr><td></td><td>28%</td></tr><tr><td rowspan=\"2\"></td><td rowspan=\"2\"></td><td rowspan=\"2\"></td><td>To translate your paper To summarize other papers</td><td>8%</td><td rowspan=\"2\">2025</td></tr><tr><td>To write the first draft</td><td>8% 8%</td></tr><tr><td rowspan=\"2\">04-06/2024</td><td rowspan=\"2\">226</td><td rowspan=\"2\">medical researchers</td><td>Writing</td><td>8%</td><td></td></tr><tr><td>Revision and editing</td><td>8%</td><td>2024</td></tr><tr><td>07-08/2025</td><td>341-557</td><td>academia, healthcare, etc.</td><td>Writing assistance (copyediting, translation, etc.)</td><td>71%</td><td>2026</td></tr></table>",
+        "bbox": [
+            77,
+            126,
+            919,
+            550
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "header",
+        "text": "Holzwarth et al.",
+        "bbox": [
+            60,
+            40,
+            173,
+            54
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "header",
+        "text": "LLM-associated vocabulary in biomedical publications",
+        "bbox": [
+            526,
+            40,
+            937,
+            55
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "page_number",
+        "text": "10",
+        "bbox": [
+            489,
+            939,
+            510,
+            953
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "table",
+        "img_path": "",
+        "table_caption": [],
+        "table_footnote": [
+            ""
+        ],
+        "bbox": [
+            62,
+            249,
+            936,
+            677
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "header",
+        "text": "Holzwarth et al.",
+        "bbox": [
+            60,
+            40,
+            173,
+            54
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "header",
+        "text": "LLM-associated vocabulary in biomedical publications",
+        "bbox": [
+            526,
+            39,
+            937,
+            55
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "page_number",
+        "text": "11",
+        "bbox": [
+            487,
+            939,
+            509,
+            953
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "table",
+        "img_path": "images/2212434226c06bee756702eadac27864b740400bc2131b60cf904d6853c5203d.jpg",
+        "table_caption": [
+            "Table S3: Estimated LLM usage in 2025 for individual countries (full paper). Top 20 countries by the number of papers are sorted by sample size. The results for countries with majority native English speakers include all PMC countries with a majority of native English speakers, not only those from the top 20. The reported frequencies correspond to the fixed set of marker words identified using the entire PMC corpus, but using a lower threshold value compared to what we used in Table 1 (see Methods). This explains the difference between the first row in this table and Table 1."
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>Country</td><td>2022 frequency</td><td>2025 frequency</td><td>LLM usage</td><td>Sample size</td></tr><tr><td>Entire PMC corpus</td><td>0.83</td><td>0.95</td><td>0.68 (2)</td><td>1,194,287</td></tr><tr><td>Majority native English</td><td>0.92</td><td>0.96</td><td>0.37 (3)</td><td>333,161</td></tr><tr><td>Other countries</td><td>0.79</td><td>0.95</td><td>0.72 (2)</td><td>719,959</td></tr><tr><td>China</td><td>0.75</td><td>0.97</td><td>0.82 (2)</td><td>246,000</td></tr><tr><td>USA</td><td>0.93</td><td>0.97</td><td>0.39 (5)</td><td>208,178</td></tr><tr><td>UK</td><td>0.91</td><td>0.95</td><td>0.28 (7)</td><td>64,347</td></tr><tr><td>Japan</td><td>0.68</td><td>0.86</td><td>0.55 (4)</td><td>59,863</td></tr><tr><td>Germany</td><td>0.90</td><td>0.96</td><td>0.53 (4)</td><td>54,827</td></tr><tr><td>Italy</td><td>0.85</td><td>0.95</td><td>0.61 (5)</td><td>28,716</td></tr><tr><td>Canada</td><td>0.92</td><td>0.96</td><td>0.46 (14)</td><td>28,649</td></tr><tr><td>Netherlands</td><td>0.86</td><td>0.95</td><td>0.49 (5)</td><td>27,538</td></tr><tr><td>South Korea</td><td>0.72</td><td>0.96</td><td>0.85 (2)</td><td>25,537</td></tr><tr><td>France</td><td>0.88</td><td>0.93</td><td>0.33 (11)</td><td>24,577</td></tr><tr><td>Australia</td><td>0.91</td><td>0.95</td><td>0.31 (11)</td><td>22,956</td></tr><tr><td>Spain</td><td>0.86</td><td>0.97</td><td>0.70 (7)</td><td>22,657</td></tr><tr><td>Brazil</td><td>0.82</td><td>0.94</td><td>0.63 (4)</td><td>19,670</td></tr><tr><td>Sweden</td><td>0.87</td><td>0.93</td><td>0.47 (11)</td><td>16,015</td></tr><tr><td>Switzerland</td><td>0.90</td><td>0.97</td><td>0.67 (7)</td><td>15,389</td></tr><tr><td>India</td><td>0.86</td><td>0.96</td><td>0.69 (5)</td><td>14,173</td></tr><tr><td>Taiwan</td><td>0.77</td><td>0.96</td><td>0.80 (4)</td><td>11,001</td></tr><tr><td>Turkey</td><td>0.64</td><td>0.90</td><td>0.67 (5)</td><td>10,287</td></tr><tr><td>Iran</td><td>0.68</td><td>0.94</td><td>0.78 (3)</td><td>9,399</td></tr><tr><td>Poland</td><td>0.83</td><td>0.94</td><td>0.48 (8)</td><td>8,210</td></tr></table>",
+        "bbox": [
+            157,
+            130,
+            840,
+            532
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "table",
+        "img_path": "images/c95c547d263c0afdf47ac06d97f9819d1307ec3297239f5e3ecba5c45c8e73d2.jpg",
+        "table_caption": [
+            "Table S4: Section lengths in words."
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>Section</td><td>5th percentile</td><td>Median</td><td>95th percentile</td></tr><tr><td>Abstract</td><td>148</td><td>248</td><td>449</td></tr><tr><td>Introduction</td><td>246</td><td>595</td><td>1,314</td></tr><tr><td>Methods</td><td>433</td><td>1,270</td><td>3,452</td></tr><tr><td>Results</td><td>487</td><td>1,852</td><td>5,354</td></tr><tr><td>Discussion</td><td>510</td><td>1,179</td><td>2,284</td></tr><tr><td>Full paper</td><td>2,527</td><td>5,156</td><td>10,684</td></tr></table>",
+        "bbox": [
+            272,
+            717,
+            726,
+            840
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "header",
+        "text": "Holzwarth et al.",
+        "bbox": [
+            60,
+            40,
+            173,
+            54
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "header",
+        "text": "LLM-associated vocabulary in biomedical publications",
+        "bbox": [
+            526,
+            39,
+            937,
+            55
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "page_number",
+        "text": "12",
+        "bbox": [
+            489,
+            939,
+            509,
+            952
+        ],
+        "page_idx": 11
+    }
+]

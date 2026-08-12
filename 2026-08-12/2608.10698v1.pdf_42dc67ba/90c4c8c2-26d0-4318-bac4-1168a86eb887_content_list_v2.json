@@ -1,0 +1,2695 @@
+[
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "EVIL-Detect for NLPCC 2026 Shared Task 6: LLM-Generated Text Detection"
+                    }
+                ],
+                "level": 1
+            },
+            "bbox": [
+                245,
+                133,
+                784,
+                174
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Hongrui Bao<sup>1,2</sup>, Hangyu Rong<sup>2</sup>, Zhuoshang Wang<sup>1,2</sup>, Yubing Ren<sup>1,2⋆</sup>, and Yanan Cao<sup>1,2</sup>"
+                    }
+                ]
+            },
+            "bbox": [
+                238,
+                200,
+                791,
+                230
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>1</sup> Institute of Information Engineering, Chinese Academy of Sciences, Beijing, China {wangzhuoshang,renyubing,caoyanan}@iie.ac.cn"
+                    }
+                ]
+            },
+            "bbox": [
+                225,
+                241,
+                806,
+                268
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>2</sup> School of Cyber Security, University of Chinese Academy of Sciences, Beijing, China {baohongrui26,ronghangyu23}@mails.ucas.ac.cn"
+                    }
+                ]
+            },
+            "bbox": [
+                221,
+                267,
+                810,
+                294
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Abstract. The rapid development of large language models (LLMs) has increased the need for reliable detection of LLM-generated text, especially in realistic Chinese scenarios involving human-written text (HWT), LLM-generated text (LGT), and LLM-refined text (HLT). This paper presents EVIL-Detect, a multi-signal ensemble framework with conflictaware fusion for Natural Language Processing and Chinese Computing (NLPCC) 2026 Shared Task 6. The system integrates edit-extent regression, zero-shot likelihood-contrast signals, lexical statistics, and conservative text rules. With calibrated decision boundaries and conflictaware integration, our system improves robustness under strong out-ofdistribution shifts, achieving a macro-F1 score of 0.8888 and ranking first in the oficial evaluation. Our code is available at https://github.com/ bbbbhrrrr/evildetect."
+                    }
+                ]
+            },
+            "bbox": [
+                268,
+                331,
+                761,
+                502
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Keywords: Large Language Models · Text Detection · Chinese Text · Three-Class Classification · Ensemble Learning · Conflict Resolution."
+                    }
+                ]
+            },
+            "bbox": [
+                268,
+                513,
+                761,
+                542
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "1 Introduction"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                223,
+                567,
+                384,
+                581
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Large language models (LLMs) such as GPT-4 [1], Qwen2.5 [2], and Qwen3 [19] can produce fluent, coherent, and instruction-following text. Their wide use also increases risks such as disinformation, academic misconduct, and manipulation of online content, making reliable LLM-generated text detection important for responsible natural language processing (NLP) [3]."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                596,
+                808,
+                669
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Most existing work focuses on English binary detection. Supervised detectors, including early GPT-style detectors [4], RADAR [5], and DeTeCtive [6], finetune classifiers on labeled data and often perform well in matched settings, but their robustness drops under cross-domain or cross-generator shifts. Trainingfree methods, including DetectGPT [7], Fast-DetectGPT [8], DNA-GPT [9], and Binoculars [10], use likelihood-, perturbation-, n-gram-, or perplexity-based signals, but remain sensitive to model choice and thresholds."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                669,
+                810,
+                769
+            ]
+        },
+        {
+            "type": "page_aside_text",
+            "content": {
+                "page_aside_text_content": []
+            },
+            "bbox": [
+                30,
+                363,
+                68,
+                783
+            ]
+        },
+        {
+            "type": "page_footnote",
+            "content": {
+                "page_footnote_content": [
+                    {
+                        "type": "text",
+                        "content": "Corresponding author."
+                    }
+                ]
+            },
+            "bbox": [
+                226,
+                778,
+                396,
+                793
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Chinese detection is less explored and cannot be handled by direct transfer from English because of diferences in tokenization, lexical granularity, and writing conventions. NLPCC 2025 Shared Task 1 [11] promoted Chinese binary detection, while NLPCC 2026 Shared Task 6 [14] extends the task to three classes: human-written text (HWT), LLM-generated text (LGT), and LLMrefined text (HLT). This setting reflects real artificial intelligence (AI)-assisted writing, where users often use LLMs to rewrite or polish human-written text, and is closely related to CUDRT [12], DetectRL-X [13], and the oficial NLPCC 2026 benchmark [14]."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                139,
+                810,
+                267
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Motivated by this strong out-of-distribution (OOD) setting, we propose EVIL-Detect, short for Edit-aware View-Integrated Learning for Detection. It combines EditLens-inspired edit-extent regression [15], zero-shot likelihood-contrast scoring, lexical statistics, and conservative rule-based corrections. Calibrated decision boundaries and conflict-aware integration are used to fuse complementary signals and resolve boundary cases among HWT, LGT, and HLT."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                267,
+                811,
+                353
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Our contributions are threefold:"
+                    }
+                ]
+            },
+            "bbox": [
+                245,
+                353,
+                487,
+                366
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "1. We analyze the performance of several representative detection methods in the Chinese three-class setting of HWT, LGT, and HLT."
+                    }
+                ]
+            },
+            "bbox": [
+                228,
+                375,
+                808,
+                404
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "2. We propose EVIL-Detect, a conflict-aware ensemble framework that integrates edit-extent regression, zero-shot likelihood evidence, lexical statistics, and conservative rule-based corrections."
+                    }
+                ]
+            },
+            "bbox": [
+                228,
+                404,
+                808,
+                445
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "3. Our system achieved a macro-F1 score of 0.8888 and ranked first in NLPCC 2026 Shared Task 6."
+                    }
+                ]
+            },
+            "bbox": [
+                228,
+                445,
+                810,
+                474
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "2 Related Work"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                495,
+                400,
+                511
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "2.1 Training-based Supervised Detection"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                525,
+                583,
+                541
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Training-based detectors formulate LLM-generated text detection as supervised classification. Early supervised detectors were developed for GPT-style outputs [4], and later methods such as RADAR [5] and DeTeCtive [6] improved robustness through adversarial learning and contrastive learning. These methods can be strong when training and test data are similar, but they are vulnerable to shifts in domain, generator, prompt style, and text length [3]."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                549,
+                810,
+                637
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "2.2 Training-free, Statistical, and Representation-based Detection"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                655,
+                794,
+                670
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Training-free methods avoid task-specific training and instead rely on languagemodel statistics. DetectGPT [7], Fast-DetectGPT [8], DNA-GPT [9], Binoculars [10], and EchoPrompt [25] exploit probability curvature, divergent n-grams, cross-model perplexity, or latent prompt restoration for zero-shot detection. For related fine-grained and robust detection settings, AI-editing-extent regression and representation-level features are also useful: EditLens [15] models the degree of AI editing, while RepreGuard [16] detects generated text from hidden representation patterns."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                677,
+                810,
+                794
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "2"
+                    }
+                ]
+            },
+            "bbox": [
+                223,
+                109,
+                235,
+                121
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "H. Bao et al."
+                    }
+                ]
+            },
+            "bbox": [
+                278,
+                109,
+                368,
+                121
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "2.3 Hybrid Ensemble Detection and Chinese Shared Tasks"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                139,
+                734,
+                153
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Hybrid and ensemble methods are important because diferent detectors fail on diferent samples. EnsemJudge [17], the winning system of NLPCC 2025 Shared Task 1, combines multiple models and voting strategies for Chinese LLMgenerated text detection. CUDRT [12], DetectRL [18], DetectRL-X [13], and NLPCC 2026 Shared Task 6 [14] further emphasize realistic, OOD, and AIedited scenarios. These studies motivate our use of heterogeneous signals and conflict resolution for robust three-class detection."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                159,
+                810,
+                260
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3 Method"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                277,
+                339,
+                292
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In this section, we present EVIL-Detect, our detection system for NLPCC 2026 Shared Task 6. We first describe the observations that motivate the design, then detail the individual modules, and finally present the fusion strategy that combines them into a final prediction."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                303,
+                810,
+                362
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.1 Observation and Motivation"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                378,
+                509,
+                393
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Most existing methods for LLM-generated text detection are designed for binary classification, distinguishing human-written text from LLM-generated text. However, NLPCC 2026 Shared Task 6 requires a more fine-grained three-way classification among HWT, LGT, and HLT. A direct adaptation to three-way classification is not suficiently robust under the distribution shift between training and evaluation data, as later shown by the representative alternative designs in Sec. 4.3. For example, a direct generative quantized low-rank adaptation (QLoRA) [23] classifier achieves only 0.1690 macro-F1 on testp1."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                398,
+                810,
+                513
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "This motivates us to reconsider the label structure of the task. HWT and LGT can be viewed as two endpoints, whereas HLT is an intermediate state because LLM refinement preserves human content while introducing machinerelated traces. We therefore do not require every component to solve the full three-way task independently: LGT-oriented signals can be reused by grouping HWT and HLT as non-LGT, while HWT/HLT discrimination relies more on editing strength. Since diferent methods show diferent class preferences, as quantified in Sec. 4.3, EVIL-Detect combines a supervised edit-strength module, zero-shot LGT evidence, lexical statistics, and conflict-aware fusion rather than uniform averaging."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                512,
+                810,
+                656
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.2 Overview of EVIL-Detect"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                671,
+                489,
+                687
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We propose EVIL-Detect, a multi-signal system for Chinese LLM-generated and LLM-refined text detection. As shown in Fig. 1, EVIL-Detect combines four types of evidence: supervised edit-extent signals from EditLens [15] and Soft-EditLens, zero-shot LGT-tendency signals from EchoPrompt, lexical frequency statistics, and conservative text rules. The fusion module integrates these heterogeneous signals with conflict-aware decision logic and outputs the final HWT, LGT, or HLT prediction."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                692,
+                810,
+                794
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "EVIL-Detect for NLPCC 2026 Task 6"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                109,
+                752,
+                122
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "3"
+                    }
+                ]
+            },
+            "bbox": [
+                796,
+                110,
+                808,
+                121
+            ]
+        }
+    ],
+    [
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/f2835cd27c67cdead1b24fcc9d8d740b71b96fa19cf92c203fedc8bca9562b49.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Fig. 1. Overall architecture of EVIL-Detect."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                282,
+                147,
+                747,
+                316
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.3 Supervised Training Module"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                388,
+                510,
+                404
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The supervised training module is inspired by EditLens [15], which formulates AI-edited text detection as continuous edit-extent estimation rather than pure discrete classification. In the original formulation, a similarity metric between a human-written source and its AI-edited version is used as intermediate supervision, and a regression model is trained to predict the amount of AI editing from the text alone."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                410,
+                810,
+                495
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In our setting, each training group contains a triplet "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( h , g , t )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", where h, g, and t denote the HWT, LGT, and HLT versions respectively. We define a continuous editing-extent target on the HWT–HLT–LGT axis by using HWT and LGT as two anchors:"
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                495,
+                810,
+                552
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "r ( h ) = 0 , \\quad r ( g ) = 1 , \\quad r ( t ) = d ( h , t ) .\\tag{1}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/49396456f816d09a07d68b3c7210f30d2ce26c150618c18c605fae692cf9f52e.jpg"
+                }
+            },
+            "bbox": [
+                378,
+                552,
+                652,
+                568
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Here "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "d ( h , t ) \\in [ 0 , 1 ]"
+                    },
+                    {
+                        "type": "text",
+                        "content": "measures how far the LLM-refined text t moves away from the corresponding human-written source h. This formulation treats HLT as an instance-dependent soft editing state rather than an independent hard class. At inference time, the paired HWT text is not required; the trained model predicts "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "r ( x )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "from the input text x alone. Based on this common formulation, we instantiate the supervised module with two variants."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                571,
+                810,
+                658
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "EditLens The EditLens variant uses a surface-level soft character n-gram distance to construct "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\scriptstyle d ( h , t )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". Let "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "C _ { n } ( x )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "be the character n-gram count vector of text x. For a set of n-gram orders N and non-negative weights "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "w _ { n }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", we compute"
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                676,
+                810,
+                719
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "d _ { \\mathrm { n g } } ( h , t ) = 1 - \\frac { \\sum _ { n \\in \\mathcal { N } } w _ { n } \\cos ( C _ { n } ( h ) , C _ { n } ( t ) ) } { \\sum _ { n \\in \\mathcal { N } } w _ { n } } .\\tag{2}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/e96f95612c0f8a71dd0e5e3814e61810f2dede56852bddca513c2b5c3ffa3c23.jpg"
+                }
+            },
+            "bbox": [
+                347,
+                724,
+                680,
+                758
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Diferent n-gram orders and weights produce diferent HLT target distributions. We therefore perform a validation-set sweep over candidate n-gram ranges and weighting schemes, ranking each configuration by how well the resulting HLT scores are separated from the two anchors 0 (HWT) and 1 (LGT). The bestranked configuration has internal sweep id 044, uses orders 1–7 with linearly increasing weights, and is denoted as rank044 in the rest of the paper. The resulting id/text/score instances are used to train a low-rank adaptation (LoRA) [22]- adapted decoder-only LLM with a regression objective. The trained model outputs a continuous editing-extent score, which is later discretized and used as a base signal by the fusion module."
+                    }
+                ]
+            },
+            "bbox": [
+                221,
+                763,
+                808,
+                794
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "4"
+                    }
+                ]
+            },
+            "bbox": [
+                223,
+                110,
+                235,
+                121
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "H. Bao et al."
+                    }
+                ]
+            },
+            "bbox": [
+                278,
+                109,
+                368,
+                121
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                220,
+                139,
+                810,
+                254
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Soft-EditLens Soft-EditLens replaces surface n-gram overlap with semantic phrase-level soft matching. We first segment HWT and HLT texts into short token phrases. For each phrase "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "q"
+                    },
+                    {
+                        "type": "text",
+                        "content": "in the HLT text, we encode it and find the most similar phrase "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "p"
+                    },
+                    {
+                        "type": "text",
+                        "content": "in the corresponding HWT text. With phrase count "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "c _ { t } ( \\boldsymbol { q } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and embedding function "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "e ( \\cdot )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", the phrase-level distance is"
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                274,
+                810,
+                348
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "d _ { \\mathrm { p h } } ( h , t ) = 1 - \\frac { \\sum _ { q \\in P ( t ) } c _ { t } ( q ) \\operatorname* { m a x } _ { p \\in P ( h ) } \\cos ( e ( q ) , e ( p ) ) } { \\sum _ { q \\in P ( t ) } c _ { t } ( q ) } .\\tag{3}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/eb1b41b50730f6b3851e91d951fdf91b5de5d08f753a62e84a312d539711c8db.jpg"
+                }
+            },
+            "bbox": [
+                310,
+                355,
+                717,
+                392
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Compared with character n-gram overlap, this target is less sensitive to lexical replacement and better captures semantically preserved expressions. Soft-EditLens also changes the learning objective: besides direct regression on the continuous score, we train an ordinal bucket predictor that discretizes the editing-extent axis into ordered intervals. At inference time, the regression model provides a smooth score, while the bucket model provides an interval-level estimate. These two outputs are used as complementary signals in the fusion module, especially for resolving HWT/HLT boundary cases."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                401,
+                810,
+                517
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.4 Zero-Shot Detection Module"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                537,
+                514,
+                551
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "EchoPrompt EchoPrompt [25] is a training-free prompting module that provides auxiliary evidence for LGT detection. The module is based on the intuition that fully LLM-generated text is more compatible with an assistant-style generation distribution, whereas human-written text is less likely to follow such a distribution. For each input text, EchoPrompt computes a normalized likelihoodcontrast score using a prompted instruction-tuned model and its corresponding base model; a higher score indicates stronger LGT tendency. To reduce the dependence on a single prompt "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "_ { \\mathrm { o r } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "model, we use multiple fixed prompt/model branches, whose outputs are passed to the fusion module as additional discriminative signals rather than standalone predictions."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                561,
+                810,
+                706
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.5 Lexical Frequency Statistics Module"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                725,
+                578,
+                740
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The lexical frequency statistics module provides a lightweight surface-level view complementary to neural and prompting-based signals. It is based on the observation that some class preferences are reflected in recurring lexical or character"
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                749,
+                810,
+                794
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "EVIL-Detect for NLPCC 2026 Task 6"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                109,
+                752,
+                122
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "5"
+                    }
+                ]
+            },
+            "bbox": [
+                796,
+                110,
+                808,
+                121
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "n-gram patterns. We build label-wise frequency lexicons from the training set and retain discriminative n-grams after removing patterns that appear similarly across classes."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                139,
+                808,
+                181
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "For an input text "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "x ,"
+                    },
+                    {
+                        "type": "text",
+                        "content": "let "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "G ( x )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "denote its extracted n-grams. We estimate smoothed label-conditional probabilities "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "p ( g \\mid y )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "for each lexical unit "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "g"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and label "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "y ,"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and aggregate their preferences through averaged log-odds scores:"
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                183,
+                810,
+                225
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "s _ { a / b } ( x ) = \\frac { 1 } { | G ( x ) | } \\sum _ { g \\in G ( x ) } \\log \\frac { p ( g \\mid a ) } { p ( g \\mid b ) } .\\tag{4}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/4b8c561123429f6c2109b7c522566fb026b5193d03c2fe7988a93b1fb670b593.jpg"
+                }
+            },
+            "bbox": [
+                381,
+                235,
+                647,
+                272
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In practice, we use several derived statistics, including LGT-vs-HWT tendency, AI-vs-HWT tendency where LGT and HLT are merged as AI-assisted text, the fraction of machine-oriented lexical units, and the fraction of HWT-oriented lexical units. These statistics are passed to the fusion module as auxiliary lexical evidence rather than used as standalone predictions."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                282,
+                810,
+                355
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.6 Fusion and Decision Module"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                376,
+                510,
+                391
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The fusion module integrates the outputs of the preceding components into the final HWT/LGT/HLT prediction. The starting point is the EditLens editingextent score. We use two calibrated boundary settings "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( \\tau _ { 1 } ^ { ( k ) } , \\tau _ { 2 } ^ { ( k ) } ,"
+                    },
+                    {
+                        "type": "text",
+                        "content": "), "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathrm { ~ \\ i ~ { ~ \\in ~ \\{ ~ 1 , ~ 2 ~ \\} ~ } ~ }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", and convert the score into a base label for each setting:"
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                401,
+                808,
+                462
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "y ^ { ( k ) } ( x ) = \\left\\{ \\begin{array} { l l } { \\mathrm { H W T } , } & { s _ { E } ( x ) \\leq \\tau _ { 1 } ^ { ( k ) } , } \\\\ { \\mathrm { H L T } , } & { \\tau _ { 1 } ^ { ( k ) } < s _ { E } ( x ) < \\tau _ { 2 } ^ { ( k ) } , \\quad k \\in \\{ 1 , 2 \\} . } \\\\ { \\mathrm { L G T } , } & { s _ { E } ( x ) \\geq \\tau _ { 2 } ^ { ( k ) } , } \\end{array} \\right.\\tag{5}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/df1359f6badc031da06af47db8f267cf98664948b1bc4dccf9f153b370697265.jpg"
+                }
+            },
+            "bbox": [
+                312,
+                472,
+                715,
+                526
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Here "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "s _ { E } ( x )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "denotes the EditLens score, and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "y ^ { ( 1 ) }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "y ^ { ( 2 ) }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "are the two resulting base labels. These base labels are combined with Soft-EditLens regression/bucket signals and a panel of nine binary LGT-support votes from zero-shot, edit-based, and lexical views (Table 3)."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                538,
+                810,
+                596
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Conflict-aware integration If "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "y ^ { ( 1 ) }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "y ^ { ( 2 ) }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "agree, EVIL-Detect directly keeps the agreed label. If they disagree, the fusion module resolves the conflict according to the label pair involved:"
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                618,
+                810,
+                663
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "y _ { \\mathrm { b a s e } } = \\left\\{ \\begin{array} { l l } { y ^ { ( 1 ) } , } & { y ^ { ( 1 ) } = y ^ { ( 2 ) } , } \\\\ { R ( y ^ { ( 1 ) } , y ^ { ( 2 ) } , z _ { \\mathrm { s o f t } } , V _ { \\mathrm { L G T } } ) , } & { y ^ { ( 1 ) } \\neq y ^ { ( 2 ) } , } \\end{array} \\right.\\tag{6}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/c142c6f5207208928901c81c4b68e93aec9e5c370cf02f4ba4657c14109053f4.jpg"
+                }
+            },
+            "bbox": [
+                337,
+                673,
+                689,
+                709
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "{ \\mathit { z } } _ { \\mathrm { s o f t } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "represents the Soft-EditLens regression and bucket evidence, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "V _ { \\mathrm { L G T } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "denotes the aggregated LGT-support votes, and R(·) "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "R ( \\cdot )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is the conflict-aware resolver."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                720,
+                808,
+                763
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We instantiate "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "R ( \\cdot )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "with validation-calibrated thresholds. Let "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "z _ { r } ( x )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "be the Soft-EditLens regression score, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "z _ { b } ( x )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "be its ordinal bucket index, and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "v ( x ) ="
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\scriptstyle \\sum _ { i = 1 } ^ { 9 } v _ { i } ( x )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "be the number of active LGT-support votes. For HWT/LGT conflicts, R outputs HWT when "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "z _ { r } ( x ) \\leq \\gamma _ { H }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", otherwise outputs LGT when "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "v ( x ) \\geq"
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\gamma _ { H L }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", and otherwise falls back to HLT. For HWT/HLT conflicts, R outputs HLT if "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "z _ { b } ( x ) \\ge \\beta _ { T } ;"
+                    },
+                    {
+                        "type": "text",
+                        "content": "otherwise it outputs HWT. For HLT/LGT conflicts, R outputs LGT if "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "v ( x ) \\geq \\gamma _ { T L } ;"
+                    },
+                    {
+                        "type": "text",
+                        "content": "otherwise it keeps HLT. Here "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\gamma _ { H }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is the HWTside Soft-EditLens boundary, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\beta _ { T }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is the rewriting-strength bucket boundary, and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\gamma _ { H L } , \\gamma _ { T L }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "are pair-specific LGT-vote thresholds. This rule design matches the role of each module: EditLens gives the initial continuum label, Soft-EditLens refines HWT/HLT boundaries, and the vote panel provides evidence for fully generated text."
+                    }
+                ]
+            },
+            "bbox": [
+                221,
+                763,
+                808,
+                794
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "6"
+                    }
+                ]
+            },
+            "bbox": [
+                223,
+                110,
+                235,
+                120
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "H. Bao et al."
+                    }
+                ]
+            },
+            "bbox": [
+                278,
+                109,
+                368,
+                121
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                220,
+                136,
+                810,
+                282
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "High-precision text rules After conflict-aware integration, we apply a small set of conservative text rules as final corrections. The complete rule set is as follows. First, raw HyperText Markup Language (HTML)-like or Extensible Markup Language (XML)-like structural markup, such as <!DOCTYPE html>, <html>, <div>, <p>, and <a href=...>, is treated as strong evidence for LGT; representative training examples are shown in Appendix A. Second, script or rendering residues, such as document.write "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( \" < \\mathtt { b r } / > \" )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "or unfinished tag sequences, also trigger an LGT correction. Third, explicit rewriting or polishing traces, such as answer wrappers indicating that a rewritten or polished version follows, support HLT when the fused label is not already LGT. These rules are applied only after fusion and serve as high-precision safeguards."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                302,
+                810,
+                460
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4 Experiments"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                479,
+                386,
+                495
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In this section, we evaluate EVIL-Detect on NLPCC 2026 Shared Task 6."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                507,
+                766,
+                521
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.1 Experimental Setup"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                542,
+                440,
+                557
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Dataset We use the oficial data released for NLPCC 2026 Shared Task 6, which requires three-way classification among human-written text (HWT), LLMgenerated text (LGT), and LLM-refined text (HLT). According to the oficial task description [14], the training set is sampled and adapted from the CUDRT dataset [12] and covers four generators, including GPT-4 [1], Qwen-family generators, ChatGLM [20], and Baichuan [21], across two domains, namely news and academic writing. In contrast, the two hidden test phases, testp1 and testp2, are drawn from the Chinese split of DetectRL-X [13] and are constructed as outof-distribution data that may involve unseen domains, unseen generators, and diferent generation schemes, so as to stress-test detector robustness. We remove empty or malformed training samples and clean task-irrelevant artifacts such as role markers, abnormal control characters, redundant whitespace, and obvious generation residues. Formatting cues such as Markdown or HTML fragments are handled conservatively to avoid removing genuine stylistic signals. This preprocessing is applied only to the training data. Detailed data statistics are shown in Table 1."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                564,
+                810,
+                794
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "EVIL-Detect for NLPCC 2026 Task 6"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                109,
+                752,
+                121
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "7"
+                    }
+                ]
+            },
+            "bbox": [
+                796,
+                110,
+                808,
+                121
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/8c3b3ed19bbdd272d4f73b4e700be62afd035264a5b49a06e20c1dac5424c681.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 1. Dataset statistics."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Split</td><td>HWT LGT</td><td>HLT</td><td>Total</td></tr><tr><td>Cleaned training set 19,634 18,368 19,587 57,589</td><td></td><td></td><td></td></tr><tr><td>testp1 (official)</td><td>1,200 1,200</td><td>1,200</td><td>3,600</td></tr><tr><td>testp2 (official)</td><td>384 384</td><td>384</td><td>1,152</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                347,
+                155,
+                682,
+                223
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/06b132b55f848e82897f49060d0a55468b5482928b63dc2752af88d29df3c152.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 2. Module configuration of EVIL-Detect."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Module</td><td>Backbone</td><td>Role</td><td>Type</td></tr><tr><td>EditLens</td><td>Qwen3.5-4B-Base + LoRA editing-extent label</td><td></td><td>supervised</td></tr><tr><td></td><td>Soft-EditLens Qwen3.5-9B-Base + LoRA regression/bucket scores supervised</td><td></td><td></td></tr><tr><td></td><td>EchoPrompt Qwen3.5-4B, Qwen2.5-1.5B LGT vote panel</td><td></td><td>training-free</td></tr><tr><td></td><td>Lexical freq. label-wise n-gram lexicon LGT vote panel</td><td></td><td>training-free</td></tr><tr><td>Fusion</td><td></td><td>evidence integration</td><td>deterministic</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                240,
+                260,
+                791,
+                351
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Metric. The oficial metric is macro-F1 over the three classes. We additionally report accuracy and per-class F1."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                384,
+                808,
+                413
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Implementation. Table 2 summarises the modules, and Table 3 details the vote panel. EditLens uses Qwen3.5-4B-Base [24] as the backbone with LoRA [22] (rank 16, α 32, dropout 0.05) on all attention and MLP projections, together with a linear regression head for editing-extent prediction. Its target adopts the rank044 soft n-gram configuration selected by the separability sweep. Soft-EditLens uses Qwen3.5-9B-Base [24] with the same LoRA [22] configuration and a dual regression/bucket objective. The zero-shot module is training-free and uses Qwen3.5-4B [24] and Qwen2.5-1.5B [2] instruct/base model pairs. The lexical-frequency module builds label-wise word and character n-gram log-odds lexicons. For fusion, EditLens scores are discretized with two calibrated classboundary settings and combined with Soft-EditLens auxiliary signals and nine binary LGT-support votes through conflict-aware integration, followed by highprecision text rules. All supervised models are trained on NVIDIA V100 graphics processing units (GPUs)."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                438,
+                811,
+                639
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.2 Main Results"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                663,
+                384,
+                677
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Table 4 reports the performance of EVIL-Detect on the two oficial test phases. The system achieves macro-F1 scores of 0.8913 on testp1 and 0.8888 on testp2. The small gap between the two phases indicates that the multi-signal design remains stable across the two evaluation splits."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                692,
+                810,
+                749
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Among the three classes, LGT obtains the highest F1 scores, reaching 0.9267 on testp1 and 0.9219 on testp2. HLT is consistently the most challenging class, with F1 scores of 0.8391 and 0.8407, which is consistent with its intermediate nature between HWT and LGT. This pattern supports the need for conflictaware fusion, where HWT/HLT and HLT/LGT disagreements are handled with diferent auxiliary signals."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                749,
+                810,
+                794
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "8"
+                    }
+                ]
+            },
+            "bbox": [
+                223,
+                109,
+                235,
+                121
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "H. Bao et al."
+                    }
+                ]
+            },
+            "bbox": [
+                278,
+                109,
+                369,
+                122
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/c40ef81b206074e06425bcb6ee267627819465457ba05235f65fabcbc621b040.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 3. Composition of the binary LGT-support vote panel used by the fusion module."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td colspan=\"2\"># Source view LGT-support signal</td></tr><tr><td></td><td>1 EchoPrompt likelihood-contrast vote (Qwen2.5-1.5B, prefix 1)</td></tr><tr><td></td><td>2 EchoPrompt likelihood-contrast vote (Qwen3.5-4B, prefix 1)</td></tr><tr><td></td><td>3 EchoPrompt likelihood-contrast vote (Qwen3.5-4B, prefix 2)</td></tr><tr><td>4 EditLens</td><td>primary editing-extent LGT vote</td></tr><tr><td>5 EditLens</td><td>auxiliary editing-extent LGT vote</td></tr><tr><td>6 Lexical</td><td>low HWT-oriented lexical evidence</td></tr><tr><td>7 Lexical</td><td>AI-vs-HWT lexical log-odds</td></tr><tr><td>8 Lexical</td><td>LGT-vs-HWT lexical log-odds</td></tr><tr><td>9 Lexical</td><td>machine-oriented lexical fraction</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                292,
+                168,
+                739,
+                315
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/f7bcce178188484520b785e71e6644f4c571dfbd87b64eaf66c2ad9a6b78f299.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 4. Main results of EVIL-Detect on the two oficial test phases of NLPCC 2026 Task 6."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td></td><td></td><td></td><td>Phase #Samples Macro-F1 Accuracy HWT-F1 LGT-F1 HLT-F1</td><td></td><td></td><td></td></tr><tr><td>testp1</td><td>3,600</td><td>0.8913</td><td>0.8911</td><td>0.9083</td><td>0.9267</td><td>0.8391</td></tr><tr><td>testp2</td><td>1,152</td><td>0.8888</td><td>0.8880</td><td>0.9039</td><td>0.9219</td><td>0.8407</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                292,
+                366,
+                737,
+                418
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                220,
+                451,
+                808,
+                495
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.3 Component and Variant Analysis"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                527,
+                552,
+                542
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We evaluate each module in isolation on testp1, together with the main variants explored during development (Table 5). EditLens [15] is the strongest standalone component: the sweep-selected rank044 configuration reaches 0.8494 macro-F1, outperforming the initial soft-n-gram configuration (0.8289). This confirms that the validation-based target sweep improves the separability of the HWT–HLT– LGT continuum."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                562,
+                810,
+                648
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The other modules are weaker as standalone three-class predictors, but they provide useful auxiliary evidence for fusion. The best zero-shot strategy reaches 0.6325 macro-F1, while the binary HWT/AI strategy reaches 0.4484, indicating that EchoPrompt is better suited for producing LGT-support votes. Lexical statistics show a similar pattern: the best lexical classifier reaches 0.5535 macro-F1, so lexical features are also used as calibrated votes rather than final labels. Soft-EditLens is not listed because its regression and bucket outputs are consumed by the fusion module. With conflict-aware fusion, EVIL-Detect reaches 0.8913 macro-F1, improving over EditLens by 4.19 points and raising HLT and LGT F1 to 0.8391 and 0.9267, respectively."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                650,
+                810,
+                794
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "EVIL-Detect for NLPCC 2026 Task 6"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                109,
+                752,
+                122
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "9"
+                    }
+                ]
+            },
+            "bbox": [
+                796,
+                110,
+                808,
+                120
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/5df2674c4c060dc76fe1afece0e15ab3b202b48314b38e3975ff0effef8299c3.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 5. Component analysis on testp1. Standalone scores are diagnostic because some methods are used as auxiliary evidence sources in the final fusion."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Method</td><td>Macro-F1</td><td>HWT LGT HLT</td></tr><tr><td>EditLens (rank044)</td><td>0.8494</td><td>0.9067 0.8651 0.7765</td></tr><tr><td>EditLens (initial soft-n-gram)</td><td>0.8289</td><td>0.8325 0.9042 0.7500</td></tr><tr><td>Zero-shot detection (best strategy)</td><td>0.6325</td><td>0.64250.7842 0.4708</td></tr><tr><td>Zero-shot detection (binary HWT/AI)</td><td>0.4484</td><td>0.6294 0.7157 0.0000</td></tr><tr><td>Lexical statistics (best classifier)</td><td>0.5535</td><td>0.6591 0.5040 0.4975</td></tr><tr><td>EVIL-Detect (full fusion)</td><td>0.8913</td><td>0.9083 0.9267 0.8391</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                273,
+                172,
+                756,
+                282
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/e5204bca7e9afe4d3edde49bc3d800751a4ab1314ce24fe8a75eb707a816929e.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 6. Representative alternative designs evaluated on testp1."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Alternative design</td><td>Macro-F1 HWT</td><td></td><td>LGT HLT</td></tr><tr><td>Binoculars</td><td>0.3928</td><td>0.4738 0.5552 0.1493</td><td></td></tr><tr><td>Generative SFT (GLM-4-9B)</td><td>0.1896</td><td>0.5082 0.0148 0.0458</td><td></td></tr><tr><td>Generative SFT (Qwen3.5-9B)</td><td>0.1690</td><td>0.0000 0.0066 0.5004</td><td></td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                300,
+                332,
+                729,
+                397
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Representative alternative designs. Table 6 reports representative alternatives explored during development but not included in the final EVIL-Detect system. Direct generative supervised fine-tuning (SFT) classifiers are not robust under the evaluation distribution: the GLM-4-9B [20] and Qwen3.5-9B [24] variants reach only 0.1896 and 0.1690 macro-F1, showing strong class bias. Binoculars [10] also performs poorly as a standalone three-way predictor, with 0.3928 macro-F1. These results support our design choice of using editing-extent modeling as the base signal and treating likelihood-based detectors as auxiliary evidence."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                439,
+                810,
+                569
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.4 Ablation Study"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                621,
+                401,
+                637
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We conduct an ablation of the fusion module on the released testp2 labels, as shown in Table 7. The EditLens-only baseline [15] obtains 0.8411 macro-F1. Adding conflict-aware integration and high-precision text rules improves the score to 0.8816, and the full system reaches 0.8888 after combining two calibrated EditLens decisions. The improvement mainly comes from boundary cases: compared with EditLens only, the full system reduces LGT→HLT errors from 59 to 30 and HLT→LGT errors from 58 to 28, showing that the fusion module helps correct confusion around HLT."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                677,
+                811,
+                794
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "10"
+                    }
+                ]
+            },
+            "bbox": [
+                223,
+                109,
+                243,
+                121
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "H. Bao et al."
+                    }
+                ]
+            },
+            "bbox": [
+                278,
+                109,
+                369,
+                122
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/550d2ef4080e7f009ee96d90da9fc5b04e90928101bedc7e8c47658670edce45.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 7. Ablation results of the fusion module on testp2."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Configuration</td><td>Macro-F1 HWT</td><td>LGT</td><td>HLT</td></tr><tr><td>Full EVIL-Detect</td><td>0.8888</td><td>0.9039 0.9219 0.8407</td><td></td></tr><tr><td>EVIL-Detect (single-threshold EditLens)</td><td>0.8816</td><td>0.9153 0.9016 0.8280</td><td></td></tr><tr><td>EditLens only</td><td>0.8411</td><td>0.9141 0.8453 0.7640</td><td></td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                267,
+                159,
+                763,
+                224
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "5 Conclusion"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                258,
+                369,
+                273
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "This paper presents EVIL-Detect for Chinese LLM-generated and LLM-refined text detection in NLPCC 2026 Shared Task 6. It integrates edit-extent regression, zero-shot LGT evidence, lexical statistics, and conservative text rules through conflict-aware fusion. With calibrated decision boundaries, our system achieved a macro-F1 score of 0.8888 and ranked first in the oficial evaluation. The results suggest that robust three-class detection cannot rely on a single signal; instead, edit-strength modeling, likelihood-based evidence, lexical cues, and high-precision corrections provide complementary information for distinguishing HWT, LGT, and HLT."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                286,
+                810,
+                416
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Acknowledgments. This work is supported by the Postdoctoral Fellowship Program of China Postdoctoral Science Foundation (CPSF) under Grant Number GZC20251076."
+                    }
+                ]
+            },
+            "bbox": [
+                221,
+                436,
+                810,
+                479
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "References"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                500,
+                334,
+                517
+            ]
+        },
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "1. Achiam, J., Adler, S., Agarwal, S., Ahmad, L., Akkaya, I., Aleman, F.L., et al.: GPT-4 technical report. arXiv preprint arXiv:2303.08774 (2023)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "2. Yang, A., Yang, B., Zhang, B., Hui, B., Zheng, B., Yu, B., et al.: Qwen2.5 technical report. arXiv preprint arXiv:2412.15115 (2024)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "3. Wu, J., Yang, S., Zhan, R., Yuan, Y., Chao, L.S., Wong, D.F.: A survey on LLMgenerated text detection: Necessity, methods, and future directions. Computational Linguistics 51(1), 275–338 (2025)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "4. Solaiman, I., Brundage, M., Clark, J., Askell, A., Herbert-Voss, A., Wu, J., et al.: Release strategies and the social impacts of language models. arXiv preprint arXiv:1908.09203 (2019)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "5. Hu, X., Chen, P.-Y., Ho, T.-Y.: RADAR: Robust AI-text detection via adversarial learning. Advances in Neural Information Processing Systems 36, 15077–15095 (2023)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "6. Guo, X., Zhang, S., He, Y., Zhang, T., Feng, W., Huang, H., Ma, C.: DeTeCtive: Detecting AI-generated text via multi-level contrastive learning. Advances in Neural Information Processing Systems 37, 88320–88347 (2024)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "7. Mitchell, E., Lee, Y., Khazatsky, A., Manning, C.D., Finn, C.: DetectGPT: Zeroshot machine-generated text detection using probability curvature. In: Proceedings of the 40th International Conference on Machine Learning, pp. 24950–24962. PMLR (2023)"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                231,
+                531,
+                806,
+                556
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "EVIL-Detect for NLPCC 2026 Task 6"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                109,
+                752,
+                121
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "11"
+                    }
+                ]
+            },
+            "bbox": [
+                789,
+                109,
+                808,
+                121
+            ]
+        }
+    ],
+    [
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "8. Bao, G., Zhao, Y., Teng, Z., Yang, L., Zhang, Y.: Fast-DetectGPT: Eficient zeroshot detection of machine-generated text via conditional probability curvature. In: The Twelfth International Conference on Learning Representations (2024)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "9. Yang, X., Cheng, W., Wu, Y., Petzold, L., Wang, W.Y., Chen, H.: DNA-GPT: Divergent n-gram analysis for training-free detection of GPT-generated text. In: The Twelfth International Conference on Learning Representations (2024)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "10. Hans, A., Schwarzschild, A., Cherepanova, V., Kazemi, H., Saha, A., Goldblum, M., Geiping, J., Goldstein, T.: Spotting LLMs with binoculars: Zero-shot detection of machine-generated text. In: Proceedings of the 41st International Conference on Machine Learning, pp. 17519–17537. PMLR (2024)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "11. Wu, J., Zhan, R., Wang, Q., Yuan, Y., Chao, L.S., Wong, D.F.: Overview of the NLPCC 2025 Shared Task 1: LLM-generated text detection. In: CCF International Conference on Natural Language Processing and Chinese Computing, pp. 263–274. Springer (2025)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "12. Tao, Z., Chen, Y., Xi, D., Li, Z., Xu, W.: Toward reliable detection of LLMgenerated texts: A comprehensive evaluation framework with CUDRT. ACM Transactions on Intelligent Systems and Technology 17(2), 1–35 (2026)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "13. Wu, J., Liu, Y., Zhu, C., Zhang, H., Wu, Z., Shi, T., Du, Y., Wang, L., Luo, W., Su, J., Wong, D.F.: DetectRL-X: Towards reliable multilingual and real-world LLM-generated text detection. In: Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pp. 38247– 38294. Association for Computational Linguistics (2026)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "14. NLP2CT Lab: NLPCC 2026 Shared Task 6: The Second Shared Task on LLM-Generated Text Detection. https://github.com/NLP2CT/ NLPCC-2026-Task6-Detection (2026). Accessed 2 July 2026"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "15. Thai, K., Emi, B., Masrour, E., Iyyer, M.: EditLens: Quantifying the extent of AI editing in text. arXiv preprint arXiv:2510.03154 (2025)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "16. Chen, X., Wu, J., Yang, S., Zhan, R., Wu, Z., Luo, Z., Wang, D., Yang, M., Chao, L.S., Wong, D.F.: RepreGuard: Detecting LLM-generated text by revealing hidden representation patterns. Transactions of the Association for Computational Linguistics 13, 1812–1831 (2025)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "17. Wang, Z., Ren, Y., Zhao, G., Zhu, X., Li, H., Cao, Y.: EnsemJudge: Enhancing reliability in Chinese LLM-generated text detection through diverse model ensembles. In: CCF International Conference on Natural Language Processing and Chinese Computing, Singapore, pp. 284–295. Springer (2025)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "18. Wu, J., Zhan, R., Wong, D.F., Yang, S., Yang, X., Yuan, Y., Chao, L.S.: DetectRL: Benchmarking LLM-generated text detection in real-world scenarios. Advances in Neural Information Processing Systems 37, 100369–100401 (2024)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "19. Yang, A., Li, A., Yang, B., Zhang, B., Hui, B., Zheng, B., Yu, B., et al.: Qwen3 technical report. arXiv preprint arXiv:2505.09388 (2025)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "20. Team GLM, Zeng, A., Xu, B., Wang, B., Zhang, C., Yin, D., Zhang, D., et al.: ChatGLM: A family of large language models from GLM-130B to GLM-4 all tools. arXiv preprint arXiv:2406.12793 (2024)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "21. Yang, A., Xiao, B., Wang, B., Zhang, B., Bian, C., Yin, C., Lv, C., et al.: Baichuan 2: Open large-scale language models. arXiv preprint arXiv:2309.10305 (2023)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "22. Hu, E.J., Shen, Y., Wallis, P., Allen-Zhu, Z., Li, Y., Wang, S., Wang, L., Chen, W.: LoRA: Low-rank adaptation of large language models. In: International Conference on Learning Representations (2022)"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "23. Dettmers, T., Pagnoni, A., Holtzman, A., Zettlemoyer, L.: QLoRA: Eficient finetuning of quantized LLMs. Advances in Neural Information Processing Systems 36, 10088–10115 (2023)"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                228,
+                140,
+                808,
+                178
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "12"
+                    }
+                ]
+            },
+            "bbox": [
+                223,
+                109,
+                243,
+                121
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "H. Bao et al."
+                    }
+                ]
+            },
+            "bbox": [
+                277,
+                109,
+                369,
+                122
+            ]
+        }
+    ],
+    [
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "24. Qwen Team: Qwen3.5 model cards. https://huggingface.co/Qwen (2026). Accessed 10 July 2026"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "25. Bao, H., Ren, Y., Cao, Y., You, J., Fang, F., Wang, S.: Once a response, always a response: Detecting LLM-generated text via latent prompt restoration. arXiv preprint arXiv:2608.05741 (2026)"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                223,
+                140,
+                806,
+                165
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "A HTML-like LGT Examples"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                221,
+                228,
+                534,
+                243
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We observed LGT training samples with raw markup or rendering residues. Representative short snippets include:"
+                    }
+                ]
+            },
+            "bbox": [
+                221,
+                258,
+                806,
+                286
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "<!DOCTYPE html>"
+                    }
+                ]
+            },
+            "bbox": [
+                250,
+                296,
+                389,
+                309
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "– <html> and <div>"
+                    }
+                ]
+            },
+            "bbox": [
+                231,
+                311,
+                389,
+                323
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "– <a href=...>"
+                    }
+                ]
+            },
+            "bbox": [
+                231,
+                324,
+                363,
+                337
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "– document.write(\"<br/>\")"
+                    }
+                ]
+            },
+            "bbox": [
+                231,
+                338,
+                457,
+                351
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "These patterns appear in LGT training items generated by Baichuan, ChatGLM, and GPT-4. We show only structural snippets because the original samples are long Chinese documents."
+                    }
+                ]
+            },
+            "bbox": [
+                220,
+                362,
+                810,
+                405
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "EVIL-Detect for NLPCC 2026 Task 6"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                109,
+                752,
+                121
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "13"
+                    }
+                ]
+            },
+            "bbox": [
+                789,
+                109,
+                808,
+                121
+            ]
+        }
+    ]
+]
