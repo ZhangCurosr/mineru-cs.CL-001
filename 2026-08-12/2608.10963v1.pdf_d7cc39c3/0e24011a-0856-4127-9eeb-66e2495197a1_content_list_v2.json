@@ -1,0 +1,1684 @@
+[
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "REAP: Relation-Aware Elicitation and Parsing for Closed-Book Knowledge Base Construction from LLMs"
+                    }
+                ],
+                "level": 1
+            },
+            "bbox": [
+                189,
+                90,
+                806,
+                130
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Thanh-Dan Bui Thanh-Trung Do Tuan-Phong Nguyen VNU University of Engineering and Technology, Hanoi, Vietnam {23020342, 24022472, tuanphong}@vnu.edu.vn"
+                    }
+                ]
+            },
+            "bbox": [
+                223,
+                158,
+                778,
+                209
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Abstract"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                262,
+                260,
+                341,
+                275
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We present the REAP system for the AKBC Shared Task 2026 on constructing knowledge bases from language models in a closed-book setting, subject to a budget of at most 32B parameters and no model fine-tuning. Our system combines structured chain-of-thought reasoning, relation-specific query strategies, and a reasoning-based empty-set gate to elicit parametric knowledge, followed by direct extraction into valid JSON arrays. On the official test set, the system, built on Mistral-Small-24B-Instruct-2501, achieves a macro-F1 score of 0.62, with particularly strong results on countryLandBordersCountry (F = 0.95), companyTradesAtStockExchange (F = 0.73), and hasArea (F = 0.77). Our code is publicly available.<sup>1</sup>"
+                    }
+                ]
+            },
+            "bbox": [
+                141,
+                287,
+                460,
+                532
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "1 Introduction"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                115,
+                543,
+                260,
+                558
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Large language models (LLMs) encode substantial factual knowledge in their parameters (Petroni et al., 2019). However, eliciting this knowledge for knowledge base construction (KBC) is considerably more challenging than answering isolated factual questions: a subject–relation pair (s, r) may correspond to an empty (∅), single-valued (1), or multi-valued (N) object set. The AKBC Shared Task 2026 (Kalo et al., 2026) formalizes this problem under a constrained setting: systems must operate in a closed-book fashion, without retrievalaugmented generation or external knowledge; use at most 32B parameters; and perform no model fine-tuning."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                569,
+                489,
+                794
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In this task, each input record specifies a subject entity and one of the six given relations (see Table 1), and the system must return the complete set of corresponding objects as a valid JSON array. The relations cover geographic adjacency and area, a person’s city of death, venue capacity, award recipients, and the stock exchanges on which a company is traded. Consequently, the required output may be empty, contain a single object, or contain a long list of objects, while quantitative answers must also be sufficiently precise. Table 1 summarizes the six target relations and the scope of their ground-truth labels."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                794,
+                489,
+                875
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                262,
+                885,
+                391
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Earlier factual probing methods use cloze-style prompts or prompt ensembles to rank candidate objects (Petroni et al., 2019; Jiang et al., 2020), while the LM-KBC challenge series additionally requires systems to materialize variable-cardinality answer sets (Singhania et al., 2022; Kalo et al., 2023, 2024, 2025). A direct generative solution that asks the model to recall all objects and produce correctly formatted JSON in a single pass can therefore hallucinate objects, omit valid answers, or violate the output schema."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                391,
+                885,
+                568
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "To address this issue, we propose REAP (Relation-aware Elicitation And Parsing), a twostage pipeline that decouples factual elicitation from answer serialization. Stage 1 prompts the LLM using strategies tailored to each relation, whereas Stage 2 uses deterministic JSON parsing when possible and LLM-based extraction only as a fallback. This separation allows the model to focus on recalling the answer set before the system enforces the required JSON format."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                568,
+                885,
+                728
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Our main contributions are as follows:"
+                    }
+                ]
+            },
+            "bbox": [
+                527,
+                730,
+                816,
+                745
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "1. Relation-Aware Elicitation: We design specialized strategies for different relation types, including CoT reasoning with an empty-set gate, a four-direction geographical scan for land borders, and chronological multi-pass querying for awards."
+                    }
+                ]
+            },
+            "bbox": [
+                526,
+                756,
+                885,
+                853
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "2. Efficient Hybrid Parsing: Deterministic parsing handles approximately 80% of the records, while LLM-based extraction is reserved for complex outputs, substantially reducing the overall computational cost."
+                    }
+                ]
+            },
+            "bbox": [
+                524,
+                863,
+                884,
+                912
+            ]
+        },
+        {
+            "type": "page_aside_text",
+            "content": {
+                "page_aside_text_content": [
+                    {
+                        "type": "text",
+                        "content": "arXiv:2608.10963v1 [cs.CL] 11 Aug 2026"
+                    }
+                ]
+            },
+            "bbox": [
+                30,
+                363,
+                67,
+                783
+            ]
+        },
+        {
+            "type": "page_footnote",
+            "content": {
+                "page_footnote_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>1</sup>https://github.com/yammdd/ AKBC-Shared-Task-2026"
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                882,
+                344,
+                908
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "1"
+                    }
+                ]
+            },
+            "bbox": [
+                494,
+                942,
+                504,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/c0dbf2c7345c086ea2d8478fac05a9ae52e24ac05f4c5841d482c219ac695461.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 1: Definitions and ground-truth scope of the six target relations."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Relation</td><td>Ground-truth scope and definition</td></tr><tr><td>countryLandBordersCountry</td><td>Countries that share a land border with the subject (maritime borders excluded; island countries → ∅).</td></tr><tr><td>personHasCityOfDeath</td><td>The city in which the person died (living people or cases with an unknown city → ∅).</td></tr><tr><td>hasCapacity</td><td>The maximum spectator capacity of the venue, represented as an integer.</td></tr><tr><td>awardWonBy</td><td>Entities, including individuals and organizations, that have received the corresponding award.</td></tr><tr><td>companyTradesAtStockExchange</td><td>Stock exchanges on which the company&#x27;s shares are publicly traded (private companies → ∅).</td></tr><tr><td>hasArea</td><td>The total surface area (land + inland water) of the geographical entity, measured in km².</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                115,
+                82,
+                880,
+                248
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                149,
+                300,
+                487,
+                332
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "3. Scalable Inference and Evaluation: Batched inference with vLLM on TPU hardware enables fast end-to-end processing. The complete system achieves macro-F1 0.62 on the test set and highlights the limits of parametric knowledge for rare entities."
+                    }
+                ]
+            },
+            "bbox": [
+                127,
+                342,
+                489,
+                439
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "2 Related Work"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                450,
+                270,
+                467
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Probing knowledge in language models. LAMA (Petroni et al., 2019) established clozestyle probing but assumes exactly one object per relation, and what can be extracted depends heavily on the prompt (Jiang et al., 2020); see AlKhamissi et al. (2022) for a survey. The LM-KBC challenge series (Singhania et al., 2022; Kalo et al., 2023, 2024, 2025) recast this as knowledge base construction with arbitrary-cardinality object sets (0, 1, or N), the setting continued by the AKBC Shared Task 2026 (Kalo et al., 2026). Prior systems pair LLM probing with entity mapping (Zhang et al., 2023); most recently, ReWiSe (Albert-Roulhac and Zouaq, 2025), a top-performing system at LM-KBC 2025, combines chain-of-thought (CoT) reasoning with relation-wise self-consistency. In REAP, we adopt the idea of relation-specific CoT and explicit empty-set handling, but drop self-consistency voting, which is costly and can be dominated by confident-but-incorrect reasoning chains."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                476,
+                489,
+                815
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Parametric knowledge and its limits. Closedbook QA shows that language models can answer factual questions without retrieval (Roberts et al., 2020), motivating the closed-book setting we adopt. This parametric knowledge is uneven, however: models recall popular facts well but struggle with long-tail entities (Kandpal et al., 2023; Mallen et al., 2023), which bounds any closed-book system and matches our error analysis on rare subjects."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                824,
+                489,
+                921
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                300,
+                884,
+                349
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Step-by-step reasoning and empty-set gate. Chain-of-thought prompting (Wei et al., 2022; Kojima et al., 2022) improves multi-step reasoning and builds on the in-context learning ability of instruction-tuned LLMs (Brown et al., 2020). Since a correct answer may itself be the empty set, in REAP, we add a reasoning-based empty-set gate inspired by selective prediction (Kamath et al., 2020). Unlike calibrated methods that estimate whether a model knows an answer (Kadavath et al., 2022), our gate is a prompt-driven decision that returns an empty set as the final answer when the property does not exist or the evidence of it is insufficient."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                357,
+                885,
+                567
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3 Method"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                577,
+                615,
+                594
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.1 Architecture Overview"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                602,
+                737,
+                618
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The REAP system consists of two sequential stages (Figure 1). In Stage 1, we use an LLM to generate evidence as free-form text for multi-valued relations or use CoT reasoning for single-valued relations. If the generation phase produces unparsable output, the system automatically retries or switches to a fallback prompt. Stage 2 extracts the evidence into JSON arrays using regular expressions; for multi-valued relations that cannot be handled reliably by simple rules, the LLM performs the extraction itself."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                624,
+                885,
+                802
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.2 Relation-Specific Prompt Design"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                812,
+                813,
+                828
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Stage 1 prompts are specialized per relation following three principles: (i) query decomposition to maximize recall on multi-valued relations (e.g., six decade-scoped passes for awardWonBy and a four-direction geographical scan for countryLandBordersCountry); (ii) output-format constraints via BORDERS: or FINAL_ANSWER: [. . . ] markers; and (iii) stepby-step reasoning with an empty-set gate that outputs FINAL_ANSWER: [] for unanswerable entities (e.g., living individuals or private companies). Together, these relation-tailored, multi-step CoT procedures constitute the structured reasoning that Stage 1 performs before extraction."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                832,
+                885,
+                915
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "2"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/fd7bdecc89b87184e257c4cf4d64176f873ab6ce7a73667f77a30c835025685c.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 1: The architecture of REAP."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                127,
+                84,
+                472,
+                518
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                573,
+                489,
+                718
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Few-shot demonstrations are static exemplar pairs (one positive, one empty-set case) fixed per relation to illustrate the reasoning chain and emptyset triggering. Crucially, all exemplars are drawn exclusively from train.jsonl or hand-written triples, ensuring zero data leakage against the evaluation splits."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                718,
+                489,
+                832
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "awardWonBy: Chronological Multi-Pass. For major awards with dozens or hundreds of recipients, a single query typically yields low recall. We therefore use a multi-pass strategy comprising one general prompt and five auxiliary prompts decomposed chronologically: from the award’s inception through the 1970s, the 1980s–1990s, the 2000s– 2010s, 2020 onward, and a final pass targeting less prominent or non-Western recipients. All six generations use temperature T = 0.7 to diversify recall before the evidence is merged."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                838,
+                489,
+                921
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                84,
+                885,
+                183
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "countryLandBordersCountry: Four-Direction Geographical Scan. The prompt instructs the model to act as a geography expert and inspect the subject’s eastern, western, southern, and northern boundaries. This scan reduces omissions of small neighboring countries and adjacent detached territories. The prompt includes land borders only, explicitly excludes maritime boundaries, and returns BORDERS: NONE for island countries. If the response lacks the BORDERS: marker, the system automatically retries with a shorter fallback prompt."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                190,
+                885,
+                369
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "companyTradesAtStockExchange: Four-Step Listing Check. The model follows a four-step CoT procedure: (1) identify the company; (2) apply a Strict Public Check (empty-set gate) to determine whether the entity is a private company, a nonprofit organization, or a subsidiary that is not separately listed, returning FINAL_ANSWER: [] if any condition holds; (3) retrieve all listing exchanges using their full official names, such as New York Stock Exchange or SIX Swiss Exchange; and (4) conclude with FINAL_ANSWER: [\"Exchange Name\"]."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                376,
+                885,
+                570
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "hasArea: Four-Step Entity Disambiguation and Unit Normalization. The model follows four CoT steps: (1) distinguish the target entity (e.g., an island, lake, or region) from the country containing it; (2) retrieve its area from parametric knowledge while preserving decimal precision; (3) convert the value to km<sup>2</sup>; and (4) output an integer or decimal value as FINAL_ANSWER: [\"Value\"]."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                577,
+                885,
+                708
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "hasCapacity: Four-Step Reasoning with Capacity-Range Verification. The model follows four CoT steps: (1) determine the venue type and location; (2) distinguish a university or small local stadium from a larger national stadium with a similar name or in the same city; (3) check the estimate against a plausible capacity range (1,000–35,000 seats for small venues and 35,000– 100,000 for large national stadiums); and (4) return the capacity as an integer in FINAL_ANSWER: [\"Value\"]."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                715,
+                885,
+                895
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "3"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "personHasCityOfDeath: Five-Step Reasoning with Empty-Set Gate. The model performs five steps: (1) check the subject’s biographical status and record “ALIVE TODAY” if appropriate; (2) resolve name ambiguity; (3) retrieve the city or town of death; (4) isolate the place name; and (5) return FINAL_ANSWER: [] if the person is alive or the information is unavailable, or FINAL_ANSWER: [\"CityName\"] if the place of death is confirmed."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                85,
+                489,
+                230
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.3 Post-processing"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                240,
+                285,
+                256
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "To ensure that extracted outputs adhere to the ground-truth format, we apply the following automated post-processing procedure after the generation phase:"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                261,
+                489,
+                326
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "1. Direct Parsing and Robust Array Extraction: The system directly parses the content of the FINAL_ANSWER: line or recovers a truncated JSON array using balanced-bracket scanning."
+                    }
+                ]
+            },
+            "bbox": [
+                129,
+                336,
+                489,
+                417
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "2. Numeric Extraction and Normalization: For quantitative relations (hasArea and hasCapacity), regular expressions extract integer or floating-point values while removing thousands separators and measurement units."
+                    }
+                ]
+            },
+            "bbox": [
+                127,
+                428,
+                489,
+                508
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "3. Title and Noise Filtering: For awardWonBy, the system removes year prefixes (e.g., \"1938: Albert Einstein\"), HTML tags, work-title suffixes, and honorifics such as Dr., Prof., Sir, Dame, Lord, Saint, St., and Mr. to obtain normalized entity names."
+                    }
+                ]
+            },
+            "bbox": [
+                127,
+                518,
+                489,
+                615
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "4. Parenthetical Filtering and Deduplication: The system removes trailing parenthetical qualifiers (e.g., \"Guinea (West Africa)\" → \"Guinea\") and performs case-insensitive deduplication while preserving the capitalization of the first occurrence."
+                    }
+                ]
+            },
+            "bbox": [
+                127,
+                625,
+                489,
+                724
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4 Experiments"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                733,
+                262,
+                751
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.1 Experimental Setup"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                759,
+                319,
+                775
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Data. The organizers provide training, validation, and test splits for six relations. The validation and test splits each contain 475 records: 68 for countryLandBordersCountry in validation (67 in test), 97 and 98 for hasCapacity respectively, 10 for awardWonBy, and 100 for each of the other three relations. Each record consists of a subject, a relation, and a set of objects, each accompanied by a list of aliases. The data cover all three cardinality cases: empty sets (e.g., New Zealand for land borders), single-valued relations, and multi-valued relations (e.g., Nobel Prize in Physics, 229 recipients in train.jsonl, or AAAI Fellow, 350 people in val.jsonl)."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                781,
+                489,
+                910
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                85,
+                885,
+                183
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Models. We evaluate three instruction-tuned models—Gemma-2-9B-it (Gemma Team, 2024), Llama-3.1-8B-Instruct (Llama Team, Meta AI, 2024), and Mistral-Small-24B-Instruct-2501 (Mistral AI, 2025)—and compare against the organizer’s Qwen3.5-9B baseline (Qwen Team, 2026). Gemma-2-9B-it and Llama-3.1-8B-Instruct serve as comparison systems, while Mistral-Small-24B-Instruct-2501 (hereafter Mistral-24B) is the primary model in our final system."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                190,
+                885,
+                353
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Hardware and Runtime. Experiments are conducted on Kaggle using a TPU v5e-8 with eight TPU v5e cores. We serve the models with vLLM TPU Server and use bfloat16 precision. With direct parsing and batched inference, one complete run over all six relations in the validation set (475 records) takes approximately 2–5 minutes with batch_size=32."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                359,
+                885,
+                488
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Metrics. We report macro/micro precision, recall, and F1 using the organizer-provided evaluate.py script. For string-valued relations, the evaluator normalizes predictions and matches aliases through maximum bipartite matching. For quantitative relations, it applies a relative tolerance of 5%. Overall macro-F1 is the mean of the perrecord F1 scores."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                497,
+                885,
+                626
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.2 Validation Results"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                634,
+                700,
+                651
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We first evaluate all models in a zero-shot setting, using direct queries without evidence generation or CoT reasoning. As shown in Figure 2, Llama-3.1-8B, Gemma-2-9B, and Mistral-24B achieve macro-F1 scores of 0.38, 0.42, and 0.43, respectively. These relatively low and similar scores suggest that all three models struggle when required to recall facts and satisfy the output format simultaneously. The limitation is particularly pronounced for multi-valued relations that require long object lists, such as awardWonBy, and for quantitative relations requiring precise values."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                656,
+                885,
+                851
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Effectiveness of the Two-Stage Pipeline. Figure 2 shows that the two-stage pipeline improves macro-F1 for all three models. Llama-3.1-8B improves from 0.38 to 0.48, Gemma-2-9B from 0.42 to 0.51, and Mistral-24B from 0.43 to 0.65. Mistral-24B yields the largest absolute gain (+0.22) and is therefore selected as the primary model in our final system submitted to the AKBC Shared Task 2026."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                858,
+                885,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "4"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/f0ecf4eb1fd5a252f15740b54ba0565f1f08cd94c1935859d284d20cec7f2027.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 2: Overall macro-F1 of zero-shot prompting and the two-stage pipeline on the validation set."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                119,
+                82,
+                485,
+                286
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/5cf41bad1e963298770b833fa0da8bdbb381f9ea704f0b4fe1f527e9ad3aaef9.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 2: Macro-F1 of Mistral-24B on the test set."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Relation Macro-F1</td></tr><tr><td>awardWonBy 0.37</td></tr><tr><td>companyTradesAtStockExchange 0.73</td></tr><tr><td>countryLandBordersCountry 0.95</td></tr><tr><td>hasArea 0.77</td></tr><tr><td>hasCapacity 0.23</td></tr><tr><td>personHasCityOfDeath 0.53</td></tr><tr><td>Overall 0.62</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                114,
+                369,
+                485,
+                514
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                539,
+                489,
+                620
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.3 Test Results"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                631,
+                257,
+                646
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Table 2 reports the relation-level and overall macro-F1 scores of the primary system on the official test set."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                651,
+                489,
+                699
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The relation-level results in Figure 3 show that the Mistral-24B pipeline consistently outperforms all other configurations across all six relations on the F1 metric. It achieves its highest scores on countryLandBordersCountry (0.95) and hasArea (0.77). Overall, the Mistral pipeline leads with a macro-F1 score of 0.62, significantly outperforming the Llama (0.48) and Gemma (0.48) pipelines, as well as more than doubling the organizer’s baseline that is based on Qwen3.5-9B (0.30)."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                700,
+                489,
+                878
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/b8fae4f1a4bfbe28b029fe3bad0728138e07adc2040054598a95c25651a421c5.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 3: Ablation results on the validation set."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Configuration</td><td>Macro-F1</td><td>Δ</td></tr><tr><td>Full Pipeline (Ours)</td><td>0.65</td><td></td></tr><tr><td>w/o Task Decomposition</td><td>0.59</td><td>-0.06</td></tr><tr><td>w/o Empty-Set Gate</td><td>0.57</td><td>-0.08</td></tr><tr><td>w/o CoT (Zero-Shot)</td><td>0.43</td><td>-0.22</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                509,
+                108,
+                882,
+                196
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "5 Ablation Study"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                221,
+                675,
+                237
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "To quantify each component’s contribution, we perform a subtractive ablation study on the validation set using Mistral-24B (Table 3)."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                247,
+                884,
+                296
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Removing Task Decomposition drops macro-F1 from 0.65 to 0.59, as single-pass queries suffer severe recall loss on multi-valued relations: awardWonBy collapses from 0.25 to 0.00 and countryLandBordersCountry falls from 0.98 to 0.63. Removing the Empty-Set Gate lowers macro-F1 to 0.57 due to hallucinated answers for unanswerable entities, severely hurting precision on personHasCityOfDeath "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( 0 . 5 0  0 . 3 6 )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and companyTradesAtStockExchange (0.76 → 0.57). Finally, removing CoT Reasoning entirely causes the largest drop to 0.43, heavily degrading hasArea "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( 0 . 8 2 \\mathrm { ~  ~ { ~  ~ } ~ } 0 . 5 5 )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and countryLandBordersCountry "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( 0 . 9 8 \\  \\ 0 . 2 7 )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", confirming that our gains stem primarily from structured parametric reasoning rather than output parsing alone."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                296,
+                885,
+                571
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "6 Discussion"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                581,
+                638,
+                598
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Relation-Aware Prompting versus Zero-Shot Prompting. In the zero-shot setting, all models exhibit limited and relatively similar performance. Requiring a model to recall facts and produce valid JSON in a single pass is especially difficult for relations with large object sets, such as awardWonBy, and for quantitative relations that demand precise values, such as hasArea and hasCapacity. Applying the complete two-stage pipeline of REAP with relation-specific prompts, CoT reasoning, a reasoning-based empty-set gate, and direct parsing improves all three models. These results indicate that structured reasoning is important for reliably eliciting knowledge encoded in model parameters."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                606,
+                885,
+                834
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Limits of Parametric Knowledge. Our results reveal a clear gap between the 9B model (Gemma-2-9B) and the 24B model (Mistral-24B). In the zero-shot setting, the models perform similarly, partly because both struggle with output formatting. Under the full structured-reasoning pipeline, however, Mistral-24B reaches macro-F1 0.65 on the validation set, compared with 0.51 for Gemma-2-9B. This result suggests that reasoning prompts can reduce formatting noise, while successful factual retrieval still depends on model capacity. Mistral-24B performs better on long-tail entities such as small islands, club-level stadiums, and less prominent awards. Thus, in a closed-book setting, a larger model may benefit more from such a pipeline."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                840,
+                885,
+                922
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "5"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/ae174adf16987df0eeac919a728af1c214408facbd58c17d6e1a1b40fb9836a2.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 3: Relation-level macro-F1 of the organizer’s Qwen3.5-9B baseline and three models using the two-stage REAP pipeline on the official test set of the AKBC Shared Task 2026."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                137,
+                82,
+                863,
+                340
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                412,
+                489,
+                590
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Run-to-run variance. Two minor sources of variation affect our runs. First, awardWonBy uses sampling (T = 0.7, six decade-scoped passes) to diversify recall over long recipient lists, so its score fluctuates slightly given only 10 validation awards. Second, even under greedy decoding (T = 0.0) the TPU v5e-8 is not bit-exact, because the accumulation order of bfloat16 values differs across its eight cores. Both effects are small—overall macro-F1 varies by about ±0.005—and do not change our conclusions."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                596,
+                489,
+                774
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "7 Conclusion"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                112,
+                784,
+                248,
+                800
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We presented the REAP system for the AKBC Shared Task 2026 under a strict closed-book setting with at most 32B parameters, no external knowledge, and no model fine-tuning. The system implements a unified two-stage pipeline with Mistral-Small-24B-Instruct-2501, combining relation-aware prompt engineering, a reasoningbased empty-set gate, and direct parsing. It achieves a macro-F1 of 0.65 on the validation set and a macro-F1 of 0.62 on the official test set. The results demonstrate that structured reasoning can effectively elicit factual knowledge encoded in model parameters for knowledge base construction."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                809,
+                489,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                412,
+                885,
+                510
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Limitations"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                519,
+                616,
+                536
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Despite its promising performance, our system has several limitations: (i) its parametric knowledge remains incomplete for very rare, long-tail entities; (ii) predictions for quantitative relations sometimes fall outside the 5% relative-tolerance threshold because of retrieval or rounding errors; and (iii) stochastic sampling for awardWonBy, together with non-deterministic distributed computation on TPU v5e-8, causes slight variation across runs. Among the six relations, hasCapacity is the most challenging (test macro-F1 0.23): venues are frequently confused with larger namesakes in the same city, and even small numeric errors exceed the 5% tolerance."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                545,
+                885,
+                770
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "References"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                510,
+                796,
+                610,
+                813
+            ]
+        },
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Edouard Albert-Roulhac and Amal Zouaq. 2025. Re-WiSe: Relation-Wise Self-consistency for LLM Probing. In LM-KBC @ ISWC 2025."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Badr AlKhamissi, Millicent Li, Asli Celikyilmaz, Mona Diab, and Marjan Ghazvininejad. 2022. A review on language models as knowledge bases. https: //arxiv.org/abs/2204.06031."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                510,
+                819,
+                882,
+                859
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "6"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Tom B. Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, Sandhini Agarwal, Ariel Herbert-Voss, Gretchen Krueger, Tom Henighan, Rewon Child, Aditya Ramesh, Daniel Ziegler, Jeffrey Wu, Clemens Winter, and 12 others. 2020. Language models are few-shot learners. In NeurIPS."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Gemma Team. 2024. Gemma 2: Improving open language models at a practical size. https://arxiv. org/abs/2408.00118."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Zhengbao Jiang, Frank F. Xu, Jun Araki, and Graham Neubig. 2020. How can we know what language models know? TACL."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Saurav Kadavath, Tom Conerly, Amanda Askell, Tom Henighan, Dawn Drain, Ethan Perez, Nicholas Schiefer, Zac Hatfield-Dodds, Nova DasSarma, Eli Tran-Johnson, Scott Johnston, Sheer El-Showk, Andy Jones, Nelson Elhage, Tristan Hume, Anna Chen, Yuntao Bai, Sam Bowman, Stanislav Fort, and 17 others. 2022. Language models (mostly) know what they know. https://arxiv.org/abs/2207. 05221."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jan-Christoph Kalo, Tuan-Phong Nguyen, Simon Razniewski, and Bohui Zhang. 2024. Preface: LM-KBC challenge 2024. In ISWC."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jan-Christoph Kalo, Tuan-Phong Nguyen, Simon Razniewski, and Bohui Zhang. 2026. AKBC shared task 2026: Knowledge base construction from language models. https://lm-kbc.github.io/ challenge2026/."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jan-Christoph Kalo, Simon Razniewski, Bohui Zhang, and Tuan-Phong Nguyen. 2025. LM-KBC 2025: 4th challenge on knowledge base construction from pre-trained language models. In ISWC."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jan-Christoph Kalo, Sneha Singhania, Simon Razniewski, and Jeff Z. Pan. 2023. LM-KBC 2023: 2nd challenge on knowledge base construction from pre-trained language models. In ISWC."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Amita Kamath, Robin Jia, and Percy Liang. 2020. Selective question answering under domain shift. In ACL."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Nikhil Kandpal, Haikang Deng, Adam Roberts, Eric Wallace, and Colin Raffel. 2023. Large language models struggle to learn long-tail knowledge. In ICML."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Takeshi Kojima, Shixiang Shane Gu, Machel Reid, Yutaka Matsuo, and Yusuke Iwasawa. 2022. Large language models are zero-shot reasoners. In NeurIPS."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Llama Team, Meta AI. 2024. The llama 3 herd of models. https://arxiv.org/abs/2407.21783."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Alex Mallen, Akari Asai, Victor Zhong, Rajarshi Das, Daniel Khashabi, and Hannaneh Hajishirzi. 2023. When not to trust language models: Investigating effectiveness of parametric and non-parametric memories. In ACL."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Mistral AI. 2025. Mistral-small-24b-instruct-2501. https://huggingface.co/mistralai/ Mistral-Small-24B-Instruct-2501."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Fabio Petroni, Tim Rocktäschel, Sebastian Riedel, Patrick Lewis, Anton Bakhtin, Yuxiang Wu, and Alexander Miller. 2019. Language models as knowledge bases? In EMNLP-IJCNLP."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Qwen Team. 2026. Qwen3.5: Towards native multimodal agents. https://qwen.ai/blog?id=qwen3. 5."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Adam Roberts, Colin Raffel, and Noam Shazeer. 2020. How much knowledge can you pack into the parameters of a language model? In EMNLP."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Sneha Singhania, Tuan-Phong Nguyen, and Simon Razniewski. 2022. LM-KBC: Knowledge base construction from pre-trained language models. In ISWC."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Brian Ichter, Fei Xia, Ed Chi, Quoc Le, and Denny Zhou. 2022. Chain-of-thought prompting elicits reasoning in large language models. In NeurIPS."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Bohui Zhang, Ioannis Reklos, Nitisha Jain, Albert Meroño-Peñuela, and Elena Simperl. 2023. Using large language models for knowledge engineering (LLMKE): A case study on Wikidata. In LM-KBC @ ISWC 2023."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                115,
+                85,
+                487,
+                190
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "7"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                505,
+                956
+            ]
+        }
+    ]
+]
