@@ -1,0 +1,3508 @@
+[
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "ENTLORE: A Graph-Grounded Benchmark for Latent Organizational Reasoning in Enterprise Question Answering"
+                    }
+                ],
+                "level": 1
+            },
+            "bbox": [
+                127,
+                85,
+                870,
+                126
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Akrin Zheng<sup>*</sup>, Alexander Wu<sup>*</sup>, Alaia Liu<sup>*,†</sup>"
+                    }
+                ]
+            },
+            "bbox": [
+                312,
+                137,
+                689,
+                155
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>*</sup>These authors contributed equally to this work. <sup>†</sup>Correspondence: alaia@scitix.ai"
+                    }
+                ]
+            },
+            "bbox": [
+                341,
+                173,
+                658,
+                204
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Abstract"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                458,
+                255,
+                539,
+                271
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Enterprise question answering is framed as retrieving internal documents and generating grounded answers. Routine enterprise records, however, are work by-products in which required organizational relations remain implicit across heterogeneous sources. Existing benchmarks provide realistic multi-source evidence, but often materialize a predefined answer path and therefore test the composition of stated facts rather than recovery of a target relation absent from the corpus. We call the latter capability latent organizational reasoning."
+                    }
+                ]
+            },
+            "bbox": [
+                157,
+                278,
+                840,
+                375
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We introduce ENTLORE, a graph-grounded benchmark construction framework that reconstructs an audited enterprise world from routine documents, authoritative organizational tables, and operational records. Versioned organizational conventions certify derived relations in a truth graph, enabling complete golden answers and proof certificates. The aligned anonymized release exposes only the document corpus while withholding private structure and target relations. ENTLORE contains 2,341 documents from three source types and 907 questions spanning explicit lookup, cross-source composition, and latent organizational reasoning, evaluated across 56 model and access configurations. Structuring the released world as an induced entity graph or navigable knowledge base gives the strongest deployable results. Yet supplying gold documents still leaves 30.4% of latent questions unanswered, versus 12.6% and 6.2% for explicit and compositional questions. Enterprise QA therefore depends not only on document recall, but also on whether implicit organizational relations become usable. The benchmark, data, and code will be made publicly available."
+                    }
+                ]
+            },
+            "bbox": [
+                156,
+                380,
+                842,
+                592
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "1 Introduction"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                115,
+                618,
+                260,
+                634
+            ]
+        },
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/2d6527af22efa3982506f834bac88c47930f66b8216619aec8e6f90521a325fa.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 1: Query-shaped construction versus ENTLORE. Controlled benchmarks materialize documents along a predefined reasoning path (left). ENTLORE reconstructs an audited enterprise world and releases an aligned anonymized corpus; graph programs derive answers and proofs while target relations remain withheld (right)."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                136,
+                658,
+                862,
+                863
+            ]
+        },
+        {
+            "type": "page_aside_text",
+            "content": {
+                "page_aside_text_content": [
+                    {
+                        "type": "text",
+                        "content": "arXiv:2608.10679v1 [cs.IR] 11 Aug 2026"
+                    }
+                ]
+            },
+            "bbox": [
+                30,
+                368,
+                67,
+                783
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "SCITIX"
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                24,
+                277,
+                53
+            ]
+        },
+        {
+            "type": "page_header",
+            "content": {
+                "page_header_content": [
+                    {
+                        "type": "text",
+                        "content": "2026-08-12"
+                    }
+                ]
+            },
+            "bbox": [
+                800,
+                39,
+                882,
+                53
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "1"
+                    }
+                ]
+            },
+            "bbox": [
+                494,
+                944,
+                504,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Enterprise question answering is typically formulated as a retrieval problem: given a user query, the system identifies relevant internal documents and generates an answer grounded in them. In practice, however, many enterprise questions cannot be answered by retrieving an explicitly stated fact. Internal documents are usually produced as by-products of day-to-day work rather than as self-contained descriptions written for future question answering."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                85,
+                885,
+                165
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Recent enterprise QA benchmarks have substantially improved multi-source evaluation through workflow-guided synthesis, project-coherent corpora, and executable event representations (Choubey et al., 2025; Sun et al., 2026; Cohen et al., 2025; Zhang et al., 2026). These approaches provide controlled evidence composition and reliable supervision. In many such constructions, however, evidence is organized around a predefined answer path: each required step is materialized as explicit document content, often distributed across multiple sources. The resulting challenge is to retrieve and compose these stated facts, rather than to recover a target relation absent from the corpus. Routine enterprise sources provide no such explicit chain. The project scope of an activity, the correspondence between an internal alias and a broader initiative, or responsibility for a workstream may remain implicit across heterogeneous records. We call the ability to recover and reason over these relations latent organizational reasoning."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                167,
+                885,
+                328
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "This setting also creates a benchmark-construction problem. A realistic enterprise information need is not necessarily answerable from the released knowledge sources. A structural premise may remain private, the visible records may cover only part of the answer, or the question may admit several organizational interpretations. Directly generating questions from selected documents avoids this uncertainty by tailoring each question to visible evidence, but it cannot establish whether realistic enterprise questions have complete and uniquely defined answers."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                329,
+                885,
+                424
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Rather than shaping documents around a predefined reasoning path, our graph-grounded construction framework first reconstructs an audited enterprise world from heterogeneous private sources and then compiles realistic enterprise question families into executable graph programs (Figure 1). The graph serves as an intermediate semantic layer between questions and fragmented sources. It separates audited base facts from weak associations, certifies organization-specific derived relations, filters out unsupported or ambiguous candidates, computes complete golden answers, and links every premise to a released evidence unit. Question wording is realized with controlled personas and audited for organizational plausibility; the graph determines whether the question is answerable and what constitutes its correct answer."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                426,
+                885,
+                555
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The resulting benchmark is an aligned, anonymized projection of the source enterprise world rather than a corpus synthesized around individual questions. The release preserves the forms, source-derived content, and cross-document information structure of routine enterprise records, while consistently replacing identity-bearing details across documents and questions. Its audited questions reflect realistic enterprise information needs and remain aligned with the released world."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                556,
+                885,
+                636
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Using this framework, we construct ENTLORE, containing 2,341 documents from three enterprise source types and 907 questions. We define a 56-configuration evaluation matrix spanning different models and access paradigms. Access conditions that materialize organizational structure over the released world lead the matrix, plain lexical access remains a strong baseline, and flat dense retrieval and agentic pipelines lose the largest share of their attainable performance on latent organizational questions."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                637,
+                885,
+                718
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Our contributions are as follows:"
+                    }
+                ]
+            },
+            "bbox": [
+                132,
+                719,
+                379,
+                733
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• We formulate implicit enterprise process question answering and identify latent organizational reasoning as a central enterprise QA capability: systems must combine heterogeneous grounded facts to recover organization-specific relations before answering many routine questions."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                750,
+                884,
+                797
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• We construct an audited benchmark truth graph from real enterprise documents, authoritative organizational tables, and operational records, separating native, metadata, heuristic, and certified derived relations."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                813,
+                885,
+                859
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• We introduce ENTLORE, a graph-grounded construction framework that jointly determines answerability, complete golden answers, proof dependencies, and release-grounding status without exposing instance-level gold relations to evaluated systems."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                875,
+                885,
+                922
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "2"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• We construct ENTLORE and evaluate models and knowledge-access systems across explicit lookup, cross-source composition, latent organizational reasoning, evidence acquisition, answer generation, and release fidelity."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                85,
+                887,
+                134
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "2 Related Work"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                145,
+                272,
+                161
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Enterprise and document-grounded QA. Realistic domain QA has moved from curated passages toward large, heterogeneous collections. TechQA uses authentic technical-support questions over a corporate corpus; doc2dial and MultiDoc2Dial ground information-seeking interactions in one or multiple service documents; and EKRAG benchmarks retrieval and answer generation over corporate releases, blogs, and reports (Castelli et al., 2020; Feng et al., 2020, 2021; Yu et al., 2025). WixQA combines real user queries with expert-written answers that can span multiple knowledge-base articles, while EnterpriseRAG-Bench synthesizes coherent company corpora with question-aware evidence structures (Cohen et al., 2025; Sun et al., 2026). Financial-document benchmarks require joint reasoning over prose, tables, and numerical programs, including FinQA, TAT-QA, and MultiHiertt, while ARQA and MuDABench emphasize deterministic verification and aggregation over annual-report collections (Chen et al., 2021; Zhu et al., 2021; Zhao et al., 2022; Wang and Balloccu, 2026; Li et al., 2026). These resources improve domain and corpus realism, but their answers are generally grounded in facts explicitly available in released documents, knowledge bases, or deterministic table and database programs. They therefore primarily evaluate retrieving and composing stated information rather than recovering an organizationspecific target relation absent from the corpus."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                172,
+                887,
+                414
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Multi-hop and executable benchmark construction. HotpotQA, 2WikiMultiHopQA, IIRC, and MuSiQue distribute explicit supporting facts across documents and annotate facts, paths, answerability, or connected reasoning (Yang et al., 2018; Ho et al., 2020; Ferguson et al., 2020; Trivedi et al., 2022). KILT standardizes a shared corpus and provenance, KQA Pro compiles questions from a knowledge base into executable programs, and ProofWriter evaluates rule application with explicit proofs (Petroni et al., 2021; Cao et al., 2022; Tafjord et al., 2021). QO-Bench comes closest to our executable perspective by computing deterministic answers over typed event tuples recovered from corporate text, but targets database-style operations over event attributes rather than organization-specific derived relations (Zhang et al., 2026). Document multi-hop benchmarks thus distribute explicit reasoning steps, while executable benchmarks operate over materialized knowledge, rules, or typed records. Our setting instead reconstructs and certifies organizational relations from routine records, then withholds the target relations from the released evidence."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                423,
+                887,
+                618
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Retrieval-augmented and graph-based access. DPR, RAG, and FiD establish retrieve-and-read or retrieve-and-generate architectures; IRCoT and ReAct interleave retrieval with reasoning or actions (Karpukhin et al., 2020; Lewis et al., 2020; Izacard and Grave, 2021; Trivedi et al., 2023; Yao et al., 2022). RAPTOR organizes long documents hierarchically, Self-RAG adaptively retrieves and critiques, and HippoRAG, G-Retriever, and GraphRAG exploit graph structure; CRAG broadens evaluation across web and knowledge-graph access (Sarthi et al., 2024; Asai et al., 2024; Gutiérrez et al., 2024; He et al., 2024; Edge et al., 2025; Yang et al., 2024). These methods differ in how they retrieve, organize, or navigate released evidence and therefore form complementary evaluation subjects for ENTLORE. They may induce useful structure, but do not by themselves provide benchmark-side certification of which unstated organizational relations are valid, complete, and grounded in released premises. ENTLORE uses a private audited truth graph for that certification while withholding its target relations from evaluated systems. Across these lines, prior work improves corpus realism, reasoning control, or knowledge access; ENTLORE complements them by evaluating whether systems can recover an audited organizational relation that no released document states."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                626,
+                887,
+                852
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3 The ENTLORE Framework"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                112,
+                864,
+                396,
+                879
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "ENTLORE constructs an enterprise QA benchmark in four stages: it reconstructs a provenance-bearing raw graph from routine documents, authoritative records, and operational traces; certifies authorized organization-specific inferences to form a truth graph; projects this world into an anonymized release; and compiles each question into an executable graph program that computes its golden answer and certifies its derivation, completeness, and unique denotation. Routine sources expose only partial observations, so the framework separates the private graph that certifies answers from the released evidence world available to systems. Figure 2 shows the pipeline."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                890,
+                885,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "3"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/33207d85c324730f0ae9ddfc5b338122ecc0f633bb4b2328d4195bb5dbcf3c95.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 2: The ENTLORE pipeline. Heterogeneous enterprise sources are reconstructed into a raw graph. Audited organizational conventions add certified inference edges to form the truth graph. A shared anonymization map produces the released document corpus; private organizational records, certification rules, and the truth graph remain hidden. Typed graph programs compute answers and verify their derivations, completeness, uniqueness, and target absence from released documents."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                124,
+                83,
+                872,
+                357
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                467,
+                885,
+                548
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.1 Audited Truth Graph and Released Evidence World"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                557,
+                569,
+                573
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We reconstruct a real-named raw graph "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "G _ { \\mathrm { r a w } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "over people, projects, modules, campaigns, systems, and customers from routine documents, authoritative organizational records, and operational traces. Each edge retains source provenance. Native relations are grounded in documents or traces; metadata relations come from authoritative records; and heuristic associations support candidate discovery and decoy construction but never independently establish gold truth."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                579,
+                884,
+                658
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "A versioned convention library produces candidate organizational inference edges. A retained edge records its generating rule, supporting dependencies, and human authorization verdict. The resulting truth graph is"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                658,
+                884,
+                708
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "G _ { \\mathrm { t r u t h } } = \\mathrm { a u d i t } ( G _ { \\mathrm { r a w } } ) \\cup \\mathcal { C } ^ { * } ( G _ { \\mathrm { r a w } } ) ,",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/59f96c03536fed52a427159befcad7c1875da6a4ed8211d4a174a4dbd8e574ef.jpg"
+                }
+            },
+            "bbox": [
+                363,
+                722,
+                633,
+                740
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { C } ^ { * }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "denotes certified rule applications rather than an unrestricted closure. A shared anonymization map "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\phi"
+                    },
+                    {
+                        "type": "text",
+                        "content": "produces the released document corpus "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "D _ { \\mathrm { r e l e a s e } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "by consistently renaming private entities and aliases and shifting dates while preserving their relative organization. Evaluated systems access only "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "D _ { \\mathrm { r e l e a s e } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "; private organizational records, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "G _ { \\mathrm { t r u t h } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", certification rules, target edges, and item-level proof certificates remain hidden."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                746,
+                885,
+                827
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.2 Organizational Conventions"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                837,
+                383,
+                853
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Many enterprise questions target relations that no released source states explicitly. We encode the organizational knowledge needed to certify them as private typed conventions that are not released to evaluated systems. For example, containment transfer attributes module-level activity to its parent project:"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                858,
+                885,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "4"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                504,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\begin{array} { r l } & { \\mathsf { w o r k s \\_ o n } ( p , m ) \\circ \\mathsf { c o n t a i n s } ( p r o j , m ) } \\\\ & { \\qquad \\Rightarrow \\mathsf { a t t r i b u t e d \\_ t o } ( p , p r o j ) . } \\end{array}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/212b26eca8ff5793f6f21a8ec4bd59dee4983365ebd03f8e585d6d09c35b3ed4.jpg"
+                }
+            },
+            "bbox": [
+                352,
+                97,
+                643,
+                131
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Additional convention families, their typed preconditions, and applicability conditions are given in Appendix E. Each certified edge retains its rule version and dependency chain."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                137,
+                884,
+                170
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.3 Privacy-Preserving Corpus Projection"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                112,
+                179,
+                460,
+                195
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Each released document is an anonymized transcription of exactly one raw document. The projection preserves genre, local organization, information density, and natural omissions, but introduces no facts from organizational tables, other documents, or certified inference edges. Thus, abbreviated names, omitted project scope, and reliance on prior context remain properties of the released corpus rather than generation artifacts. Shared anonymization preserves cross-source identity and temporal structure; detailed privacy and fidelity controls appear in Appendix D."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                200,
+                885,
+                297
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.4 Question Construction and Capability Decomposition"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                306,
+                583,
+                322
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Each question instance is generated by a typed graph operator that samples an eligible region of "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "G _ { \\mathrm { t r u t h } } ."
+                    },
+                    {
+                        "type": "text",
+                        "content": "executes a query, and records its typed answer, proof dependencies, and associated released evidence units. A language model then realizes the question in a concise employee-like form without receiving the golden answer. Graph operators determine question semantics; language models determine only surface wording."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                326,
+                885,
+                391
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We group questions by how the target answer relation is represented in the released evidence:"
+                    }
+                ]
+            },
+            "bbox": [
+                132,
+                392,
+                825,
+                407
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• L1 — stated lookup. The answer is explicitly stated in one released document."
+                    }
+                ]
+            },
+            "bbox": [
+                134,
+                414,
+                739,
+                431
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• L2 — stated composition. The answer composes facts explicitly stated across multiple released sources."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                441,
+                884,
+                472
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• L3 — latent organizational reasoning. The target relation appears in no released source. It is certified only in "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "G _ { \\mathrm { t r u t h } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and must be recovered from observations distributed across the released document corpus."
+                    }
+                ]
+            },
+            "bbox": [
+                134,
+                482,
+                884,
+                530
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We use these levels as a capability decomposition. L1 evaluates single-source evidence acquisition and answer extraction, while L2 evaluates cross-source composition when all required facts are explicitly stated. Together they provide diagnostic baselines for the prerequisite evidence-use capabilities. L3 builds on these prerequisites while withholding the target relation from the released world; producing a grounded answer therefore additionally requires latent organizational reasoning from organizational structure implicit across the released documents."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                537,
+                885,
+                633
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "For example, one report may state that an engineer worked on a module, while other released documents place that module within a project’s work context. No released source directly attributes the engineer to the project; the truth graph certifies this attribution through the applicable containment-transfer convention."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                634,
+                884,
+                683
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.5 Verification and Golden Answers"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                692,
+                421,
+                707
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Every question is verified before release. The verifier checks that the graph program returns an answer with valid dependencies and certified derivations, that set-valued answers are complete under the relevant closure, and that the program has a unique denotation. For an L3 item, the verifier additionally requires a proof containing a certified organizational derivation, and a release-wide scan verifies that the target relation is absent under every released entity alias."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                713,
+                884,
+                794
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Graph execution establishes correctness and completeness relative to the audited enterprise world. Human semantic review separately verifies that the natural-language question expresses the intended graph program and does not admit a materially different interpretation."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                794,
+                885,
+                841
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Directly stated values are anchored to source spans; relations, sets, and aggregates are computed by typed graph programs. Automated release gates check provenance, replay, target absence, and privacy, followed by human review. Candidates requiring an indispensable private-only premise are routed to the verified-abstention bank. Full gates are listed in Appendix C; scoring rules appear in the Experiments section."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                843,
+                885,
+                922
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "5"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/efbb3c48b2936331e46038720fe63357be871b66359cd285f6cce0d5748780d8.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 1: Overall answer accuracy (%) by level (L1/L2/L3) across 8 models and seven access conditions. LLM Wiki is an LLM-compiled offline wiki over the released corpus; Ω is a gold-document agentic reference that exposes the gold document set through the same tool loop without supplying the target relation. Boldface marks the best deployable condition per model and level; closed-book and Ω are excluded from that comparison."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td rowspan=\"2\">Model</td><td colspan=\"4\">Closed-book</td><td colspan=\"3\">BM25</td><td colspan=\"3\">RAG</td><td colspan=\"3\">Agentic</td><td colspan=\"3\">LLM Wiki</td><td colspan=\"3\">GraphRAG</td><td colspan=\"3\">Oracle</td></tr><tr><td>L1 L2</td><td></td><td>L3</td><td>L1</td><td>L2</td><td>L3</td><td>L1</td><td>L2</td><td>L3</td><td>L1</td><td>L2</td><td>L3</td><td>L1</td><td>L2</td><td></td><td>L3</td><td>L1</td><td>L2</td><td>L3</td><td>L1</td><td>L2</td><td>L3</td></tr><tr><td>GPT-5.4</td><td>1.1 0.0</td><td></td><td>8.3</td><td></td><td>63.0</td><td>51.8</td><td>34.9</td><td>47.9 34.3</td><td>19.1</td><td>49.1</td><td>40.5</td><td>17.5</td><td>62.3</td><td></td><td>52.5</td><td>35.5</td><td>56.7</td><td>51.5</td><td>34.1</td><td>88.9</td><td>95.2</td><td>69.5</td></tr><tr><td>GPT-5.4-mini</td><td>0.0</td><td>0.0</td><td>7.7</td><td></td><td>61.9</td><td>45.1</td><td>33.0</td><td>44.3</td><td>27.9</td><td>18.4</td><td>42.5</td><td>30.4</td><td>14.8</td><td>55.2</td><td>47.1</td><td>26.5</td><td>52.2</td><td>32.9</td><td>28.8</td><td>87.5</td><td>84.9</td><td>62.1</td></tr><tr><td>Claude-S 4.6</td><td>0.9</td><td>0.0</td><td>8.5</td><td>64.0</td><td></td><td>51.7</td><td>36.4</td><td>46.8 32.1</td><td>21.2</td><td>54.7</td><td>35.6</td><td>14.9</td><td>66.7</td><td></td><td>51.5</td><td>34.6</td><td>65.8</td><td>43.7</td><td>38.3</td><td>88.5</td><td>94.5</td><td>76.3</td></tr><tr><td>Qwen3.5-397B</td><td>0.4 0.0</td><td></td><td>7.7</td><td>64.9</td><td></td><td>53.0</td><td>36.2</td><td>48.4 33.2</td><td>19.5</td><td>46.0</td><td>35.0</td><td>9.5</td><td>59.4</td><td></td><td>49.3</td><td>20.4</td><td>65.6</td><td>46.6</td><td>39.6</td><td>85.2</td><td>95.9</td><td>62.5</td></tr><tr><td>GLM-5.2</td><td>0.5 0.0</td><td></td><td>7.7</td><td>60.9</td><td></td><td>51.2</td><td>30.9</td><td>44.1 32.1</td><td>17.4</td><td>51.0</td><td>35.9</td><td>12.3</td><td>67.0</td><td></td><td>53.2</td><td>30.8</td><td>68.5</td><td>46.5</td><td>43.1</td><td>89.2</td><td>95.3</td><td>70.9</td></tr><tr><td>Kimi-K2.6</td><td>0.4</td><td>0.0</td><td>8.1</td><td>63.8</td><td>55.2</td><td>35.1</td><td></td><td>46.4 37.0</td><td>19.5</td><td>46.5</td><td>31.5</td><td>9.4</td><td>57.2</td><td>49.7</td><td></td><td>14.0</td><td>63.4</td><td>40.9</td><td>27.6</td><td>88.2</td><td>94.9</td><td>70.6</td></tr><tr><td>DS-V4-Pro</td><td>0.7</td><td>0.0</td><td>7.7</td><td>61.2</td><td>52.6</td><td>33.8</td><td>46.1</td><td>33.3</td><td>17.7</td><td>48.4</td><td>39.1</td><td>14.3</td><td>64.9</td><td>56.9</td><td></td><td>29.6 66.2</td><td></td><td>48.8</td><td>38.6</td><td>86.4</td><td>95.2</td><td>73.5</td></tr><tr><td>DS-V4-Flash</td><td>1.1</td><td>0.0</td><td>7.7</td><td>59.3</td><td>50.8</td><td>31.8</td><td>45.0</td><td>30.2</td><td>18.4</td><td>49.6</td><td>36.4</td><td>15.1</td><td>61.4</td><td>59.6</td><td></td><td>30.6 67.6</td><td></td><td>51.7</td><td>39.8</td><td>85.6</td><td>94.7</td><td>71.3</td></tr><tr><td>Mean</td><td>0.60.0</td><td></td><td>7.9</td><td></td><td>62.4</td><td>51.4</td><td>34.0</td><td>46.1 32.5</td><td>18.9</td><td>48.5</td><td>35.6</td><td>13.5</td><td>61.7</td><td>52.5</td><td></td><td>27.7</td><td>63.2</td><td>45.3</td><td>36.2</td><td></td><td></td><td>87.4 93.8 69.6</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                115,
+                83,
+                878,
+                217
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4 Experiments"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                310,
+                260,
+                326
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The benchmark levels separate prerequisite evidence use from organizational relation recovery. We therefore first examine whether systems can handle stated evidence, then ask what changes when the target relation is absent from every released document. We ask four questions. RQ1: How well do models and access methods handle stated lookup and cross-source composition? RQ2: When the target relation is absent from every released document, how do access paradigms compare, and where do their differences concentrate? RQ3: What remains unresolved when the gold documents are supplied? RQ4: Does the anonymized release preserve the comparative behavior of the private source world? Each question is answered by one analysis below."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                335,
+                885,
+                466
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.1 Experimental Setup"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                474,
+                319,
+                489
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Benchmark and task. ENTLORE contains 907 questions (469 L1, 204 L2, 234 L3) over 2,341 released documents and an organizational graph of 1,153 entities and 3,784 typed relations. A system receives a question and the released world "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "D _ { \\mathrm { r e l e a s e } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "under its access paradigm; no system receives private organizational records, certification rules, the truth graph, or instance-level gold relations. An L3 answer must therefore be recovered from the released document corpus alone."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                495,
+                885,
+                576
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Systems. We compare five deployable access paradigms, a closed-book floor, and a gold-document oracle reference:"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                585,
+                884,
+                617
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Closed-book: the model receives only the question."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                625,
+                537,
+                642
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• BM25: a lexical retriever ranks the released evidence units; its top-ranked units are supplied in a single answer-generation call. No structure is built."
+                    }
+                ]
+            },
+            "bbox": [
+                134,
+                651,
+                884,
+                683
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Flat RAG: the same units are embedded into one dense retrieval index and supplied in a single generation call (Lewis et al., 2020). No structure is built."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                693,
+                884,
+                726
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Agentic retrieval: the model uses the same dense index, embeddings, evidence units, and top-10 retriever as Flat RAG, but may call search or fetch tools over at most 30 LLM iterations (Yao et al., 2022). Each item is additionally capped at 400,000 cumulative input and output tokens and 900 seconds. Successful early termination requires an explicit answer submission; exhausting any budget without submission is scored as an incorrect answer."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                736,
+                885,
+                816
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• LLM-Wiki: following the llm-wiki paradigm (Karpathy, 2026), we compile the corpus offline into a navigable wiki using an implementation based on Google’s Open Knowledge Format (Google Cloud Platform, 2026), without access to benchmark questions or gold relations. An LLM assigns free-form concept types, descriptions, and tags. Page bodies preserve the released source documents verbatim, cross-links are generated via exact title matching, and generated text is restricted to metadata and directory-level navigation summaries."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                826,
+                887,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "6"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/4c56700be562a4a568ff87c9b185e7edbc5889f973669d57f4cb252cf4e7cb49.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "(c) What Ω cannot buy"
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                129,
+                93,
+                369,
+                296
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/b0d06887ad73accd289b93ab188b00baf967f9e47937af9e50e440eebc46e716.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                373,
+                89,
+                621,
+                287
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/9b16ea7ac70894452e538b2bd85d8a4b6a665ed99c18e302439a46f9a260b176.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 3: Performance across L3 relation families, flat-retriever evidence assembly, and gold-document residuals. (a) L3 accuracy by certified relation family, with BM25, LLM Wiki, GraphRAG, and Ω as the four markers; families are ordered by the GraphRAG-minus-BM25 gap. Flat RAG and agentic retrieval are omitted for legibility; they are the bottom tier in every family. Unclassified collects the L3 operators outside the five certified families. (b) L3 items grouped by whether either evaluated single-pass flat retriever assembled the complete annotated gold-document set, with Ω marked per group. Because the grouping is defined by BM25 and dense-retrieval outcomes, it is used descriptively; Ω shows that the groups also differ in difficulty. (c) The remaining error of the best deployable condition at each level (GraphRAG at L1 and L3, the LLM wiki at L2), split algebraically into the oracle gap "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\Delta _ { \\Omega }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and residual "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\rho _ { \\Omega } = 1 - \\Omega"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", with the residual share printed above each bar."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                640,
+                95,
+                868,
+                280
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Corpus-induced GraphRAG: an entity graph, its typed relations, and community reports are induced offline from the same corpus; the system never consumes the benchmark truth graph (Edge et al., 2025)."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                464,
+                884,
+                512
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Ω—Gold-document agentic reference: the model is given the gold document paths and reads them through the same agentic tool loop. This removes document-search recall errors but retains navigation, interaction, and answer-generation effects. Ω never supplies the target relation; for L3 it remains absent from every document."
+                    }
+                ]
+            },
+            "bbox": [
+                134,
+                521,
+                884,
+                586
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "All deployable systems are constructed from the same released document corpus and receive no benchmark questions or gold relations during indexing. They intentionally differ in indexing, offline compilation, query-time interaction, and computational cost. Flat RAG and agentic retrieval share the same dense index and retrieval backend, isolating the effect of iterative interaction. Agentic retrieval and the LLM wiki use the same agent-loop framework but expose different knowledge substrates, isolating the effect of offline compilation. GraphRAG is a broader system-level structured-access alternative. We report ORACLE-AGENTIC as Ω; the remaining oracle variants, model and protocol details, and per-type scoring rules are in Appendix G."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                593,
+                885,
+                724
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Models and scoring. Models are GPT-5.4, GPT-5.4-mini, Claude-Sonnet-4.6, Qwen3.5-397B-A17B, GLM-5.2, Kimi-K2.6, DeepSeek-V4-Pro, and DeepSeek-V4-Flash. Deterministic answer types are scored programmatically; free-form answers are reduced to atomic claims and scored by a single fixed judge, blind to system identity (judge-replication results in Appendix G)."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                730,
+                885,
+                795
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Metrics. Using Ω as the gold-document reference, we define for system s and level ℓ:"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                799,
+                763,
+                814
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\underbrace { 1 - \\mathrm { A c c } ( m , s , \\ell ) } _ { \\mathrm { t o t a l } } = \\underbrace { \\Omega ( m , \\ell ) - \\mathrm { A c c } ( m , s , \\ell ) } _ { \\Delta _ { \\Omega } : \\mathrm { a c c e s s } \\ : \\mathrm { g a p } } + \\underbrace { 1 - \\Omega ( m , \\ell ) } _ { \\rho _ { \\Omega } : \\mathrm { r e s i d u a l } } .",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/412c1aa566b4ebda20ffa8e6e98e4203324e623dff6d42e097e0a520540e5fbe.jpg"
+                }
+            },
+            "bbox": [
+                300,
+                820,
+                692,
+                852
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "These quantities are diagnostic rather than causal. The oracle gap "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\Delta _ { \\Omega }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "includes differences in finding, organizing, presenting, and navigating evidence. The residual "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\rho _ { \\Omega } = 1 - \\Omega"
+                    },
+                    {
+                        "type": "text",
+                        "content": "contains every error that remains under the gold-document agentic condition. On L3 it is an upper bound on failures of organizational relation recovery, not a pure derivation measure."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                858,
+                885,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "7"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.2 RQ1: Stated-Evidence Performance"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                85,
+                443,
+                99
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Table 1 reports standard-condition performance for all eight answer models and all seven access conditions. All five deployable conditions are built from the same released documents without gold supervision, but intentionally differ in indexing, offline construction, query-time interaction, and compute."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                108,
+                885,
+                155
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "On L1, GraphRAG, BM25, and the LLM wiki average 63.2%, 62.4%, and 61.7%; on L2, the LLM wiki and BM25 lead at 52.5% and 51.4%. Flat RAG and agentic retrieval remain well below this group on both levels. Across all three levels, BM25, GraphRAG, and the LLM wiki form an upper tier at 52.6%, 52.2%, and 50.9% question-weighted accuracy, compared with 36.5% for agentic retrieval and 36.0% for Flat RAG. The ranking is nevertheless model-contingent: Kimi-K2.6 alone performs best with BM25 at all three levels. Closed-book accuracy is 0.6%/0.0%/7.9%, so no condition is carried by parametric memory. These results establish the stated-evidence capabilities that L3 builds on."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                156,
+                885,
+                269
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.3 RQ2: Access Organization for Latent-Relation Questions"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                282,
+                610,
+                298
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "RQ2 compares complete access paradigms on L3 and examines how their performance differences vary across relation families and evidence-assembly conditions."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                305,
+                884,
+                337
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Averaged across the eight answer models, GraphRAG obtains the highest L3 accuracy at 36.2%, followed by BM25 at 34.0%, the LLM wiki at 27.7%, Flat RAG at 18.9%, and agentic retrieval at 13.5%. GraphRAG’s mean advantage over BM25 is modest and model-dependent: it leads for five models, whereas BM25 leads for three. Thus, the induced graph is the strongest average L3 condition in our matrix, but structured access does not uniformly dominate lexical retrieval."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                338,
+                887,
+                419
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The differences are highly heterogeneous across certified relation families (Figure 3a). Department attribution produces the largest separation: GraphRAG reaches 53%, compared with 2% for BM25, on 42 questions for which the gold-document reference reaches 84%. In contrast, containment attribution and hierarchy rollup remain difficult for every deployable condition, with no method exceeding 34% against gold-document references of 66% and 59%. The largest system separations therefore concentrate in particular organizational relations rather than appearing uniformly across L3."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                420,
+                885,
+                517
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "As a secondary diagnostic, Figure 3b groups the 1,872 model-question pairs from the eight answer models and 234 L3 items by whether either evaluated single-pass flat retriever assembled the complete annotated gold-document set. Because this grouping is defined by BM25 and dense-retrieval outcomes, we use it descriptively to localize performance differences rather than as a general measure of retrievability. On the 560 pairs (30%) for which the gold set is assembled, BM25 leads at 54.9%, compared with 48.5% for GraphRAG and 43.3% for the LLM wiki. On the remaining 1,312 pairs (70%), GraphRAG leads at 31.0%, followed by BM25 at 25.1% and the LLM wiki at 21.1%. The gold-document reference also falls from 82% to 64%, showing that the latter group is harder overall. The contrasting orderings localize GraphRAG’s relative strength in the group where the evaluated flat retrievers do not assemble the complete annotated evidence set."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                518,
+                885,
+                678
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Within the shared dense substrate, agentic retrieval trails single-pass Flat RAG both overall on L3 (13.5% versus 18.9%) and in the group where the evaluated flat retrievers do not assemble the complete gold set (8.8% versus 12.9%). In this dense-backed implementation, iterative interaction therefore does not improve single-pass retrieval. With the gold document paths exposed through the same loop, Ω reaches 69.6% on L3, showing that the loop can use supplied evidence substantially better than it acquires evidence under the evaluated dense backend."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                680,
+                885,
+                776
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Among the conditions without materialized structure, BM25 exceeds Flat RAG by 16.2/18.9/15.1 points on L1/L2/L3 and agentic retrieval by 13.9/15.9/20.5 points on the same corpus. On items where both flat retrievers assemble the gold set, the two score 75.7% and 72.1%, and this difference contributes only 8% of their overall gap; the subset that only BM25 assembles contributes 71%. This pattern associates most of the observed gap with document assembly rather than answer performance after both systems deliver the annotated gold set. The concentration of the gap is consistent with lexical matching benefiting from sparse organizational anchors—project aliases, module names, ticket terms, and role labels."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                777,
+                885,
+                890
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Finally, among zero-scored L3 answers, 53% of BM25 outputs explicitly state that the requested fact is not present, compared with 6% for GraphRAG. The rates show that response calibration and abstention behavior are another dimension along which the systems differ. Overall, GraphRAG is strongest on average, with its largest separation from BM25 concentrated in selected relation families and in cases where the evaluated flat retrievers do not assemble the complete gold set. BM25 nevertheless remains competitive, and the comparison concerns complete access systems rather than individual GraphRAG components."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                891,
+                885,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "8"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                110,
+                85,
+                885,
+                166
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.4 RQ3: What Remains with Gold Documents"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                112,
+                187,
+                502,
+                203
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Gold documents close the L1 and L2 gap but leave a third of L3 unanswered. Figure 3c splits the remaining error of the best deployable condition into the oracle gap "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\Delta _ { \\Omega }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and gold-evidence residual "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\rho _ { \\Omega } = 1 - \\Omega"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". With the gold document paths supplied through the agentic interface, 12.6% of L1 and 6.2% of L2 remain unanswered, compared with 30.4% of L3. The L3 residual is 4.9 times the L2 residual and accounts for 47.7% of the remaining error of the best deployable condition. Because Ω retains navigation, interaction, answer extraction, and prompt effects, this residual is not a pure derivation estimate. On L3, where the target relation is absent from every supplied document, it is an upper bound on failures of organizational relation recovery. Appendix F reports a consistent but limited post-hoc check on matched anchor entities."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                215,
+                885,
+                361
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.5 RQ4: Release Fidelity"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                382,
+                334,
+                398
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The anonymised release must preserve the comparative behaviour of the private source world, or the benchmark measures its own projection. Running the same answer model as the main matrix on the 176 aligned items whose wording reverse-renders cleanly, the coarse structure transfers: the three oracle configurations occupy the top three positions in both worlds and the deployable conditions stay below them, with mean "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "| \\Delta | = 0 . 1 2 5"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". The fine ordering among the deployable conditions does not, and the rank statistic says "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathord { \\mathrm { s o } } - \\rho = 0 . 7 1"
+                    },
+                    {
+                        "type": "text",
+                        "content": "over eight configurations does not reach significance (exact permutation "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "p = 0 . 0 6 )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". We therefore read the release as validated for group-level comparison and unproven for fine ranking. The deviation is concentrated in BM25 (−0.28) and GraphRAG (−0.19) while Flat RAG and agentic retrieval are essentially unchanged, consistent with lexical sensitivity to a corpus that is both anonymised and translated. Appendix A gives the per-configuration figure and the extended interpretation."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                410,
+                885,
+                574
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "5 Conclusion"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                594,
+                247,
+                611
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Enterprise QA requires more than retrieving stated facts: routine questions may depend on organizational relations that remain implicit across heterogeneous records. ENTLORE makes this setting evaluable by reconstructing an audited truth graph, certifying organization-specific derivations, and releasing an aligned anonymized document corpus while retaining executable answers and proofs privately. The resulting ENTLORE separates explicit lookup and cross-source composition from latent organizational reasoning without exposing target relations to evaluated systems."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                629,
+                885,
+                726
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Across the same corpus, an induced entity graph and a navigable knowledge base give the strongest deployable results, while plain lexical retrieval outperforms flat dense and agentic retrieval. More importantly, supplying gold document paths still leaves 30.4% of latent organizational questions unanswered. Although this residual is not a pure measure of derivation failure, removing document-search errors does not remove the latent-relation challenge. Release-fidelity analysis supports broad, group-level comparisons while leaving fine-grained rankings tentative. Together, these findings suggest that enterprise QA systems should treat the organization behind the documents as a first-class inference object. Future systems should recover typed relations across sources, preserve provenance through multi-step reasoning, and abstain when an organizational inference is not warranted. By keeping benchmark truth private but its premises auditable, ENTLORE provides a testbed for measuring such progress without reducing it to document recall alone."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                730,
+                887,
+                907
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "9"
+                    }
+                ]
+            },
+            "bbox": [
+                494,
+                944,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "References"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                84,
+                215,
+                99
+            ]
+        },
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Akari Asai, Zeqiu Wu, Yizhong Wang, Avi Sil, and Hannaneh Hajishirzi. 2024. Self-rag: Learning to retrieve, generate, and critique through self-reflection. In International Conference on Learning Representations, volume 2024, pages 9112–9141."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Shulin Cao, Jiaxin Shi, Liangming Pan, Lunyiu Nie, Yutong Xiang, Lei Hou, Juanzi Li, Bin He, and Hanwang Zhang. 2022. KQA pro: A dataset with explicit compositional programs for complex question answering over knowledge base. In Proceedings ofthe 60th Annual Meeting ofthe Associationfor Computational Linguistics (Volume 1: Long Papers), pages 6101–6119, Dublin, Ireland. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Vittorio Castelli, Rishav Chakravarti, Saswati Dana, Anthony Ferritto, Radu Florian, Martin Franz, Dinesh Garg, Dinesh Khandelwal, Scott McCarley, Michael McCawley, Mohamed Nasr, Lin Pan, Cezar Pendus, John Pitrelli, Saurabh Pujar, Salim Roukos, Andrzej Sakrajda, Avi Sil, Rosario Uceda-Sosa, and 2 others. 2020. The TechQA dataset. In Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics, pages 1269–1278, Online. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Zhiyu Chen, Wenhu Chen, Charese Smiley, Sameena Shah, Iana Borova, Dylan Langdon, Reema Moussa, Matt Beane, Ting-Hao Huang, Bryan Routledge, and William Yang Wang. 2021. FinQA: A dataset of numerical reasoning over financial data. In Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing, pages 3697–3711, Online and Punta Cana, Dominican Republic. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Prafulla Kumar Choubey, Xiangyu Peng, Shilpa Bhagavath, Kung-Hsiang Huang, Caiming Xiong, and Chien-Sheng Wu. 2025. Benchmarking deep search over heterogeneous enterprise data. In Proceedings ofthe 2025 Conference on Empirical Methods in Natural Language Processing: Industry Track, pages 501–517, Suzhou (China). Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Dvir Cohen, Lin Burg, Sviatoslav Pykhnivskyi, Hagit Gur, Stanislav Kovynov, Olga Atzmon, and Gilad Barkan. 2025. Wixqa: A multi-dataset benchmark for enterprise retrieval-augmented generation. Preprint, arXiv:2505.08643."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Darren Edge, Ha Trinh, Newman Cheng, Joshua Bradley, Alex Chao, Apurva Mody, Steven Truitt, Dasha Metropolitansky, Robert Osazuwa Ness, and Jonathan Larson. 2025. From local to global: A graph rag approach to query-focused summarization. Preprint, arXiv:2404.16130."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Song Feng, Siva Sankalp Patel, Hui Wan, and Sachindra Joshi. 2021. MultiDoc2Dial: Modeling dialogues grounded in multiple documents. In Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing, pages 6162–6176, Online and Punta Cana, Dominican Republic. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Song Feng, Hui Wan, Chulaka Gunasekara, Siva Patel, Sachindra Joshi, and Luis Lastras. 2020. doc2dial: A goaloriented document-grounded dialogue dataset. In Proceedings ofthe 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP), pages 8118–8128, Online. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "James Ferguson, Matt Gardner, Hannaneh Hajishirzi, Tushar Khot, and Pradeep Dasigi. 2020. IIRC: A dataset of incomplete information reading comprehension questions. In Proceedings ofthe 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP), pages 1137–1147, Online. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Google Cloud Platform. 2026. Open Knowledge Format (OKF) specification. https://github.com/ GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md. Version 0.2, accessed 2026-07-29."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Bernal Jiménez Gutiérrez, Yiheng Shu, Yu Gu, Michihiro Yasunaga, and Yu Su. 2024. Hipporag: Neurobiologically inspired long-term memory for large language models. In Advances in Neural Information Processing Systems, volume 37, pages 59532–59569. Curran Associates, Inc."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Xiaoxin He, Yijun Tian, Yifei Sun, Nitesh V. Chawla, Thomas Laurent, Yann LeCun, Xavier Bresson, and Bryan Hooi. 2024. G-retriever: Retrieval-augmented generation for textual graph understanding and question answering. In Advances in Neural Information Processing Systems, volume 37, pages 132876–132907. Curran Associates, Inc."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Xanh Ho, Anh-Khoa Duong Nguyen, Saku Sugawara, and Akiko Aizawa. 2020. Constructing a multi-hop QA dataset for comprehensive evaluation of reasoning steps. In Proceedings of the 28th International Confer ence on Computational Linguistics, pages 6609–6625, Barcelona, Spain (Online). International Committee on Computational Linguistics."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                115,
+                108,
+                884,
+                148
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "10"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                944,
+                509,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Gautier Izacard and Edouard Grave. 2021. Leveraging passage retrieval with generative models for open domain question answering. In Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics: Main Volume, pages 874–880, Online. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Andrej Karpathy. 2026. LLM Wiki. https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f. GitHub Gist, accessed 2026-07-29."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Vladimir Karpukhin, Barlas Oguz, Sewon Min, Patrick Lewis, Ledell Wu, Sergey Edunov, Danqi Chen, and Wen-tau Yih. 2020. Dense passage retrieval for open-domain question answering. In Proceedings ofthe 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP), pages 6769–6781, Online. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich Küttler, Mike Lewis, Wen-tau Yih, Tim Rocktäschel, Sebastian Riedel, and Douwe Kiela. 2020. Retrieval-augmented generation for knowledge-intensive nlp tasks. In Advances in Neural Information Processing Systems, volume 33, pages 9459–9474. Curran Associates, Inc."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Zhanli Li, Yixuan Cao, Lvzhou Luo, and Ping Luo. 2026. Navigating large-scale document collections: MuDABench for multi-document analytical QA. In Findings ofthe Associationfor Computational Linguistics: ACL 2026, pages 6877–6898, San Diego, California, United States. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Fabio Petroni, Aleksandra Piktus, Angela Fan, Patrick Lewis, Majid Yazdani, Nicola De Cao, James Thorne, Yacine Jernite, Vladimir Karpukhin, Jean Maillard, Vassilis Plachouras, Tim Rocktäschel, and Sebastian Riedel. 2021. KILT: a benchmark for knowledge intensive language tasks. In Proceedings ofthe 2021 Conference ofthe North American Chapter of the Association for Computational Linguistics: Human Language Technologies, pages 2523–2544, Online. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Parth Sarthi, Salman Abdullah, Aditi Tuli, Shubh Khanna, Anna Goldie, and Christopher Manning. 2024. Raptor: Recursive abstractive processing for tree-organized retrieval. In International Conference on Learning Representations, volume 2024, pages 32628–32649."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yuhong Sun, Joachim Rahmfeld, Chris Weaver, Weijia Chen, Roshan Desai, Wenxi Huang, and Mark H. Butler. 2026. Enterpriserag-bench: A rag benchmark for company internal knowledge. Preprint, arXiv:2605.05253."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Oyvind Tafjord, Bhavana Dalvi, and Peter Clark. 2021. ProofWriter: Generating implications, proofs, and abductive statements over natural language. In Findings ofthe Associationfor Computational Linguistics: ACL-IJCNLP 2021, pages 3621–3634, Online. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Harsh Trivedi, Niranjan Balasubramanian, Tushar Khot, and Ashish Sabharwal. 2022. Musique: Multihop questions via single-hop question composition. Transactions ofthe Associationfor Computational Linguistics, 10:539–554."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Harsh Trivedi, Niranjan Balasubramanian, Tushar Khot, and Ashish Sabharwal. 2023. Interleaving retrieval with chain-of-thought reasoning for knowledge-intensive multi-step questions. In Proceedings of the 61st Annual Meeting ofthe Associationfor Computational Linguistics (Volume 1: Long Papers), pages 10014–10037, Toronto, Canada. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Ruilong Wang and Simone Balloccu. 2026. ARQA: A benchmark for grounded table–text QA in enterprise annual reports. In Proceedings of the 19th Conference of the European Chapter of the Association for Computational Linguistics (Volume 5: Industry Track), pages 847–868, Rabat, Morocco. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Xiao Yang, Kai Sun, Hao Xin, Yushi Sun, Nikita Bhalla, Xiangsen Chen, Sajal Choudhary, Rongze Daniel Gui, Ziran Will Jiang, Ziyu Jiang, Lingkun Kong, Brian Moran, Jiaqi Wang, Yifan Ethan Xu, An Yan, Chenyu Yang, Eting Yuan, Hanwen Zha, Nan Tang, and 8 others. 2024. Crag - comprehensive rag benchmark. In Advances in Neural Information Processing Systems, volume 37, pages 10470–10490. Curran Associates, Inc."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Zhilin Yang, Peng Qi, Saizheng Zhang, Yoshua Bengio, William Cohen, Ruslan Salakhutdinov, and Christopher D. Manning. 2018. HotpotQA: A dataset for diverse, explainable multi-hop question answering. In Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing, pages 2369–2380, Brussels, Belgium. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Shunyu Yao, Jeffrey Zhao, Dian Yu, Izhak Shafran, Karthik R Narasimhan, and Yuan Cao. 2022. React: Synergizing reasoning and acting in language models. In NeurIPS 2022 Foundation Models for Decision Making Workshop."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                85,
+                885,
+                127
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "11"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                944,
+                509,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Tan Yu, Wenfei Zhou, Lei Yang, Aaditya Shukla, Meenakshi Madugula, Pritam Gundecha, Nick Burnett, Anbang Xu, Vishal Seth, Tamar Bar, Rama Akkiraju, and Vivienne Zhang. 2025. EKRAG: Benchmark RAG for enterprise knowledge question answering. In Proceedings ofthe 4th International Workshop on Knowledge-Augmented Methods for Natural Language Processing, pages 152–159, Albuquerque, New Mexico, USA. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Mengao Zhang, Xiang Yang, Chang Liu, Tianhui Tan, and Ke wei Huang. 2026. Qo-bench: Diagnosing queryoperator-preserving retrieval over typed event tuples. Preprint, arXiv:2606.04646."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yilun Zhao, Yunxiang Li, Chenying Li, and Rui Zhang. 2022. MultiHiertt: Numerical reasoning over multi hierarchical tabular and textual data. In Proceedings ofthe 60th Annual Meeting ofthe Associationfor Computational Linguistics (Volume 1: Long Papers), pages 6588–6600, Dublin, Ireland. Association for Computational Linguistics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Fengbin Zhu, Wenqiang Lei, Youcheng Huang, Chao Wang, Shuo Zhang, Jiancheng Lv, Fuli Feng, and Tat-Seng Chua. 2021. TAT-QA: A question answering benchmark on a hybrid of tabular and textual content in finance. In Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers), pages 3277–3287, Online. Association for Computational Linguistics."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                115,
+                85,
+                884,
+                152
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "12"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                509,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "A Extended Release-Fidelity Analysis"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                83,
+                457,
+                101
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/759ff8a803f240f6fd8b6ca0bbcceea9d32785567f7f0e39dee6ce0c2e37377b.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 4: Private-to-release fidelity, one line per access configuration over the 176 paired items. Crossings are rank changes and the overall displacement is the absolute shift; the three oracle configurations stay together at the top of both worlds while the deployable ordering reshuffles."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                164,
+                136,
+                835,
+                569
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Figure 4 shows the per-configuration detail. We hypothesize that the BM25 discrepancy reflects lexical sensitivity to the release projection. Chinese tokenization, identifier segmentation, and the standardization of anonymized aliases can substantially alter lexical term overlap without adding or removing an underlying organizational fact. The result therefore does not imply that the release adds semantic information; rather, it shows that lexical retrieval is especially sensitive to the textual surface on which the same organizational information is expressed. We accordingly interpret the release as preserving comparative evaluation behavior rather than as reproducing private-world scores exactly."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                662,
+                885,
+                776
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Two asymmetries bound the audit. First, the private side reuses the indices built once over the private corpus, whereas the released side uses the per-model index builds of the main matrix; the comparison therefore holds the index fixed on one side and not the other, and the retrieval-dependent conditions inherit that difference. Second, the private corpus is the original Chinese text while the released corpus is anonymized and translated, so the BM25 deviation combines anonymization with a language change and should not be read as an anonymization effect alone. The audit covers the 176 of 258 paired items whose wording reverse-renders without a residual pseudonym; the remaining 82 are excluded because a compound pseudonym cannot be inverted cleanly, which is a property of the rendering rather than of any evaluated system."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                777,
+                885,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "13"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                509,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "B Certified Relation Families"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                84,
+                386,
+                99
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The initial release focuses on relation families with explicit typed premises and auditable business semantics:"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                109,
+                884,
+                140
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Containment attribution: document-attested activity on a module combined with documentgrounded module–project context."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                147,
+                885,
+                179
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Hierarchy rollup: certified aggregation from modules to projects or campaigns when every child relation is release-grounded."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                189,
+                884,
+                221
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Personnel bridges: people connecting two projects through separately grounded activities."
+                    }
+                ]
+            },
+            "bbox": [
+                134,
+                229,
+                825,
+                246
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Ticket role semantics: submitter, handler, assignee, owner, and affected party remain distinct typed roles."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                254,
+                884,
+                285
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Department attribution: included only when the project–department premise has predicate-level document support."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                296,
+                882,
+                328
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Aggregation, footprint, handover, and time-window questions are retained as secondary families when their base sets and time attributes are certified. Private-only structural premises produce abstentions. Weak co-occurrence and negative-space assumptions never define positive gold."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                334,
+                885,
+                382
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "C Release Gate Pipeline"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                392,
+                341,
+                409
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Gates run in order, and every rejected candidate is logged with its terminal gate and reason:"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                417,
+                791,
+                434
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Version lock: bind the item to pinned source, graph, corpus, schema, operator, rule, and realizer revisions."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                439,
+                884,
+                470
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Source-class legality: every indispensable premise of an answerable item must be grounded in a released document; private metadata and heuristic associations may not independently establish answerability."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                481,
+                885,
+                529
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Rule certification: verify rule identifier, version, applicability conditions, typed conclusion, and authorization verdict."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                538,
+                884,
+                569
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Predicate-level premise grounding: resolve every premise to a released paragraph; endpoint cooccurrence is insufficient."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                579,
+                885,
+                611
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Public/private separation: route any item with a required private-only premise to verified abstention."
+                    }
+                ]
+            },
+            "bbox": [
+                134,
+                620,
+                885,
+                637
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Target absence: confirm that an L3 target relation is absent from every released source."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                645,
+                801,
+                661
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Exact coverage: compute the minimum set of released evidence units covering the proof."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                670,
+                815,
+                686
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Uniqueness and closure: certify unique denotation or complete set closure under the audited graph scope."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                695,
+                884,
+                726
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Raw faithfulness: trace every released document atom to its private source."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                736,
+                714,
+                751
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Privacy screening: scan released strings and structures for source identifiers and high-risk rare details."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                760,
+                882,
+                793
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Question hygiene: remove answer values, proof-path hints, and semantically ambiguous wording."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                802,
+                878,
+                819
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Raw-to-release replay: verify identical typed program outputs before and after anonymization."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                827,
+                858,
+                843
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Bank-level controls: remove near duplicates and enforce family, source, and answer-type balance."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                852,
+                880,
+                868
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Candidates are routed to answerable L1/L2/L3 when all proof premises are release-grounded, to verified abstention when at least one required premise is private-only, and to rejection when the target, proof, or question semantics is invalid."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                875,
+                885,
+                922
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "14"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                944,
+                509,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "D Privacy and Identity Ledgers"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                112,
+                84,
+                406,
+                101
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Persons, projects, customers, and internal systems are renamed under a shared mapping. Alias families map isomorphically so that source alias-resolution difficulty is preserved. Dates shift by a fixed wholeweek offset to retain reporting cadence. Released documents use stable anonymous identifiers. A private source ledger records raw paths, hashes, per-atom support, metadata origins, identity mappings, and reverse links from source records to questions. The release process includes lexical leakage scanning, rare-event review, and structural sensitivity checks. These checks provide release controls rather than a general guarantee against all possible re-identification."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                110,
+                887,
+                223
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "E Private Convention Library and Proof Certificates"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                233,
+                586,
+                249
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Every private convention entry contains:"
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                259,
+                418,
+                275
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• a rule name and version;"
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                287,
+                337,
+                302
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• typed premise and conclusion schemas;"
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                313,
+                448,
+                329
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• applicability conditions and exclusions;"
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                340,
+                448,
+                355
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• the source class permitted for each premise;"
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                367,
+                478,
+                382
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• examples using generic entities only."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                393,
+                426,
+                409
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The initial library includes containment transfer, hierarchy rollup, selected genre anchoring, and ticket role semantics. A default-scope rule is included only after its exceptions—cross-team support, reviews, meetings, research, and reported team-level progress—are explicitly encoded and audited."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                420,
+                885,
+                468
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Each certified derived relation carries a proof certificate"
+                    }
+                ]
+            },
+            "bbox": [
+                131,
+                469,
+                549,
+                483
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "( r , \\mathrm { r u l e \\_ i d , r u l e \\_ v e r s i o n } , E _ { \\mathrm { p r e m i s e } } , E _ { \\mathrm { r e l e a s e } } , v ) ,",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/143810008b4484e3a5694357b701cac49b1e9a253419154ebb7266f114c90252.jpg"
+                }
+            },
+            "bbox": [
+                322,
+                498,
+                673,
+                514
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where v is the human authorization verdict. A necessity certificate records whether every valid derivation route requires at least one organizational convention."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                526,
+                884,
+                560
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "F Post-hoc Matched Triples"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                570,
+                373,
+                587
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The three levels are separate question populations rather than a paired construction. We therefore use this post-hoc analysis only as a consistency check on the aggregate pattern, not as a controlled cross-level comparison. We identify anchor entities that carry a question at all three levels and whose L1 and L3 items share at least one released evidence document, after filtering abbreviation noise. Twenty-three such triples exist (Figure 5), 21 of them hybrid-source (the target relation requires organizational structure) and only 2 text-grounded, so the text-versus-hybrid contrast is underpowered and we do not draw it."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                596,
+                885,
+                693
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The check agrees with the oracle analysis in the main paper. Holding the anchor entity and the evidence region fixed, accuracy falls from stated composition to latent derivation by "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\Delta _ { 2  3 } = + 0 . 1 9"
+                    },
+                    {
+                        "type": "text",
+                        "content": "per triple on the hybrid arm under the LLM wiki. Running the same triples under Ω reproduces the drop with gold document paths supplied through the same agentic loop "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( 0 . 8 0  0 . 6 5 )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", so it is not explained by document-search recall alone. GraphRAG again inverts it, rising from 0.25 to 0.34: materializing the organizational relation supplies what the latent level withholds."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                693,
+                885,
+                789
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Two caveats bound this appendix. The triples are matched by anchor entity, not by base premise, so an L1 and an L3 item in the same triple need not rest on the same underlying fact; and n=23 is small. A designed premise-matched arm, in which one base premise is escalated across the three levels, would replace this check with a controlled one and is the natural next construction step."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                789,
+                885,
+                854
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "15"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                944,
+                509,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/56e9c118243180b4521c3c5c88de101baddceb5b07c8d75cefc4ad6488cfd5e1.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                127,
+                89,
+                544,
+                269
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/99d1ab1882e73285de764ee7aee7543e0af65fb9088328c8197aa4596ea022df.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 5: Post-hoc matched triples (n=23 anchor entities; accuracy is the per-item mean over the eight answer models). (a) Level slopes under the LLM wiki, corpus-induced GraphRAG, and the gold-document agentic reference Ω. (b) The same "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\Delta _ { 2  3 }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "per triple on the hybrid arm (n=21); bars are the mean, whiskers one standard error, and a positive value means accuracy falls once the relation becomes latent."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                569,
+                84,
+                873,
+                269
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "G Experimental Details"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                365,
+                337,
+                381
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Benchmark statistics. The 907-item released bank contains 469 L1, 204 L2, and 234 L3 questions. Its 62 typed graph operators anchor questions to 1,150 distinct gold documents; an item requires 2.53 gold documents on average and an L1 item requires 1.26. The covered families include explicit lookup, cross-document composition, latent project attribution, organizational aggregation, and incident roles."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                386,
+                884,
+                437
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Access implementations. BM25 ranks released evidence units lexically and supplies the highest-ranked units in one answer-generation call. Flat RAG embeds the same units in one dense index and likewise uses a single generation call. Agentic retrieval uses that same dense index, embeddings, evidence units, and top-10 retriever. It may invoke search or page-fetch tools over at most 30 LLM iterations; search and fetch calls are choices within the iteration budget rather than separately counted actions, and one iteration may contain multiple tool-use blocks. An explicit answer submission is the only successful early termination. Each item is also capped at 400,000 cumulative input and output tokens and 900 seconds of wall time; exceeding any cap without submission produces an error string scored as an incorrect answer. When accumulated tool history exceeds 240,000 characters, earlier results are folded into a summary."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                441,
+                885,
+                537
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The LLM wiki compiles the corpus offline into a navigable collection with free-form concept types, descriptions, and tags. Page bodies are lossless copies of released source documents. Cross-links are generated through exact title matching, while generated text is limited to metadata and directory-level navigation summaries. The pipeline is fully automatic and receives no benchmark questions, truth-graph edges, or gold relations. GraphRAG induces an entity graph, typed relations, and community reports offline from the same released corpus. Flat RAG and agentic retrieval share the retrieval backend; agentic retrieval and the LLM wiki share the agent-loop framework but expose different knowledge substrates."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                536,
+                885,
+                609
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Oracle variants. Four oracle forms vary only how the gold evidence is presented: canonical paragraphs (LC-ORACLE), full documents in one context (ORACLE-RAG), document paths read page by page under a tool loop (ORACLE-AGENTIC), and the same documents routed through the compiled knowledge base (ORACLE-OKF). They diagnose paragraph localization, document recall, navigation, and index-chain quality and pair with their deployable counterparts. The main paper reports ORACLE-AGENTIC as Ω: it exposes the gold document paths but retains the agentic navigation and interaction layer. No oracle supplies the target relation."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                613,
+                885,
+                688
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Models and protocol. The evaluation covers eight models from the GPT-5.4, Claude, Qwen, GLM, Kimi, and DeepSeek families. Exact versions and fixed context, output, reasoning, and tool-use budgets are recorded in the versioned evaluation manifest. All access and generation settings were fixed before the main evaluation; no development-time hyperparameter search was conducted. Retrieval and compilation run once per released world. Single-turn configurations run once; agentic systems are additionally repeated on a stratified subset to measure trajectory variance. The model-provider APIs do not expose a common, reproducible seed control, so exact model and decoding settings are retained in the manifest instead. Question-level bootstrap intervals quantify uncertainty, and infrastructure failures are reported separately from model errors."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                692,
+                885,
+                778
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Code, data, and configuration availability. The Code and Data Supplement contains the complete released corpus and question bank; preprocessing and benchmark-construction code; implementations of the evaluated access conditions; prompts, scoring, analysis, and figure code; the versioned evaluation manifest; and machine-readable outputs needed to reproduce the reported aggregates. Upon publication, these artifacts will be released under the MIT License."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                782,
+                885,
+                833
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Reasoning-trace setting and the empty-completion problem. In a first pass with each model’s reasoning trace enabled, the five open-weight models returned an empty completion on part of the closed-book, BM25, and Flat RAG conditions, and the scorer counted every empty string as an incorrect answer. The effect was large enough to distort a row rather than jitter it: Qwen3.5-397B-A17B alone produced 1,228 empty completions, which depressed its BM25 accuracy by roughly 19 points on L1 and 21 on L2. We therefore rerun those three conditions in full, for all five open-weight models, with the reasoning trace disabled, and the reported table uses the rerun for exactly those cells. Every other cell—the agentic, LLM Wiki, GraphRAG, and Ω columns, and all three rows of GPT-5.4, GPT-5.4-mini, and Claude-Sonnet-4.6, none of which produced empty completions—comes from the reasoning-enabled pass. The mixture is therefore per condition and per model rather than global, and it is the reason the closed-book, BM25, and Flat RAG columns should not be read as a reasoning-enabled measurement for the open-weight models."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                837,
+                885,
+                922
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "16"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                944,
+                509,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                86,
+                884,
+                124
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Score distribution at L3. L3 scoring is close to all-or-nothing rather than graded: under GraphRAG, 49% of L3 items score exactly zero and 23% score exactly one, and partial credit is almost entirely confined to set-valued answers. An overall accuracy of 0.36 at L3 therefore does not describe a system that is partly right on most items; it describes one that is completely wrong on about half and completely right on about a quarter."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                129,
+                885,
+                179
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "A conflict between the oracle instruction and the latent level. The oracle prompt instructs the model to use only what it has read and not to assert facts absent from the supplied pages. At L1 and L2 that instruction is harmless, because the answer is stated in those pages. At L3 it is in tension with the task, whose answer is by construction stated nowhere. The tension is measurable but bounded: among L3 items the oracle scores zero on, 19.5% of the answers contain an explicit statement that the fact is not present, against 4.0% at L1 and 3.3% at L2. Roughly a fifth of the L3 gold-evidence residual is therefore attributable to instruction-following rather than to inability to derive, and the residual should be read as an upper bound on organizational relation-recovery failure."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                184,
+                884,
+                268
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The tension is total for one answer type. Eight L3 items ask for an integer count over a latently derived set (PROJECT_HEADCOUNT); every model scores zero on them under every condition, and the oracle recovers one item out of sixty-four model-item pairs. Inspection shows the failure is not arithmetic: models enumerate the contributing people correctly and then decline to state a total because no document states one. One of these items also carries ambiguous wording that several models read as asking about a population rather than a project roster. These eight items measure the interaction between the instruction and the level rather than the capability, and should be reworded or excluded before the bank is frozen."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                267,
+                885,
+                340
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Answer judging. Free-form and atomic-claim scoring uses a single fixed judge, Claude Opus 4.8, applied identically to every model and access condition; the judge never sees which system produced an answer. Deterministic answer types (entity, set, count, ordered) are scored programmatically and never reach the judge. Replications with additional judge models are reported in the extended judging analysis; they leave the reported orderings and conclusions unchanged."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                344,
+                885,
+                395
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Type-specific scoring. Entity answers use alias-normalized exact match. Set answers use precision, recall, F<sub>1</sub>, and exact-set accuracy. Integer counts require exact match; tolerance applies only to explicitly continuous quantities. Ordered answers use exact sequence accuracy and Kendall’s τ. Free-form answers are reduced to typed atomic claims and scored by entailment against the graph answer and proof, with unsupported additions counted as errors. Evidence precision and recall use paragraph and metadata-record anchors."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                399,
+                885,
+                461
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "17"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                509,
+                956
+            ]
+        }
+    ]
+]

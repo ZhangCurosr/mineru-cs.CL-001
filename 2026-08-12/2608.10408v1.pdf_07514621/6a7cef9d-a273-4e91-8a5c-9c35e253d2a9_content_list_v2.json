@@ -1,0 +1,2642 @@
+[
+    [
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/c9b35e279ed3f60701dc3d0d61546a8c38c7832e10d3b2ddc14630ad268fd2be.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                512,
+                248,
+                880,
+                392
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "VisEditBench: Can Vision-Language Models Edit Visualization Code from Multimodal Feedback?"
+                    }
+                ],
+                "level": 1
+            },
+            "bbox": [
+                115,
+                89,
+                882,
+                129
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Mizanur Rahman<sup>‡</sup> *, Arshia Azimlu<sup>‡</sup> <sup>†</sup>, Shadikur Rahman<sup>‡†</sup>, Md Tahmid Rahman Laskar<sup>‡†</sup>, Amran Bhuiyan<sup>‡†</sup>, Shafiq Joty<sup>$,¶</sup>, Enamul Hoque Prince<sup>‡</sup>"
+                    }
+                ]
+            },
+            "bbox": [
+                186,
+                145,
+                810,
+                196
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>‡</sup>York University <sup>$</sup>Nanyang Technological University <sup>¶</sup>Salesforce AI Research"
+                    }
+                ]
+            },
+            "bbox": [
+                242,
+                199,
+                756,
+                234
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Abstract"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                262,
+                260,
+                341,
+                275
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Vision-language models (VLMs) have shown strong capabilities in generating visualization code from textual or visual specifications. How ever, real-world visualization authoring is inher ently iterative: users frequently revise existing visualizations to repair flawed charts or adapt them to desired styles. Existing benchmarks primarily evaluate generation from scratch, leaving visualization code editing from mul timodal feedback largely unexplored. We in troduce VisEditBench, a benchmark of 1,395 human-annotated visualization code-editing tasks grounded in realistic visualization work flows and failure cases. VisEditBench covers two practical settings: feedback-guided re pair, where models revise visualization code using buggy or marked charts together with tex tual feedback, and reference-guided restyling, where models modify code to match a tar get chart image. Evaluating 20 state-of-theart VLMs reveals that visualization code edit ing remains challenging: Claude-4.6-Sonnet achieves the best overall pass rate of 74.46%, while most open-source models remain below 50%. Performance is particularly weak on visu ally grounded style adaptation, where Claude-4.6-Sonnet achieves only 55.71%. To establish a strong baseline, we further propose VisEditAgent, a render-grounded editing framework that iteratively generates, executes, validates, and refines candidate edits. Built on GPT-4o, VisEditAgent improves overall pass rate from 55.75% to 67.99%, demonstrating the importance of render-grounded feedback for faithful visualization editing. We will release VisEdit Bench at https://github.com/vis-nlp/ VisEditBench."
+                    }
+                ]
+            },
+            "bbox": [
+                141,
+                285,
+                462,
+                814
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "1 Introduction"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                828,
+                260,
+                845
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Data visualizations play a central role in modern data analysis and communication, enabling data"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                854,
+                489,
+                888
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Figure 1: Overview of a VisEditBench task. Given visualization code, visual feedback or a reference chart, and a language instruction, the model must generate revised executable code that repairs or restyles the visualization while preserving the underlying data semantics."
+                    }
+                ]
+            },
+            "bbox": [
+                509,
+                395,
+                884,
+                468
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "scientists, business analysts, journalists, policymakers, and researchers to explore patterns, communicate insights, and support decision-making across domains (Hoque and Islam, 2024; Rahman et al., 2025a). To support increasingly complex visualization workflows, recent advances in vision-language models (VLMs) have driven rapid progress in automated visualization, including chart generation from natural-language instructions (Rahman et al., 2025b; Maddigan and Susnjak, 2023) and visualization code reconstruction from chart images (Yang et al., 2025; Wu et al., 2025)."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                474,
+                887,
+                669
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Yet real-world visualization authoring rarely ends with the first generated chart. Even when models produce executable visualizations, the outputs often fail to fully match user intent, visual preferences, accessibility requirements, or publication constraints (Rahman et al., 2025b; Chen et al., 2024). As a result, users frequently inspect rendered charts, revise the underlying code, and rerender the output through iterative refinement. In many workflows, charts must also be adapted to match preferred visual styles or reference designs, since default visualizations are often stylistically homogeneous and poorly aligned with communicative goals. Figure 1 illustrates a typical repair workflow: although the user already has visualization code and a rendered chart, the output remains visually flawed; labels overlap, annotations obscure important regions, and visual emphasis is misplaced. Even seemingly minor edits can trigger cascading layout and styling changes, requiring repeated rounds of debugging and visual inspection. This repair-and-restyling cycle is one of the most common and time-consuming bottlenecks in practical visualization workflows (Harper and Agrawala, 2017). Unlike one-shot generation, these workflows require localized edits that preserve data semantics, layout structure, encodings, and analytical meaning while modifying only the desired visual properties. Visualization authoring is therefore fundamentally an iterative multimodal editing problem. Solving this problem requires grounded multimodal reasoning. A model must determine what is visually wrong, which code regions should change, how the rendered chart should evolve, and which aspects of the original visualization must remain preserved. This demands substantially richer reasoning than standard code generation or chart reconstruction."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                680,
+                889,
+                923
+            ]
+        },
+        {
+            "type": "page_aside_text",
+            "content": {
+                "page_aside_text_content": [
+                    {
+                        "type": "text",
+                        "content": "arXiv:2608.10408v1 [cs.CL] 11 Aug 2026"
+                    }
+                ]
+            },
+            "bbox": [
+                30,
+                362,
+                67,
+                783
+            ]
+        },
+        {
+            "type": "page_footnote",
+            "content": {
+                "page_footnote_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>*</sup>Corresponding authors: {mizanurr,enamulh}@yorku.ca <sup>†</sup>These authors contributed equally."
+                    }
+                ]
+            },
+            "bbox": [
+                139,
+                895,
+                487,
+                922
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                85,
+                492,
+                455
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Despite rapid progress in VLMs, existing benchmarks largely overlook this setting. Text-tovisualization benchmarks mainly evaluate chart generation from natural-language queries or data tables (Luo et al., 2021; Liu et al., 2021; Rahman et al., 2025b; Chen et al., 2024), while chartto-code benchmarks evaluate code reconstruction from chart images (Yang et al., 2025; Wu et al., 2025). Neither captures a common workflow where users already have visualization code and want models to iteratively edit rendered visualizations using multimodal feedback or reference charts. More general multimodal software-engineering benchmarks (Yang et al., 2024b) study visual bug fixing, but do not address visualization-specific challenges such as repairing misleading encodings, resolving cluttered layouts, or matching reference chart styles while preserving data semantics."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                455,
+                490,
+                746
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "To address this gap, we introduce VisEditBench, a benchmark for evaluating visualization code editing from multimodal feedback. Each task provides existing visualization code, a rendered chart, and a natural-language editing instruction, and requires the model to generate revised executable code that produces the desired visualization. VisEditBench supports two practical editing settings. In feedbackguided repair, models receive buggy or humanmarked charts together with textual feedback and must repair the visualization while preserving its intended meaning (Fig. 1). In reference-guided restyling, models receive a target chart image and must adapt the original visualization to match the reference style without altering the underlying data semantics. Across these settings, VisEditBench contains 1,395 human-annotated tasks grounded in realistic visualization issues collected from Stack Overflow, Matplotlib and Vega-Lite issue reports, and diverse real-world visualization datasets."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                745,
+                490,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                85,
+                885,
+                230
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Beyond executability, successful visualization editing requires edits that are visually faithful, semantically precise, and effective. To support finegrained analysis, VisEditBench introduces a taxonomy of eight visualization-editing intents spanning correctness repair, readability improvement, style adaptation, consistency harmonization, robustness improvement, structural transformation, constraint satisfaction, and style-aware repair (Fig. 3). Together, these settings capture realistic visualization workflows requiring visual reasoning, code understanding, and multimodal grounding."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                230,
+                887,
+                423
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We evaluate 20 state-of-the-art VLMs on VisEditBench in a zero-shot setting using executability, task accuracy, readability and clarity, visual quality, visual similarity, and final pass rate. Results show that visualization editing remains challenging: Claude-4.6-Sonnet achieves the best overall pass rate at 74.46%, while most open-source models remain below 50%. Performance is particularly weak on visually grounded style adaptation, where even Claude-4.6-Sonnet achieves only 55.71%. To further study how rendering feedback can improve editing, we introduce VisEditAgent, a render-grounded baseline, that generates multiple candidate revisions, executes and renders them, visually validates the outputs, and iteratively refines the selected solution. Using GPT-4o as the base model, VisEditAgent improves overall pass rate from 55.75% to 67.99%, demonstrating that rendergrounded feedback is critical for visually faithful visualization editing."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                423,
+                887,
+                745
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In summary, our contributions include: (i) VisEditBench, a benchmark of 1,395 humanannotated visualization code-editing tasks covering feedback-guided repair and reference-guided restyling across diverse visualization-editing intents; (ii) a structured evaluation framework measuring executability, task accuracy, chart readability and clarity, visual quality, visual similarity, and final pass rate; (iii) zero-shot evaluations of 20 state-of-the-art VLMs, revealing major limitations in executable and visually faithful chart editing; and (iv) VisEditAgent, a render-grounded baseline that improves visualization editing through execution feedback, visual validation, and iterative refinement."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                745,
+                887,
+                923
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                84,
+                489,
+                149
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "2 Related Work"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                164,
+                272,
+                179
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Text-to-Visualization Existing visualization benchmarks and systems have primarily studied how models generate (Rahman et al., 2025b), understand (Hoque et al., 2022), or reconstruct charts (Wu et al., 2025) from natural-language queries, tabular data, chart images, and analytical intents (Tab. 6). WikiSQL (Zhong et al., 2017) supports natural-language-to-SQL parsing over tables, while nvBench (Luo et al., 2021) extends this setting to large-scale cross-domain NL2VIS by synthesizing paired natural-language queries and visualization specifications from NL-to-SQL benchmarks. Later systems explore visualization recommendation, specification generation, and code generation from free-form analytical queries (Liu et al., 2021; Dibia and Demiralp, 2019; Narechania et al., 2020; Song et al., 2022; Maddigan and Susnjak, 2023). Recent LLM-based benchmarks, including Text2Vis (Rahman et al., 2025b) and VisEval (Chen et al., 2024), evaluate whether large language models can generate visualizations across diverse real-world datasets. ChartBench (Xu et al., 2023) focuses on chart comprehension and visual reasoning, while ChartLlama (Han et al., 2023), ChartMimic (Yang et al., 2025), and Plot2Code (Wu et al., 2025) test chart reasoning or visualization-code reconstruction from chart images."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                191,
+                490,
+                643
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "However, existing benchmarks do not evaluate iterative visualization editing from multimodal feedback, where users revise existing visualization code using rendered feedback or reference charts while preserving data semantics (Tab. 6). VisEditBench addresses this gap by evaluating visualization code editing from multimodal feedback through feedback-guided repair and referenceguided restyling tasks."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                644,
+                490,
+                789
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Multimodal Code Generation. Recent work has extended code generation to multimodal settings, where models generate or edit code from visual inputs (Li et al., 2024; Si et al., 2025; Wu et al., 2025). Early UI-to-code systems translated screenshots or sketches into executable interfaces (Beltramelli, 2018; Robinson, 2019), while later work improved screenshot-to-code generation using vision-code architectures and visual feedback (Soselia et al., 2023). More recent benchmarks study visually grounded programming tasks, including diagram-based programming (MMCode (Li et al., 2024)), screenshotto-webpage generation (Design2Code (Si et al., 2025)), SVG editing (SVGEditBench (Nishina and Matsui, 2024)), and visual software bug fixing (SWE-bench Multimodal (Yang et al., 2024b)). In contrast, VisEditBench focuses on editing and restyling existing visualization code from multimodal feedback while preserving data semantics."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                794,
+                490,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                85,
+                887,
+                279
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3 VISEDITBENCH"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                292,
+                690,
+                309
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We introduce VisEditBench, a benchmark of 1,395 human-annotated visualization code-editing tasks from multimodal feedback."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                313,
+                885,
+                362
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.1 Data Collection"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                366,
+                680,
+                381
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We designed VisEditBench to capture realistic visualization editing workflows rather than synthetic chart-generation prompts. To ensure both realism and diversity, we combine two complementary sources: real user-reported visualization issues and model-generated chart failures on real-world datasets. Fig. 2 illustrates the collection process."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                388,
+                887,
+                501
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "First, we manually collected 120 real visualization-editing cases from Stack Overflow and Matplotlib/Vega-Lite GitHub issue discussions. We retained only examples containing a user-reported issue, visualization code, and a corresponding rendered buggy chart with clear visual problems requiring repair, improvement, or restyling. These naturally occurring cases include cluttered layouts, unreadable labels, malformed axes, misleading encodings, annotation failures, broken legends, and rendering inconsistencies."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                502,
+                887,
+                680
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Second, we use the Text2Vis benchmark (Rahman et al., 2025b), whose tables and queries are drawn from realistic data sources such as Statista (Statista, 2024), Pew Research (Pew, 2024), Our World in Data (OWID, 2024), and OECD (OECD, 2024). We reran both frontier and open-source models on Text2Vis queries, executed the generated code, and manually inspected the rendered charts to identify visual, semantic, and presentation failures. We retained chart-code pairs only when the rendered output exhibited clear visualization errors or imperfect visual design, such as layout problems, incorrect encodings, unreadable labels, or poor presentation quality. These retained cases therefore reflect realistic examples where current models fail in zero-shot visualization generation. This process substantially increases diversity beyond naturally reported bugs, covering not only correctness repair, but also style adaptation, consistency harmonization, robustness improvement, structural transformation, and style-aware repair."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                681,
+                887,
+                923
+            ]
+        }
+    ],
+    [
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/2f5f08c6afd7b727e4da165afd72ed27c44e47bc09d8cbf31ea1c957b5c748cf.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                307,
+                406,
+                502,
+                539
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/811a16c7a2dddb5c9db4218a287da120b0575eb1fbc61edab461131f28514d0a.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                115,
+                405,
+                307,
+                538
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/9b9811dc5f1eed0c46ed0886760e9ccf9d2feae62a409d76135dc9b252758661.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                704,
+                449,
+                877,
+                542
+            ]
+        },
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/18a3bf2415946592b09b2c9d8020f2dd053c5500ccea70b7e1cbdb06a24f6437.jpg"
+                },
+                "image_caption": [],
+                "image_footnote": []
+            },
+            "bbox": [
+                114,
+                266,
+                882,
+                541
+            ]
+        },
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/9e7844fbcffe56afbf7eaa92680247cebe9b6a89fd692ef775a3cfdb0ddd3ad2.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 2: Overview of the VisEditBench construction pipeline. We collect real visualization issues and real-world chart/data examples, construct multimodal editing tasks, cross-review candidates for quality, and retain the final benchmark with metadata on editing intents, problem types, chart types, and visualization libraries."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                121,
+                55,
+                870,
+                221
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/02b1636210b65fff0516c918ef10df03178dd2d26a53ce51d511e02abfd1a896.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                117,
+                277,
+                305,
+                404
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/7398091e2a5d5da1a11018fa984c870b5fd6fc199335a4af7e4ca43d30fa5069.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                309,
+                304,
+                495,
+                404
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/546136da49c24313b5fc948845ed51e37a2cd5ae0031fdfbd7112f7601d49cba.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 3: Examples from VisEditBench across eight editing intents. Each task pairs input visualization code with a buggy, human-marked, or reference chart image and a natural-language instruction; the model must output revised executable code that renders the desired visualization."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                502,
+                472,
+                689,
+                541
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                595,
+                492,
+                693
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.2 Annotation and Quality Control"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                112,
+                706,
+                415,
+                722
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "From these sources, four annotators created an initial pool of 1,648 candidate editing tasks. For each task, annotators wrote a natural-language editing instruction and assigned metadata including editing intent, problem type, visualization library, and chart type. Each candidate was then independently cross-reviewed by another annotator to verify that the task was visually grounded, realistic, clearly specified, and solvable through code edits. A candidate was retained only when the reviewer judged that the code, chart image, instruction, and metadata together formed a valid editing task with an observable visual target and a feasible code-level solution."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                728,
+                492,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                595,
+                884,
+                627
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "To measure annotation reliability, we computed inter-annotator agreement on the binary accept/reject decision across all candidates. Annotators agreed on 84.65% of cases, indicating strong consensus on what constitutes a valid visualization editing task. We removed the remaining examples because they were ambiguous, insufficiently grounded in the image, duplicated, unrealistic, underspecified, or not clearly solvable through visualization code editing. This filtering process resulted in the final VisEditBench dataset of 1,395 high-quality tasks. Each retained instance contains existing visualization code, a chart image, textual feedback or editing instruction, visual feedback or a reference chart, and structured metadata for fine-grained analysis."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                664,
+                887,
+                923
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/d60cb7436d047e77adb607e879a0555fa4bb98b3e9ba05275976f64ed32a51cf.jpg"
+                },
+                "table_caption": [],
+                "table_footnote": [
+                    {
+                        "type": "text",
+                        "content": "Table 1: Statistics and diversity of VisEditBench. Counts and percentages are computed over the final 1,395 examples."
+                    }
+                ],
+                "html": "<table><tr><td colspan=\"8\">Editing Intent (Count / %)</td><td colspan=\"6\">Problem Type (Count / %)</td></tr><tr><td>Correct. Repair</td><td>Quality Improv.</td><td>Robust. Gen.</td><td>Style Adapt.</td><td>Refactor/ Transform.</td><td>Consistency Harmon.</td><td>Constraint Satis.</td><td>Style-aware Repair</td><td>Layout &amp; Geometry</td><td>Annotation &amp; Labeling</td><td></td><td>Encoding &amp; Mapping</td><td>Data Transform.</td><td>Other</td></tr><tr><td>529 / 37.9</td><td>446 /32.0</td><td>116/8.3</td><td>70/5.0</td><td>63 / 4.5</td><td>59 / 4.2</td><td>52/3.7</td><td>49 / 3.5</td><td>802 / 57.5</td><td>348 / 24.9</td><td></td><td>156/11.2</td><td>63 / 4.5</td><td>26 /1.9</td></tr><tr><td colspan=\"2\">Cause Type (Count / %)</td><td></td><td></td><td>Complexity (Count / %)</td><td></td><td></td><td></td><td>Chart Type (Count / %)</td><td></td><td></td><td></td><td>Library (Count / %)</td><td></td></tr><tr><td>Multi-cause</td><td></td><td>Single-cause</td><td> $\\operatorname { E a s y }$ </td><td>Medium</td><td>Hard</td><td>Bar</td><td></td><td>Line</td><td>Boxplot</td><td>Scatter</td><td>Other</td><td>Matplotlib</td><td>Vega-Lite</td></tr><tr><td colspan=\"2\">797/57.1</td><td>598 / 42.9</td><td>516 / 37.0</td><td>498 /35.7</td><td>381 / 27.3</td><td></td><td>679/48.7</td><td>522/37.4</td><td>54 /3.9</td><td>52 /3.7</td><td>88 / 6.3</td><td>1156 / 82.9</td><td>239 / 17.1</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                121,
+                51,
+                875,
+                158
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.3 Dataset Diversity"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                183,
+                297,
+                198
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Table 1 summarizes the diversity of VisEditBench. The dataset spans eight editing intents, with Correctness Repair (37.9%) and Quality Improvement (32.0%) forming the largest categories, reflecting the prevalence of misleading, cluttered, or visually ineffective charts in real workflows. VisEditBench also covers diverse problem types and difficulty levels. Layout & Geometry issues are most common, followed by Annotation & Labeling, Encoding & Mapping, and Data Transformation. These categories include failures such as overlapping labels, malformed axes, incorrect encodings, broken annotations, and data-processing errors. Importantly, 57.1% of tasks are multi-cause, requiring coordinated edits across multiple chart components rather than isolated fixes. The dataset further spans varying levels of complexity, including a substantial number of challenging visually grounded editing problems (27.3% hard problems). Difficulty labels were assigned using GPT-5 under a fixed rubric and then manually reviewed and verified by human annotators (classification prompt is in Figure 7)."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                203,
+                490,
+                558
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "VisEditBench spans diverse chart types, editing behaviors, and visualization paradigms. Bar and line charts are the most common chart families, reflecting their prevalence in practical visualization workflows, while the benchmark also includes scatter plots, boxplots, heatmaps, treemaps, histograms, waterfall charts, tables, and composite visualizations. The benchmark further covers both imperative and declarative visualization paradigms through 1,156 Matplotlib examples and 239 Vega-Lite examples. Matplotlib tasks often require procedural edits involving layout control, annotation placement, and axis formatting, whereas Vega-Lite tasks require modifying declarative specifications such as encodings, scales, legends, layers, and configuration fields."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                558,
+                492,
+                816
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4 Methodology"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                827,
+                263,
+                845
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.1 Task Formulation"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                853,
+                304,
+                869
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We formulate visualization code editing as a multimodal code revision task. Each example is defined as "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "x _ { i } = ( c _ { i } , I _ { i } , u _ { i } , c _ { i } ^ { \\prime } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "c _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is the input visualization code, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "I _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is a rendered chart image, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "u _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is a natural-language editing instruction, and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "c _ { i } ^ { \\prime }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is the revised visualization code. Given "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( c _ { i } , I _ { i } , u _ { i } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", the model must generate executable code "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "c _ { i } ^ { \\prime }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "that produces the desired visualization while preserving the relevant data semantics."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                873,
+                490,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                183,
+                885,
+                279
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "VisEditBench supports two practical editing settings. In feedback-guided repair, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "I _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "contains a flawed or human-marked chart, and the model must repair the visualization according to the provided feedback. In reference-guided restyling, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "I _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "serves as a target chart or style reference, and the model must revise the original visualization to visually align with the reference while preserving its underlying analytical meaning."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                280,
+                887,
+                425
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.2 Model Inference"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                429,
+                687,
+                444
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We evaluate 20 state-of-the-art VLMs spanning both closed-source and open-source model families. Closed-source models include multimodal systems from the GPT, Gemini, and Claude families (OpenAI, 2024; Team, 2024), while open-source models cover recent VLM and code-oriented families including Qwen, InternVL, LLaVA, and Gemma (Yang et al., 2024a; Jiang et al., 2023; Grattafiori et al., 2024; DeepSeek-AI et al., 2024; Guo et al., 2025; Roziere et al., 2023). This setup enables direct comparison between frontier proprietary systems and deployable open-source alternatives under a unified visualization editing protocol.We use a fixed decoding configuration for all models to support reproducibility. Full inference and evaluation parameters are provided in App. A.1 (Tab. 10)."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                451,
+                887,
+                711
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.3 VisEditAgent"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                722,
+                665,
+                739
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "While zero-shot prompting can produce plausible visualization edits, real-world visualization authoring is inherently iterative (Munzner, 2014): authors repeatedly modify code, render charts, inspect the output, and refine the visualization through successive feedback loops. This process is especially important for visually grounded edits involving layout, annotations, encodings, and style, where small code changes can trigger cascading visual errors or distort underlying data semantics. Motivated by this workflow, we introduce VisEditAgent, a strong render-grounded baseline for visualization code editing. Rather than relying on a single-pass response, VisEditAgent iteratively generates, renders, validates, and refines candidate edits using execution and visual feedback (Fig. 4)."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                745,
+                887,
+                923
+            ]
+        }
+    ],
+    [
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/83a468c30d3d64d59ad9385bd1af73e8d2659276a95e132f931a592e5c34f7d3.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 4: VisEditAgent framework. Given visualization code, a buggy, human-marked, or reference chart image, an instruction, and an edit intent, VisEditAgent plans the edit, generates candidate revisions, executes and renders them, validates the outputs, selects the best candidate, and refines it through iterative refinement rounds."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                115,
+                49,
+                880,
+                151
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                206,
+                489,
+                286
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "(1) Edit Planning. Given the input code, chart image, instruction, and editing intent, the framework first identifies the likely visual issue, relevant code regions, and required modification strategy. This stage grounds the edit in both the rendered visualization and the underlying code structure."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                287,
+                489,
+                382
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "(2) Candidate Generation. VisEditAgent generates multiple candidate code edits representing different implementations of the requested modification. Each candidate is then executed and rendered into a chart image, enabling the framework to jointly evaluate program-level correctness and visualization-level quality. Exploring multiple rendered candidates is particularly important because many visualization edits admit several plausible yet visually different solutions."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                384,
+                490,
+                545
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "(3) Visual Validation and Selection. Rendered candidates are evaluated using the task instruction, input chart, and reference or target image. The framework assesses whether each candidate satisfies the requested edit, preserves the intended data semantics, and visually aligns with the desired output. VisEditAgent then selects the strongest candidate based on execution success and visual alignment."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                545,
+                490,
+                690
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "(4) Feedback-Based Refinement. The selected candidate is further refined using execution diagnostics, rendering failures, and visual-validation feedback. This refinement stage helps correct common one-shot failure modes."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                690,
+                490,
+                772
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "5 Evaluation"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                784,
+                245,
+                801
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "5.1 Evaluation Criteria"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                810,
+                317,
+                825
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Evaluating visualization editing requires measuring not only code executability, but also whether the edited chart satisfies the intended visual revision while remaining readable, visually coherent, and faithful to the target output. We therefore evaluate each output using five criteria: (i)"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                826,
+                492,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Code Execution, which checks whether the generated code executes successfully and renders a valid chart; non-executable, timed-out, or empty outputs receive zero scores for all remaining metrics; (ii) Task Accuracy, which measures whether the edited chart satisfies the requested instruction or matches the target/reference chart while preserving the intended visualization semantics; (iii) Readability and Clarity, which evaluates the legibility and organization of labels, legends, axes, ticks, annotations, and other chart elements; (iv) Visual Quality, which assesses overall presentation quality, including layout, scaling, color usage, chart appropriateness, and visual polish; and (v) Visual Similarity, which measures how closely the rendered output aligns with the corrected or reference chart image."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                206,
+                887,
+                481
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Automatic Evaluator. We use a rubric-based VLM evaluator with fixed prompts, deterministic settings, explicit scoring criteria, and a fixed input order. The evaluator receives the task instruction, the input or reference chart, and the rendered model output, without access to model identities. By default, GPT-4o serves as the evaluator for all visual metrics; when evaluating GPT-4o outputs, we instead use Gemini 2.5 Pro to avoid self-evaluation bias. We further validate the evaluator through human assessment using the same rubric and report agreement between automatic and human judgments."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                483,
+                887,
+                677
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Scoring and Final Pass Rate. Task accuracy, readability and clarity, and visual quality are scored on a 0–5 scale with 0.5-point increments, while visual similarity is scored from 0–100. We additionally report a strict final pass rate: an example passes only if the code executes successfully, task accuracy is at least 4.5, readability and clarity and visual quality are at least 4.0, and visual similarity is at least 90. These thresholds intentionally measure complete task success rather than partial improvement, ensuring that edited charts are executable, visually coherent, instruction-faithful, and aligned with the intended target. The full evaluation rubric, including score definitions and intent-specific visual similarity rules, is provided in Table 9."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                681,
+                887,
+                923
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/658734058120c54c0cfa4874e7c7543cca8a204be3d2c0e015745ffa2fdc3012.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 2: Pass rate by editing intent on VisEditBench. All values are percentages (%). Overall averages all examples."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Model</td><td>Correctness Repair</td><td>Quality Improvement</td><td>Robustness / Generalization</td><td>Style Adaptation</td><td>Constraint Satisfaction</td><td>Consistency Harmonization</td><td>Refactor / Transformation</td><td>Style-Aware Error Repair</td><td>Overall</td></tr><tr><td colspan=\"10\">Closed-Source Models</td></tr><tr><td>GPT-40</td><td>56.08</td><td>67.34</td><td>57.76</td><td>10.00</td><td>63.46</td><td>47.46</td><td>42.86</td><td>30.61</td><td>55.75</td></tr><tr><td>GPT-5-Mini</td><td>55.51</td><td>64.64</td><td>71.55</td><td>47.14</td><td>67.30</td><td>55.93</td><td>58.73</td><td>51.02</td><td>60.00</td></tr><tr><td>GPT-5</td><td>61.60</td><td>75.45</td><td>56.89</td><td>57.14</td><td>59.61</td><td>66.10</td><td>69.84</td><td>51.02</td><td>65.68</td></tr><tr><td>Gemini-3.0-Flash</td><td>17.96</td><td>19.28</td><td>9.48</td><td>35.71</td><td>5.77</td><td>15.25</td><td>9.52</td><td>0.00</td><td>17.06</td></tr><tr><td>Claude-4.5-Sonnet</td><td>60.83</td><td>65.34</td><td>75.00</td><td>52.86</td><td>67.31</td><td>42.38</td><td>74.60</td><td>51.02</td><td>62.73</td></tr><tr><td>Claude-4.6-Sonnet</td><td>70.34</td><td>79.73</td><td>86.20</td><td>55.71</td><td>80.76</td><td>64.40</td><td>85.71</td><td>61.22</td><td>74.46</td></tr><tr><td colspan=\"10\">Open-Source Models</td></tr><tr><td>Gemma-3-4B</td><td>30.79</td><td>25.00</td><td>1.00</td><td>0.00</td><td>3.85</td><td>16.95</td><td>3.18</td><td>1.00</td><td>21.29</td></tr><tr><td>Gemma-3-12B</td><td>42.97</td><td>47.97</td><td>6.89</td><td>1.43</td><td>13.46</td><td>28.81</td><td>7.94</td><td>10.20</td><td>34.96</td></tr><tr><td>Gemma-3-27B</td><td>49.24</td><td>56.76</td><td>23.28</td><td>0.00</td><td>26.92</td><td>42.37</td><td>12.70</td><td>12.25</td><td>42.95</td></tr><tr><td>InternVL-3.5-1B</td><td>11.41</td><td>7.88</td><td>0.00</td><td>0.00</td><td>1.92</td><td>8.47</td><td>1.59</td><td>2.04</td><td>7.41</td></tr><tr><td>InternVL-3.5-2B</td><td>25.67</td><td>21.85</td><td>0.00</td><td>0.00</td><td>3.85</td><td>20.34</td><td>0.00</td><td>6.12</td><td>18.13</td></tr><tr><td>InternVL-3.5-4B</td><td>34.03</td><td>33.78</td><td>8.62</td><td>0.00</td><td>9.61</td><td>28.81</td><td>1.58</td><td>2.04</td><td>26.33</td></tr><tr><td>InternVL-3.5-8B</td><td>42.96</td><td>41.22</td><td>7.75</td><td>0.00</td><td>11.54</td><td>32.20</td><td>12.70</td><td>10.20</td><td>33.17</td></tr><tr><td>InternVL-3.5-14B</td><td>41.65</td><td>49.78</td><td>3.45</td><td>0.00</td><td>3.85</td><td>37.29</td><td>7.94</td><td>10.21</td><td>34.83</td></tr><tr><td>Pixtral-12B</td><td>44.68</td><td>47.07</td><td>5.17</td><td>0.00</td><td>15.38</td><td>30.51</td><td>6.35</td><td>10.20</td><td>35.32</td></tr><tr><td>Qwen3-VL-2B</td><td>24.52</td><td>20.49</td><td>1.00</td><td>0.00</td><td>5.77</td><td>16.95</td><td>7.94</td><td>6.12</td><td>17.55</td></tr><tr><td>Qwen3-VL-4B</td><td>51.11</td><td>50.90</td><td>1.72</td><td>1.42</td><td>7.69</td><td>37.28</td><td>4.76</td><td>16.32</td><td>38.84</td></tr><tr><td>Qwen3-VL-8B</td><td>49.04</td><td>52.02</td><td>28.44</td><td>0.00</td><td>5.70</td><td>52.44</td><td>26.98</td><td>14.29</td><td>42.09</td></tr><tr><td>Qwen3-VL-30B-A3B</td><td>49.80</td><td>53.38</td><td>44.83</td><td>15.71</td><td>38.46</td><td>42.37</td><td>47.61</td><td>20.41</td><td>47.05</td></tr><tr><td>Qwen3-VL-32B</td><td>54.95</td><td>59.00</td><td>50.00</td><td>21.42</td><td>48.10</td><td>54.23</td><td>36.51</td><td>16.32</td><td>51.72</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                117,
+                77,
+                878,
+                322
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "5.2 Main Results"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                349,
+                267,
+                365
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "5.2.1 Zero-Shot Performance"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                373,
+                361,
+                387
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Tables 2 and 3 reveal a substantial gap between generating executable visualization code and performing visually faithful visualization editing. Overall, closed-source models substantially outperform open-source models, but even the strongest model remains far from solving visualization code editing. Claude-4.6-Sonnet achieves the best overall pass rate at 74.46%, followed by GPT-5 at 65.68% and Claude-4.5-Sonnet at 62.73%. Among opensource models, Qwen3-VL-32B performs best with 51.72%, while most open-source models remain below 50%. Smaller models perform much worse, such as InternVL-3.5-1B at 7.41% and Qwen3-VL-2B at 17.55%, suggesting that visualization editing requires strong multimodal and reasoning ability."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                395,
+                490,
+                634
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "A key finding is that executability alone is not the primary bottleneck for strong models. Claude-4.6-Sonnet and GPT-4o execute successfully on 96.19% and 93.31% of examples, respectively, yet achieve substantially lower visual similarity scores of 89.42 and 78.13. This indicates that models can often generate runnable code while still failing to preserve visual semantics, layout fidelity, or stylistic alignment with the target edit."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                633,
+                489,
+                776
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Performance also varies sharply across editing intents. Stronger models perform relatively well on correctness repair and quality improvement, where edits often involve localized readability or layout fixes. For example, Claude-4.6-Sonnet reaches 70.34% on correctness repair and 79.73% on quality improvement, while GPT-4o reaches 56.08% and 67.34%, respectively. In contrast, visually grounded and coordinated edits remain difficult:"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                777,
+                490,
+                923
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/d06e9527431f240b52aa76a970cb653d18522e51d4598f4bae6544726acc138b.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 3: Metric-level scores on VisEditBench. Executability is reported as a percentage, Visual Similarity on a 0–100 scale, and other metrics on a 5-point scale."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Model</td><td>Code Exec.</td><td>Task Acc.</td><td>Read. &amp; Clarity</td><td>Visual Quality</td><td>Visual Similarity</td></tr><tr><td colspan=\"6\">Closed-Source Models</td></tr><tr><td>GPT-40</td><td>93.31</td><td>4.04</td><td>4.03</td><td>3.95</td><td>78.13</td></tr><tr><td>GPT-5-Mini</td><td>88.20</td><td>4.11</td><td>4.12</td><td>4.07</td><td>80.65</td></tr><tr><td>GPT-5</td><td>94.10</td><td>4.13</td><td>4.10</td><td>4.09</td><td>84.13</td></tr><tr><td>Gemini-3.0-Flash</td><td>46.02</td><td>1.83</td><td>2.07</td><td>2.04</td><td>42.85</td></tr><tr><td>Claude-4.5-Sonnet</td><td>94.46</td><td>4.41</td><td>4.38</td><td>4.38</td><td>86.52</td></tr><tr><td>Claude-4.6-Sonnet</td><td>96.19</td><td>4.57</td><td>4.54</td><td>4.55</td><td>89.42</td></tr><tr><td colspan=\"6\">Open-Source Models</td></tr><tr><td>Gemma-3-4B</td><td>82.30</td><td>2.70</td><td>3.30</td><td>3.33</td><td>64.78</td></tr><tr><td>Gemma-3-12B</td><td>87.19</td><td>3.57</td><td>3.75</td><td>3.78</td><td>74.20</td></tr><tr><td>Gemma-3-27B</td><td>88.27</td><td>3.92</td><td>3.97</td><td>3.98</td><td>77.34</td></tr><tr><td>InternVL-3.5-1B</td><td>72.81</td><td>1.36</td><td>2.62</td><td>2.65</td><td>53.74</td></tr><tr><td>InternVL-3.5-2B</td><td>80.00</td><td>2.39</td><td>3.09</td><td>3.13</td><td>61.47</td></tr><tr><td>InternVL-3.5-4B</td><td>78.71</td><td>3.01</td><td>3.28</td><td>3.31</td><td>65.35</td></tr><tr><td>InternVL-3.5-8B</td><td>83.38</td><td>3.47</td><td>3.64</td><td>3.65</td><td>71.25</td></tr><tr><td>InternVL-3.5-14B</td><td>78.95</td><td>3.34</td><td>3.46</td><td>3.48</td><td>68.12</td></tr><tr><td>Pixtral-12B</td><td>86.04</td><td>3.46</td><td>3.66</td><td>3.69</td><td>72.43</td></tr><tr><td>Qwen3-VL-2B</td><td>79.93</td><td>2.24</td><td>3.09</td><td>3.13</td><td>62.48</td></tr><tr><td>Qwen3-VL-4B</td><td>79.71</td><td>3.08</td><td>3.39</td><td>3.43</td><td>67.86</td></tr><tr><td>Qwen3-VL-8B</td><td>85.83</td><td>3.68</td><td>3.79</td><td>3.82</td><td>74.77</td></tr><tr><td>Qwen3-VL-30B-A3B</td><td>89.71</td><td>3.92</td><td>4.03</td><td>4.05</td><td>79.19</td></tr><tr><td>Qwen3-VL-32B</td><td>87.77</td><td>4.05</td><td>4.01</td><td>4.04</td><td>78.38</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                514,
+                342,
+                877,
+                586
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Claude-4.6-Sonnet achieves only 55.71% on style adaptation, and GPT-4o only 10.00%. Overall, VisEditBench requires more than code generation or chart reconstruction: successful models must jointly reason over code, visual feedback, user intent, and rendered chart quality."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                642,
+                887,
+                739
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "5.2.2 VisEditAgent Results"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                755,
+                739,
+                770
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Table 4 shows that VisEditAgent consistently improves over direct zero-shot prompting. Using GPT-4o as the base model, VisEditAgent increases overall pass rate from 55.75% to 67.99%, demonstrating the importance of render-grounded iterative refinement for visualization editing. The largest gains appear on visually grounded editing tasks. Style adaptation improves from 10.00% to 62.85%, consistency harmonization from 47.46% to 64.41%, and refactor/transformation from 42.86% to 60.32%. Similar trends hold for open-source models: for example, Qwen3-VL-4B improves from 1.42% to 35.71% on style adaptation and from 4.76% to 42.85% on refactor/transformation. Table 5 further shows consistent improvements in task accuracy, readability, visual quality, and visual similarity. These results suggest that a central failure mode of zero-shot VLMs is not merely code generation, but the inability to iteratively validate and refine edits against rendered visual feedback. Multi-candidate generation, rendering, visual validation, and refinement substantially improve the ability of models to produce edits that are both executable and visually faithful (see Figure 5)."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                777,
+                887,
+                922
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/5eb4876edec459e4887a511c2217b6113ea4e6fbf995aaf2ddc53252bbe2f12a.jpg"
+                },
+                "table_caption": [],
+                "table_footnote": [
+                    {
+                        "type": "text",
+                        "content": "Table 4: Pass rate by editing intent for zero-shot models, VisEditAgent, and ablations. All values are percentages (%)."
+                    }
+                ],
+                "html": "<table><tr><td>Model / Method</td><td>Correct. Repair</td><td>Quality Improve.</td><td>Robust. Gen.</td><td>Style Adapt.</td><td>Constraint Satis.</td><td>Consistency Harmon.</td><td>Refactor/ Transform.</td><td>Style-aware Repair</td><td>Overall</td></tr><tr><td>GPT-4o Zero-shot</td><td>56.08</td><td>67.34</td><td>57.76</td><td>10.00</td><td>63.46</td><td>47.46</td><td>42.86</td><td>30.61</td><td>55.75</td></tr><tr><td>GPT-4o + VisEditAgent</td><td>64.64</td><td>78.37</td><td>61.22</td><td>62.85</td><td>65.38</td><td>64.41</td><td>60.32</td><td>44.89</td><td>67.99</td></tr><tr><td>Qwen3-VL-4B Zero-shot</td><td>51.11</td><td>50.90</td><td>1.72</td><td>1.42</td><td>7.69</td><td>37.28</td><td>4.76</td><td>16.32</td><td>38.84</td></tr><tr><td>Qwen3-VL-4B + VisEditAgent</td><td>63.14</td><td>63.00</td><td>42.24</td><td>35.71</td><td>44.23</td><td>54.23</td><td>42.85</td><td>18.36</td><td>44.98</td></tr><tr><td>Qwen3-VL-8B Zero-shot</td><td>49.04</td><td>52.02</td><td>28.44</td><td>0.00</td><td>5.70</td><td>52.44</td><td>26.98</td><td>14.29</td><td>42.09</td></tr><tr><td>Qwen3-VL-8B + VisEditAgent</td><td>71.08</td><td>67.71</td><td>1.80</td><td>24.29</td><td>13.46</td><td>49.15</td><td>17.46</td><td>16.36</td><td>54.53</td></tr><tr><td>Ablations on GPT-4o + VisEditAgent</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>w/o Multi-candidate Generation</td><td>61.44</td><td>74.44</td><td>56.03</td><td>28.57</td><td>59.62</td><td>55.93</td><td>52.38</td><td>38.78</td><td>61.94</td></tr><tr><td>w/o Refinement</td><td>58.79</td><td>71.52</td><td>52.59</td><td>41.43</td><td>57.69</td><td>54.24</td><td>49.21</td><td>34.70</td><td>59.86</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                115,
+                83,
+                880,
+                219
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                110,
+                246,
+                492,
+                504
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "To validate the automatic evaluation, we manually evaluated outputs from GPT-4o zero-shot and GPT-4o + VisEditAgent on all 1,395 VisEditBench samples, resulting in 2,790 total model outputs. We additionally evaluated Qwen3-VL-4B zero-shot and Qwen3-VL-4B + VisEditAgent on a 500-example stratified sample. Five annotators assessed each output using the same rubric as the automatic evaluator, covering task accuracy, readability and clarity, visual quality, visual similarity, and final pass/fail judgment. As shown in Table 7, human evaluation confirms that VisEditAgent improves pass rate for both GPT-4o and Qwen3-VL-4B. The human scores also show strong agreement with the automatic evaluator, with Pearson correlations ranging from 83.38 to 87.00 across the four scalar metrics: task accuracy, readability and clarity, visual quality, and visual similarity (Table 8). This suggests that the automatic evaluation is well aligned with human judgments while enabling scalable assessment of visualization code editing performance."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                504,
+                492,
+                859
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "5.3 Ablation Studies"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                112,
+                870,
+                294,
+                885
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "As shown in Tab. 4, removing multi-candidate generation lowers VisEditAgent’s overall pass rate with GPT-4o from 67.99% to 61.94%, while removing refinement lowers it to 59.86%. The largest drop occurs for style adaptation, where performance decreases from 62.85% to 28.57% and 41.43%, respectively. These results show that both candidate selection and feedback-based refinement are important for visually faithful editing."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                890,
+                489,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                505,
+                246,
+                887,
+                359
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "5.4 Error Analysis"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                365,
+                675,
+                379
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We conducted a qualitative error analysis on 500 randomly selected model outputs. We identify four recurring failure modes, illustrated in Fig. 6."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                382,
+                885,
+                431
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Executable but visually incorrect outputs. The code executes and renders a chart, but the edit is not satisfied. Typical failures include unresolved label overlap, misplaced legends, cluttered annotations, and poor readability."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                431,
+                885,
+                512
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Weak grounding in visual feedback. Models fail to localize edits from marked or reference images. They move annotations, legends, or labels to incorrect regions, or keep arrows pointing to the wrong data points."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                513,
+                887,
+                594
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Poor reference-style matching. In style adaptation, models often make generic visual changes rather than preserving the reference layout, colors, fonts, legends, backgrounds, or annotation style."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                594,
+                887,
+                659
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Incorrect or incomplete transformations. For refactor/transformation tasks, models change the wrong chart type, omit required visual elements, alter encodings, or fail to preserve data semantics."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                659,
+                887,
+                725
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "6 Conclusion"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                750,
+                643,
+                766
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We introduce VisEditBench, the first benchmark for visualization code editing from multimodal feedback, moving beyond the one-shot chartgeneration focus of prior work. Across 1,395 human-annotated tasks spanning feedback-guided repair and reference-guided restyling, our evaluation reveals a substantial gap between generating executable charts and performing visually faithful visualization editing, particularly for visually grounded and coordinated edits requiring layout, style, and semantic preservation. As a strong baseline, we include VisEditAgent, a render-grounded framework that iteratively generates, executes, validates, and refines candidate edits using visual feedback. This framework substantially improves editing performance, demonstrating that reliable visualization editing requires iterative multimodal reasoning rather than single-pass code generation. Together, VisEditBench and VisEditAgent establish a strong foundation for advancing visually grounded, feedback-aware, and user-aligned visualization authoring systems."
+                    }
+                ]
+            },
+            "bbox": [
+                505,
+                777,
+                889,
+                923
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                85,
+                490,
+                294
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Limitations"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                306,
+                221,
+                323
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "VisEditBench currently covers two visualization libraries, Matplotlib and Vega-Lite. These libraries represent both imperative and declarative visualization paradigms and support many common chartediting scenarios. However, the benchmark does not yet directly evaluate other widely used visualization ecosystems such as Plotly, D3.js, and ggplot2. Extending VisEditBench to these libraries would allow future work to study whether the observed model behaviors generalize across a broader range of visualization programming environments."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                334,
+                490,
+                511
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Although VisEditBench includes diverse chart types, editing intents, problem types, and difficulty levels, it is not intended to exhaustively cover every possible visualization-editing need. The benchmark emphasizes common editing scenarios such as layout adjustment, label and annotation repair, encoding correction, style adaptation, and reference-guided restyling. More specialized domains may involve additional constraints, domain conventions, or visualization types that are not fully represented in the current dataset."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                512,
+                490,
+                690
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Ethical Considerations"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                702,
+                317,
+                718
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "VisEditBench is designed to support transparent and reproducible research on multimodal visualization code editing. The benchmark is constructed from publicly available visualization resources, including user-reported visualization issues and realworld chart/data examples, and is used only for research and evaluation purposes. During dataset construction, annotators retained only examples with concrete visualization code, clearly grounded visual feedback, and implementable editing goals. We used LLM assistance only for language editing and polishing, while all technical content, dataset construction, experiments, and analyses were reviewed and verified by the authors."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                730,
+                490,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                85,
+                885,
+                117
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "To improve data quality and reduce ambiguity, each candidate task was cross-reviewed before inclusion in the final benchmark. We removed examples that were underspecified, duplicated, unrealistic, insufficiently grounded in the chart image, or not clearly solvable through visualization code editing. The benchmark does not aim to collect or evaluate sensitive personal information; its focus is on visualization code, rendered charts, editing instructions, and structured metadata."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                117,
+                885,
+                278
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We maintained fairness in model comparisons by applying the same prompting protocol, execution environment, evaluation criteria, and scoring rubrics across open-source and closed-source models. For automatic evaluation, we used a fixed rubric and avoided self-evaluation bias by using a different evaluator when assessing outputs from the default evaluator model. We also report limitations and failure modes to help prevent overclaiming model capabilities. Overall, VisEditBench is intended to encourage reliable, visually grounded, and user-aligned visualization authoring systems. Finally, we used AI-based writing assistants only to improve the presentation of the paper."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                279,
+                887,
+                506
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Acknowledgements"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                517,
+                682,
+                533
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "This research was supported by the Natural Sciences and Engineering Research Council (NSERC), Canada, Canada Foundation for Innovation, Compute Canada, and the CIRC grant on Inclusive and Accessible Data Visualizations and Analytics."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                543,
+                887,
+                624
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "References"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                510,
+                651,
+                610,
+                667
+            ]
+        },
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Tony Beltramelli. 2018. pix2code: Generating code from a graphical user interface screenshot. In Proceedings of the ACM SIGCHI symposium on engineering interactive computing systems, pages 1–6."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Nan Chen, Yuge Zhang, Jiahang Xu, Kan Ren, and Yuqing Yang. 2024. Viseval: A benchmark for data visualization in the era of large language models. IEEE Transactions on Visualization and Computer Graphics."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "DeepSeek-AI, Qihao Zhu, Daya Guo, Zhihong Shao, Dejian Yang, Peiyi Wang, Runxin Xu, Y. Wu, Yukun Li, Huazuo Gao, Shirong Ma, Wangding Zeng, Xiao Bi, Zihui Gu, Hanwei Xu, Damai Dai, Kai Dong, Liyue Zhang, Yishi Piao, Zhibin Gou, Zhenda Xie, Zhewen Hao, Bingxuan Wang, Junxiao Song, Deli Chen, Xin Xie, Kang Guan, Yuxiang You, Aixin Liu, Qiushi Du, Wenjun Gao, Xuan Lu, Qinyu Chen,"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                512,
+                675,
+                884,
+                728
+            ]
+        }
+    ],
+    [
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yaohui Wang, Chengqi Deng, Jiashi Li, Chenggang Zhao, Chong Ruan, Fuli Luo, and Wenfeng Liang. 2024. Deepseek-coder-v2: Breaking the barrier of closed-source models in code intelligence. CoRR, abs/2406.11931."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Victor Dibia and Çagatay Demiralp. 2019. Data2vis:˘ Automatic generation of data visualizations using sequence-to-sequence recurrent neural networks. IEEE computer graphics and applications, 39(5):33– 46."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Aaron Grattafiori, Abhimanyu Dubey, Abhinav Jauhri, Abhinav Pandey, Abhishek Kadian, Ahmad Al-Dahle, Aiesha Letman, Akhil Mathur, Alan Schelten, Alex Vaughan, et al. 2024. The llama 3 herd of models. arXiv preprint arXiv:2407.21783."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Ruoyu Zhang, Runxin Xu, Qihao Zhu, Shirong Ma, Peiyi Wang, Xiao Bi, et al. 2025. Deepseek-r1: Incentivizing reasoning capability in llms via reinforcement learning. arXiv preprint arXiv:2501.12948."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yucheng Han, Chi Zhang, Xin Chen, Xu Yang, Zhibin Wang, Gang Yu, Bin Fu, and Hanwang Zhang. 2023. Chartllama: A multimodal llm for chart understanding and generation. arXiv preprint arXiv:2311.16483."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jonathan Harper and Maneesh Agrawala. 2017. Converting basic d3 charts into reusable style templates. IEEE transactions on visualization and computer graphics, 24(3):1274–1286."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Enamul Hoque and M Saidul Islam. 2024. Natural language generation for visualizations: State of the art, challenges and future directions. In Computer Graphics Forum, page e15266. Wiley Online Library."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Enamul Hoque, Parsa Kavehzadeh, and Ahmed Masry. 2022. Chart question answering: State of the art and future directions. In Computer Graphics Forum, volume 41, pages 555–572. Wiley Online Library."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Albert Q Jiang, Alexandre Sablayrolles, Arthur Mensch, Chris Bamford, Devendra Singh Chaplot, Diego de las Casas, Florian Bressand, Gianna Lengyel, Guillaume Lample, Lucile Saulnier, et al. 2023. Mistral 7b. arXiv preprint arXiv:2310.06825."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Kaixin Li, Yuchen Tian, Qisheng Hu, Ziyang Luo, Zhiyong Huang, and Jing Ma. 2024. Mmcode: Benchmarking multimodal large language models for code generation with visually rich programming problems. In Findings of the Association for Computational Linguistics: EMNLP 2024, pages 736–783."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Can Liu, Yun Han, Ruike Jiang, and Xiaoru Yuan. 2021. Advisor: Automatic visualization answer for naturallanguage question on tabular data. In 2021 IEEE 14th Pacific Visualization Symposium (PacificVis), pages 11–20. IEEE."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yuyu Luo, Jiawei Tang, and Guoliang Li. 2021. nvbench: A large-scale synthesized dataset for crossdomain natural language to visualization task. arXiv preprint arXiv:2112.12926."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Paula Maddigan and Teo Susnjak. 2023. Chat2vis: Generating data visualizations via natural language using chatgpt, codex and gpt-3 large language models. Ieee Access, 11:45181–45193."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Tamara Munzner. 2014. Visualization Analysis and Design, 1 edition. A K Peters/CRC Press."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Arpit Narechania, Arjun Srinivasan, and John Stasko. 2020. Nl4dv: A toolkit for generating analytic specifications for data visualization from natural language queries. IEEE Transactions on Visualization and Computer Graphics, 27(2):369–379."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Kunato Nishina and Yusuke Matsui. 2024. Svgeditbench: A benchmark dataset for quantitative assessment of llm’s svg editing capabilities. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 8142–8147."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "OECD. 2024. Our world in data."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "OpenAI. 2024. Gpt-4 technical report."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "OWID. 2024. Our world in data."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Pew. 2024. Pew research center."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Mizanur Rahman, Amran Bhuiyan, Mohammed Saidul Islam, Md Tahmid Rahman Laskar, Ridwan Mahbub, Ahmed Masry, Shafiq Joty, and Enamul Hoque. 2025a. Llm-based data science agents: A survey of capabilities, challenges, and future directions. arXiv preprint arXiv:2510.04023."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Mizanur Rahman, Md Tahmid Rahman Laskar, Shafiq Joty, and Enamul Hoque. 2025b. Text2vis: A challenging and diverse benchmark for generating multimodal visualizations from text. In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing, pages 31837–31862."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Alex Robinson. 2019. Sketch2code: Generating a website from a paper mockup. arXiv preprint arXiv:1905.13750."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Baptiste Roziere, Jonas Gehring, Fabian Gloeckle, Sten Sootla, Itai Gat, Xiaoqing Ellen Tan, Yossi Adi, Jingyu Liu, Romain Sauvestre, Tal Remez, et al. 2023. Code llama: Open foundation models for code. arXiv preprint arXiv:2308.12950."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Chenglei Si, Yanzhe Zhang, Ryan Li, Zhengyuan Yang, Ruibo Liu, and Diyi Yang. 2025. Design2code: Benchmarking multimodal code generation for automated front-end engineering. In Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers), pages 3956–3974."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                131,
+                85,
+                489,
+                152
+            ]
+        }
+    ],
+    [
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yuanfeng Song, Xuefang Zhao, Raymond Chi-Wing Wong, and Di Jiang. 2022. Rgvisnet: A hybrid retrieval-generation neural framework towards automatic data visualization generation. In Proceedings ofthe 28th ACM SIGKDD Conference on Knowledge Discovery and Data Mining, pages 1646–1655."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Davit Soselia, Khalid Saifullah, and Tianyi Zhou. 2023. Learning ui-to-code reverse generator using visual critic without rendering. arXiv preprint arXiv:2305.14637."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Statista. 2024. Statista."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Gemini Team. 2024. Gemini 1.5: Unlocking multimodal understanding across millions of tokens of context."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Chengyue Wu, Zhixuan Liang, Yixiao Ge, Qiushan Guo, Zeyu Lu, Jiahao Wang, Ying Shan, and Ping Luo. 2025. Plot2code: A comprehensive benchmark for evaluating multi-modal large language models in code generation from scientific plots. In Findings of the Association for Computational Linguistics: NAACL 2025, pages 3006–3028."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Zhengzhuo Xu, Sinan Du, Yiyan Qi, Chengjin Xu, Chun Yuan, and Jian Guo. 2023. Chartbench: A benchmark for complex visual reasoning in charts. arXiv preprint arXiv:2312.15915."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "An Yang, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo Zheng, Bowen Yu, Chengyuan Li, Dayiheng Liu, Fei Huang, Haoran Wei, et al. 2024a. Qwen2. 5 technical report. arXiv preprint arXiv:2412.15115."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Cheng Yang, Chufan Shi, Yaxin Liu, Bo Shui, Junjie Wang, Mohan Jing, Linran Xu, Xinyu Zhu, Siheng Li, Yuxiang Zhang, et al. 2025. Chartmimic: Evaluating lmm’s cross-modal reasoning capability via chart-to-code generation. In International Conference on Learning Representations, volume 2025, pages 26590–26646."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "John Yang, Carlos E Jimenez, Alex L Zhang, Kilian Lieret, Joyce Yang, Xindi Wu, Ori Press, Niklas Muennighoff, Gabriel Synnaeve, Karthik R Narasimhan, et al. 2024b. Swe-bench multimodal: Do ai systems generalize to visual software domains? arXiv preprint arXiv:2410.03859."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Victor Zhong, Caiming Xiong, and Richard Socher. 2017. Seq2sql: Generating structured queries from natural language using reinforcement learning. arXiv preprint arXiv:1709.00103."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                115,
+                85,
+                489,
+                166
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/08e0d5a6ad2ab810d24d889cdf43889132c219bc9052cc8eec74ba2d6acf1e78.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 5: Metric-level comparison of zero-shot models and VisEditAgent. Executability is reported as a percentage (%). Task Accuracy, Chart Readability and Clarity, and Visual Quality are reported on a 5-point scale. Visual Similarity is reported on a 0–100 scale. Best results in each column are shown in bold."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Model / Method</td><td>Code Exec.</td><td>Task Acc.</td><td>Read. &amp; Clarity</td><td>Visual Quality</td><td>Visual Similarity</td></tr><tr><td>GPT-4o Zero-shot</td><td>93.31</td><td>4.04</td><td>4.03</td><td>3.95</td><td>78.13</td></tr><tr><td>GPT-4o + VisEditAgent</td><td>96.83</td><td>4.37</td><td>4.35</td><td>4.36</td><td>86.30</td></tr><tr><td>Qwen3-VL-4B Zero-shot</td><td>79.71</td><td>3.08</td><td>3.39</td><td>3.43</td><td>67.86</td></tr><tr><td>Qwen3-VL-4B + VisEditAgent</td><td>91.93</td><td>3.70</td><td>3.92</td><td>3.94</td><td>77.30</td></tr><tr><td>Qwen3-VL-8B + VisEditAgent</td><td>93.45</td><td>4.03</td><td>4.13</td><td>4.16</td><td>76.50</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                515,
+                76,
+                878,
+                146
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "A Appendices"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                244,
+                652,
+                260
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "A.1 Inference and Evaluation Parameters"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                263,
+                855,
+                279
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "To support reproducibility, we report the decoding, rendering, and evaluation parameters used in our experiments in Table 10."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                284,
+                885,
+                332
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/61191775ab81eb1ad031498a921f122db7feb47c4fc088abdb8ffdec29993459.jpg"
+                },
+                "table_caption": [],
+                "table_footnote": [],
+                "html": "<table><tr><td>Benchmark</td><td>Main Task</td><td>Input</td><td>Code Given</td><td>Human Feedback</td><td>Code Editing</td><td>Ref. Restyling</td><td>Edit Taxonomy</td></tr><tr><td>Text2Vis (Rahman et al., 2025b)</td><td>Text-to-vis genera- tion</td><td>Text + data</td><td>△</td><td>x</td><td>x</td><td>x</td><td>x</td></tr><tr><td>VisEval (Chen et al., 2024)</td><td>NL2VIS evaluation</td><td>Text + data</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td></tr><tr><td>ChartMimic (Yang et al., 2025)</td><td>Chart-to-code genera- tion</td><td>Chart image</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td></tr><tr><td>Plot2Code (Wu et al., 2025)</td><td>Plot-to-code genera- tion</td><td>Plot image</td><td>△</td><td>x</td><td>x</td><td>x</td><td>x</td></tr><tr><td>SWE-bench Multi- modal (Yang et al., 2024b)</td><td>Visual software repair</td><td>Issue + repo.</td><td>√</td><td>x</td><td>x</td><td>x</td><td>x</td></tr><tr><td>VisEditBench</td><td>Visualization repair &amp; restyling</td><td>Code + multi- modal feedback</td><td>√</td><td>√</td><td>√</td><td>√</td><td>√</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                124,
+                82,
+                872,
+                230
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/0012bed15e008ad2584516a83d2243da7dec3ba221a2f3c60a79f95cf3f5840c.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 6: Comparison of VisEditBench with related visualization and multimodal software benchmarks. ✓ = yes, ✗ = no, and △ = partial. VisEditBench uniquely evaluates editing existing visualization code from multimodal feedback, including feedback-guided repair and reference-guided restyling."
+                    },
+                    {
+                        "type": "text",
+                        "content": "Table 7: Human evaluation results for GPT-4o and Qwen3-VL-4B under zero-shot and VisEditAgent settings. GPT-4o is evaluated on all 1,395 examples, while Qwen3-VL-4B is evaluated on a 500-example stratified sample. Code execution and pass rate are reported as percentages. Task accuracy, readability and clarity, and visual quality use a 0–5 scale; visual similarity uses a 0–100 scale."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Model / Method</td><td>Code Execution</td><td>Task Accuracy</td><td>Readability &amp; Clarity</td><td>Visual Quality</td><td>Visual Similarity</td><td>Pass Rate</td></tr><tr><td>GPT-4o Zero-shot</td><td>95.00</td><td>4.13</td><td>4.10</td><td>4.14</td><td>82.70</td><td>51.70</td></tr><tr><td>GPT-4o + VisEditAgent</td><td>97.00</td><td>4.36</td><td>4.41</td><td>4.40</td><td>89.60</td><td>59.10</td></tr><tr><td>Qwen3-VL-4B Zero-shot</td><td>80.54</td><td>3.11</td><td>3.41</td><td>3.44</td><td>68.13</td><td>38.91</td></tr><tr><td>Qwen3-VL-4B + VisEditAgent</td><td>91.63</td><td>3.68</td><td>3.85</td><td>3.95</td><td>77.20</td><td>45.45</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                114,
+                292,
+                880,
+                373
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/b1a0851aefd7be460bf262d56d54d07ec195c4c49b4c61ddc56b86a9bd07a268.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 8: Human–automatic evaluation agreement across all human-evaluated outputs. Pearson correlations are reported for scalar metrics; agreement is reported for the final pass/fail decision."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Metric</td><td>Pearson Correlation</td></tr><tr><td>Task Accuracy</td><td>83.38</td></tr><tr><td>Readability &amp; Clarity</td><td>87.00</td></tr><tr><td>Visual Quality</td><td>86.50</td></tr><tr><td>Visual Similarity</td><td>86.00</td></tr><tr><td>Final Pass/Fail Agreement</td><td>81.00%</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                137,
+                605,
+                462,
+                687
+            ]
+        }
+    ],
+    [
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/9d0f84f841c5c62f25ed9a6510e6acc85dbbfdd6dc42fd53344cad19e4cefde1.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                304,
+                296,
+                668,
+                453
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/1bf1b971bdc38bbecfae8bccbde6dea08eae2fdfedc25b106553dd6f41bc9a87.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                115,
+                461,
+                490,
+                618
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/25581ed18fefa9e0bd292318a8811555d49f8b98213e06bdc9d19db07e5ae395.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 5: Qualitative example comparing GPT-4o zero-shot with GPT-4o + VisEditAgent. The original chart contains crowded x-axis labels and poorly positioned cumulative-percentage annotations. The editing instruction asks the model to improve label/annotation readability and spacing while preserving the chart semantics. Although GPT-4o zero-shot produces executable code, it only partially addresses these issues, whereas VisEditAgent produces a cleaner chart with better-positioned annotations and more readable labels."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                507,
+                462,
+                878,
+                618
+            ]
+        }
+    ],
+    [
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/63b23a302d0e66972990a00743211e6c48404f34a9260c83fefbb5ca32cf29f1.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                186,
+                254,
+                450,
+                436
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/f35f57564bcb8e685db85b17b80b38d23312f57047adf4844fc9ae534fe395d4.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                537,
+                239,
+                848,
+                441
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/d1c00ff40ee367034e933887a5ccaa6c8ecdf9ded978a42b7cc0a86acf4dcd59.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                114,
+                463,
+                492,
+                675
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/d09c882349c09486264595a064d433707ea61e977b783e4d327c0037e488d62c.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 6: Error analysis examples showing that models often produce executable and visually plausible charts while missing the intended edit. (a) GPT-4o reduces clutter but the chart remains unreadable due to overlapping 1K–256M request labels. (b) GPT-4o fails to move the legend outside the line chart, leaving it over the plotted data. (c) InternVL-14B produces a clean chart but does not match the dark reference style. (d) Qwen3-VL-4B fails to transform the output into the reference visualization."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                500,
+                466,
+                878,
+                675
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/823dc518a379d636ec85f3565c19e9f5a781fcf1a34a0b65851d9738600c21b6.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 9: Evaluation rubric used for scoring rendered visualization outputs. Task accuracy, readability and clarity, and visual quality are scored on a 0–5 scale in 0.5-point increments. Visual similarity is scored on a 0–100 scale. The rubric is intent-aware and distinguishes repair, style adaptation, style-aware error repair, and other reference-guided target-matching tasks."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Metric</td><td>Rubric</td></tr><tr><td>Allowed Scores</td><td>For 0–5 metrics, the evaluator may use only the following scores: 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, and 5. Visual similarity is scored from 0 to 100</td></tr><tr><td>Task Accuracy</td><td>Score range: 0–5, in 0.5-point increments. Correctness Repair and Quality Improvement: 5 = fully fixes the issue shown in the image and instruction, preserves data meaning, and introduces no meaningful new problems; 4.5 = almost fully fixes the issue, with only tiny remaining issues; 4.0 = mostly fixes the issue, with minor remaining problems; 0 = invalid, irrelevant, unreadable, or does not address the requested fix at all. All other intents:  ${ \\mathfrak { H } } = { \\mathrm { c l o s e l y } }$  matches the reference/target image and instruction, preserving data meaning unless the instruction asks otherwise; 4.5 = almost closely matches the reference/target, with only very minor differences; 4.0 = mostly matches the reference/target, with minor differences; 0 = invalid, irrelevant, unreadable, or does not match the reference/instruction at all.</td></tr><tr><td>Readability &amp; Clar- ity</td><td>Score range: 0–5, in 0.5-point increments. 5 = labels, titles, axes, ticks, legends, fonts, and annotations are clear, readable, well-positioned, and non-overlapping.</td></tr><tr><td>Visual Quality</td><td>Score range: 0–5, in 0.5-point increments. 5 = polished, professional, visually clean, accessible, uses appropriate colors/scales/chart type, and communicates the intended information clearly. 0 = no valid visualization, irrelevant image, misleading visual design, or extremely poor visual quality.</td></tr><tr><td>Visual Similarity</td><td>Score range: 0–100. Correctness Repair and Quality Improvement: Compare the rendered chart to the clean corrected version of the original buggy/marked chart. The rendered chart should remain visually similar to the original chart, but should fix the issue described in the instruction. Do not penalize the rendered chart for not reproducing handwritten marks or the original bug. Style Adaptation: Compare style similarity: colors, fonts, background, gridlines, mark style, layout, and overall appearance. Data values may differ if the task uses the base data, but the style should match the reference image closely. Style-Aware Error Repair: The reference image is the target chart style/output and may show marked potential errors. The rendered chart should recreate the clean target chart while avoiding the marked or anticipated issues. Do not reward reproducing handwritten marks or buggy artifacts. All other intents: The reference image is the target chart. The rendered chart should match it as closely as possible in chart type,</td></tr><tr><td>Visual Similarity Scale</td><td>data, encodings, colors, labels, title, axes, legend, annotations, layout, and overall appearance. 100 = near-perfect match under the intent-specific rules; 90–99 = almost identical, only tiny differences; 80–89 = good match but minor differences; 60–79 = partially correct but noticeable differences; 40–59 = weak match;  $1 { - } 3 9 = \\mathrm { b a r e l y }$  related;  $\\mathbf { \\bar { 0 } = c o m p l e t e l y }$ </td></tr><tr><td>Intermediate Guide for 0–5 Metrics</td><td>different, invalid, or no usable chart. 4.5 = very good; only tiny issues. 4.0 = good; small issues but clearly successful. 3.5 = decent; mostly usable but with noticeable issues.  $3 . { \\overset { \\cdot } { 0 } } = \\operatorname { a v e r a g e } ;$  important issues affect clarity/correctness. 2.5 = below average; several issues may mislead or confuse. 2.0 = poor; significant issues. 1.5 = very poor; major problems.  $1 . 0 = \\mathrm { { b a r e l y } }$  usable or mostly wrong. 0.5 = almost completely failed but</td></tr><tr><td>Evaluator Rules</td><td>has a tiny relevant element.  $0 . 0 = { \\mathrm { ~ f a i l e d } } .$  If executable = 0, all scores must be 0. The evaluator is instructed to be strict. Handwritten annotations, circles, arrows, scribbles, highlights, and notes are ignored unless they describe what should be fixed. A nice-looking chart is not rewarded if it fails the</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                124,
+                98,
+                872,
+                530
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/e1c76e32be2782d72399e99804ba164cf48b55a90e979403a8b35e49b58608fc.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 10: Inference and evaluation parameters used in VisEditBench experiments. These settings are fixed across model evaluations unless otherwise stated."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Component</td><td>Configuration</td></tr><tr><td>Inference parameters</td><td>For direct model inference, each model receives the visualization image and the corresponding editing prompt as multimodal input. The model is instructed to return only complete revised code, without markdown or explanation. Unless otherwise stated, we use image detail = hi gh, temperature = 0.2, top-p = 1.0, maximum output tokens = 4096, and output format = complete executable visualization code only.</td></tr><tr><td>Evaluation parameters</td><td>Generated code is cleaned, executed, and rendered before scoring. Vega-Lite specifications are rendered using vl-convert-python, while Python/Matplotlib outputs are executed using a non-interactive Agg backend. Non-executable outputs are assigned executability 0 and zero scores for all remaining metrics. GPT-4o is used as the default evaluator; for GPT-4o outputs, Gemini 2.5 Pro is used to avoid self-evaluation bias. The evaluator uses temperature = 0.0, maximum output tokens = 1200, and image detail = hi gh. Task accuracy, readability and clarity, and visual quality are scored on a 0–5 scale in 0.5-point increments; visual similarity is</td></tr><tr><td>Final pass criteria</td><td>scored on a 0–100 scale. An output is counted as a pass only if all conditions are satisfied: execut able = 1, task accuracy ≥ 4.5, readability and clarity  $\\geq 4 . 0 ,$  visual quality ≥ 4.0, and visual similarity ≥ 90.</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                122,
+                639,
+                873,
+                860
+            ]
+        }
+    ],
+    [
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/b29a7bde34f5ad9889fe18f50d1cf82b6342581a62f550ad3c035963826612f2.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 7: Prompt used for difficulty classification. GPT-5 was used to classify each VisEditBench example as Easy, Medium, or Hard under this rubric."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                126,
+                82,
+                865,
+                881
+            ]
+        }
+    ]
+]
