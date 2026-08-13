@@ -1,0 +1,577 @@
+# Diagnosis Before Recovery: Turning Agent Failures into Selective Self-Correction
+
+Pan Wang Yihao Hu Hang Wang Zirui Lv Xin Zhang Jianshe Li Jiang-Ming Yang Wei Wu Yongqi Tong<sup>B</sup>
+
+Ant International
+
+Contact: Pan Wang diogenescask@gmail.com
+
+B Corresponding Author: yoqitong@gmail.com
+
+## Abstract
+
+Self-correction is particularly useful when a failure constrains the next repair. Coding agents benefit from this property because compilers, tests, and execution traces turn many failures into typed recovery signals, but broad language-agent tasks often expose only a coarse task failure. This creates a tension for generic recovery playbooks: they broaden the agent’s context precisely when the system needs a narrower repair interface, mixing incompatible signals for invalid actions, missing procedures, and strict-format errors. Our insight is that development-set failures can recover part of the missing diagnostic substrate by deciding which recovery interventions are admissible before test-time correction. We propose DARC, a diagnosis-guided recovery harness that profiles task-family failure modes, prunes mismatched interventions from a shared recovery library, and freezes a verifier-selected success-cost policy for deployment. This causal order makes correction selective: the harness first determines what kind of failure can be repaired, then decides how much recovery evidence to spend. In ALFWorld, AppWorld, and XBRL Finance, the same protocol yields an action-validity harness, a procedural-recovery fallback, and a format-precision retrieval policy; in each evaluated setting it improves average task performance over base agents and broad playbooks while reducing environment steps or retrieval budget. Our experiments show that failures need not trigger uniformly more context: DARC turns self-correction from prompt expansion into recovery-interface design. DARC provides a practical route toward more reliable agents in domains where compiler-like feedback is absent: making failures actionable before making contexts larger.
+
+Keywords: language agents, self-correction, failure diagnosis, recovery policies, agent evaluation
+
+## 1 Introduction
+
+Coding agents have become one of the most visible successes of language-agent research. A major reason is not only that code models improved, but that software environments provide an unusually powerful recovery interface: compilers expose syntax and type errors, tests expose behavioral mismatches, and execution traces localize intermediate states [13, 25, 37, 88, 95]. These signals do more than add information. They make failure actionable. A type error, a failing assertion, and a timeout call for diferent repairs; the environment helps the agent distinguish them.
+
+Most agent tasks are asked to self-correct without this diagnostic substrate. An embodied household agent may fail after issuing an invalid action, but the benchmark may only report that the episode was not solved. A multi-application assistant may miss a goal because it lacks the right API workflow, while a financial extraction agent may locate the evidence but violate a strict schema. These are not the same failure. Yet many recovery recipes treat them as if they were:
+
+append reflection, retrieve more examples, expose a longer tool manual, or run a broad recovery playbook. That strategy is attractive because it is generic, but it sufers from three concrete problems. 1 Intervention Mismatch: a recovery signal chosen without diagnosis often cannot address the failure at hand, such as exposing an exhaustive API manual to fix an invalid embodied action or a strict-format violation. 2 Recovery Interference: irrelevant procedures can pull an embodied agent away from state-compatible actions, long manuals can mix incompatible workflow rules, and demonstrations for one failure mode can degrade another. 3 Uncontrolled Recovery Cost: triggering every recovery signal on every failure inflates environment steps, retrieval budget, and inference tokens regardless of whether the extra evidence is needed.
+
+The key question is therefore not whether agents need more recovery material, but which failure should be allowed to trigger which recovery signal. This paper studies diagnosis guided agent self-correction: using development failures to recover part of the compiler-like role that broad agent tasks lack. Instead of treating a failure as a request for more context, we treat it as evidence about the dominant bottleneck of a task family. The output is a recovery harness: a frozen policy that links a diagnosed failure mode to a restricted set of admissible recovery interventions, such as an action-validity guard, a procedural API source, a local induction rule, or a retrieval-demonstration budget.
+
+We propose DARC, a framework for Diagnosis-guided Agent Recovery and Correction. DARC makes two design choices explicit. First, to address 1 , it profiles developmentset failures and restricts the recovery library before test evaluation, so interventions that cannot address the diagnosed failure mode are excluded rather than mixed into a generic playbook. Second, to resolve 2 and 3 , within the admissible set it uses training-set verifier feedback to distill a short success-cost policy for deployment, so that expensive recovery evidence is spent only when cheaper interventions fail. To ensure stability and auditability, we freeze this diagnosis at the task-family level rather than learning it online.
+
+We evaluate this protocol in three settings chosen to stress diferent recovery needs. ALFWorld tests action validity, where recovery should constrain state-incompatible actions rather than expose unrelated manuals. AppWorld tests procedural breadth, where recovery should reveal richer API workflow knowledge only when cheaper procedural sources fail. XBRL Finance tests format precision, where recovery should tune demonstration evidence without expanding into a broad playbook. These settings allow us to evaluate whether failure diagnosis makes self-correction more reliable and cost-aware across diverse bottlenecks.
+
+Our contributions are:
+
+• We formulate diagnosis-guided agent self-correction as the problem of turning ambiguous task failures into actionable recovery signals, motivated by the compiler-like feedback available in coding but often absent in broad agent tasks.
+
+• We propose DARC, which constructs recovery harnesses by development-set failure diagnosis, admissibleintervention restriction, and success-cost policy distillation.
+
+• We evaluate DARC on ALFWorld, AppWorld, and XBRL Finance, showing that targeted recovery improves average success or accuracy under the reported protocols while reducing environment steps or retrieval budget.
+
+• We provide extensive ablations isolating the impact of correct, generic, and mismatched recovery policies, demonstrating that diagnosis-guided restriction is essential for eficient self-correction.
+
+## 2 Related Work
+
+Self-correction from execution feedback. Recent work shows that agents can improve when feedback is structured enough to guide repair. In code generation, Self-
+
+Debugging uses execution results and explanations to refine programs [13], while LDB segments programs into execution units and verifies intermediate runtime states [95]. Related code-agent and program-synthesis work uses generated tests, execution traces, benchmarks, or agent-computer interfaces to expose concrete repair signals [6, 10, 12, 25, 47, 80, 85, 88]. Work on learning from mistakes and negative examples similarly suggests that errors can be useful supervision when their structure is exposed [21, 71, 77, 78]. Voyager uses environment feedback, execution errors, and self-verification to grow a skill library in Minecraft [75]. DARC takes this compiler-like feedback as motivation, but targets settings where such feedback is not naturally available: it uses development failures to build a task-family recovery interface for non-coding agent tasks.
+
+Language-agent recovery and reflection. ReAct [90] interleaves reasoning and acting, Reflexion [64] stores verbal feedback, and recursive critique [30] uses feedback loops for computer-control tasks. Broader reasoning and refinement methods use chain-of-thought, self-consistency, decomposition, search, or process supervision to make intermediate reasoning states more explicit [14, 31, 40, 46, 70, 72, 76, 81– 83, 91, 93, 96]. These methods demonstrate the value of self-correction, but the recovery mechanism is often applied uniformly across failures. DARC instead makes the recovery policy conditional on a diagnosed failure mode: actionvalidity recovery, procedural recovery, and format-precision recovery expose diferent interventions.
+
+Prompt optimization and generic context. Frameworks such as DSPy [28] and teleprompter-based optimization [48] tune instructions and demonstrations over validation data. Tool and multi-agent systems expose external modules, APIs, planning roles, or conversation protocols to language models [19, 26, 34, 36, 52, 54, 56, 60, 62, 67, 84]. Other lines use reinforcement learning or preference optimization to update model behavior [4, 8, 32, 38, 49, 51, 59, 61, 79, 86], including multi-turn or device-control agents [7, 55, 97]. These approaches are complementary to DARC. Our focus is not weight updates or arbitrary prompt search, but the construction of a recovery interface that decides which feedback and interventions are relevant for a diagnosed failure mode.
+
+When more context is not neutral. The motivation for diagnosis-guided recovery is strengthened by evidence that irrelevant or poorly placed context can hurt language-model behavior. GSM-IC shows that irrelevant context can distract LLM reasoning [63], while Lost in the Middle shows that models do not robustly use long contexts even when relevant information is present [42]. Long-context, real-world chat, format-following, and safety studies similarly show that performance depends on where information appears, whether irrelevant material is present, and whether the task constraints are precise [9, 20, 35, 41, 50, 69, 89]. In agent settings, a generic playbook can similarly mix unrelated procedures, constraints, and demonstrations. DARC addresses this by restricting recovery context before policy search rather than appending a universal context bundle after every failure.
+
+![](images/3b3d99453d05db9444cb651c63a8f9bb95911a1878e5f3a4270ce9f52a02ef5a.jpg)  
+Figure 1: DARC constructs a diagnosis-guided recovery harness. Development failures are converted into a task-family failure diagnosis, which restricts the candidate recovery interventions. Training-set verifier feedback then scores candidate fallback policies, and the selected policy is frozen before test evaluation.
+
+Cascades, routing, and adaptive computation. LLM cascade methods such as FrugalGPT [11] and AutoMix [2] route queries among models to trade cost for accuracy. Retrieval-augmented and adaptive-retrieval methods decide what evidence to fetch or how much retrieval is needed for a query [5, 16, 17, 22–24, 27, 33, 87]. DARC routes among recovery interventions rather than base models. Scaling or switching the model does not necessarily fix an invalid action, a missing API procedure, or an output-format violation. The closest matched baseline is therefore a validation-selected full-library recovery cascade without diagnosis; we report this controlled comparison on ALFWorld in Section 6 (Table 14), where diagnosis matches full-library accuracy while searching a much smaller policy space.
+
+## 3 Problem Setup: Diagnosis-Guided Recovery
+
+Let X denote a task family and let an agent produce an output or trajectory � for each task $x \in \chi$ . Evaluation is given by a task verifier $s ( x , y ) \in \{ 0 , 1 \}$ and an execution cost $c ( x , y ) \geq 0 .$ , such as environment steps, latency, or retrieval budget. We assume a library of candidate recovery interventions R, where an intervention may be an action guard, an API procedure source, a local induction rule, or a few-shot retrieval budget. We use intervention for an executable correction signal that can be attached to a base agent and evaluated by the task verifier. A failure signal is actionable when it selects or parameterizes an admissible intervention rather than merely adding more undiferentiated
+
+context.
+
+The central object in this paper is a recovery harness. A harness for failure mode � is defined as a tuple
+
+$$
+H _ { m } = ( m , \mathcal { R } _ { m } , \pi _ { m } ) ,\tag{1}
+$$
+
+where $\mathcal { R } _ { m } \subseteq \mathcal { R }$ is the set of interventions admissible for that diagnosed failure mode and $\boldsymbol { \pi } _ { m } = ( r _ { 1 } , \ldots , r _ { L } )$ is the ordered deployment policy over those interventions. In our instantiation, � is assigned at the task-family level from development-set failure profiles. Each benchmark family or split pair defines one X and one fixed recovery policy before test evaluation.
+
+The recovery objective is to select a short policy that improves task success without invoking unnecessary or mismatched interventions:
+
+$$
+\operatorname* { m a x } _ { \pi \in \Sigma ( \mathcal { R } _ { m } ) } \mathbb { E } _ { x \sim \mathcal { X } } [ s ( x , \pi ) ] - \lambda \operatorname* { m a x } \big ( 0 , \mathbb { E } _ { x \sim \mathcal { X } } [ c ( x , \pi ) ] - \tau _ { \mathrm { f r e e } } \big ) ,\tag{2}
+$$
+
+where $\Sigma ( \mathcal { R } _ { m } )$ is the space of bounded-length recovery policies, � controls the cost-success tradeof, and $\tau _ { \mathrm { f r e e } }$ is the cost allowance of a standard attempt. This formulation makes two questions explicit: which recovery signals are actionable for this failure mode, and in what order should they be invoked?
+
+## DARC: Diagnosis-Guided Agent Recovery and Correction
+
+DARC constructs a recovery harness in two stages (Figure 1). The diagnosis stage turns development failures into a taskfamily failure mode and restricts the recovery interventions that may be used. The policy-distillation stage freezes a cost-aware fallback policy over that restricted intervention set. Algorithm 1 summarizes the procedure.
+
+```latex
+Algorithm 1 DARC Recovery-Harness Construction
+Require: Task family X, candidate intervention library ${ \mathcal { R } } .$
+training tasks $\mathcal { D } _ { \mathrm { t r a i n } }$ , failure-profile data $\mathcal { D } _ { \mathrm { d e v } } .$ , penalty
+$\lambda .$
+1: Profile: Run the base agent on $\mathcal { D } _ { \mathrm { d e v } }$ and measure failure
+signatures.
+2: Diagnose: Select dominant failure mode � and admis
+sible intervention set ${ \mathcal { R } } _ { m } \subseteq { \mathcal { R } } .$
+3: Evaluate interventions: For each $x _ { i } ~ \in ~ \mathcal { D } _ { \operatorname { t r a i n } }$ and
+intervention $r _ { j } \in \mathcal { R } _ { m } .$ , record success $s ( x _ { i } , r _ { j } )$ and cost
+$c ( x _ { i } , r _ { j } )$
+4: Distill policy: Enumerate bounded candidate policies
+$\pi \in \Sigma ( \mathcal { R } _ { m } )$ and score them by $J ( \pi )$
+5: Freeze: Deploy $\pi ^ { * } = \arg \operatorname* { m a x } _ { \pi } J ( \pi )$ as the task-family
+recovery policy.
+```
+
+Candidate intervention library. The candidate library R is fixed before test evaluation. It contains the recovery interventions available to all relevant baselines in a benchmark family: action guards for ALFWorld, procedural knowledge sources and local induction rules for AppWorld, and retrieval-demonstration budgets for Finance. DARC does not invent new interventions at test time; it restricts this pre-specified library to the interventions that match the diagnosed failure mode.
+
+## 4.1 Failure Diagnosis
+
+DARC converts development-set failure analysis into a harness restriction. For each task family, we execute the base agent on development tasks and measure observable failure signatures: invalid or state-incompatible actions in ALF-World, missing cross-application procedures in AppWorld, and exact-format violations in XBRL Finance. These signatures identify a dominant failure mode and determine the admissible intervention set ${ \mathcal { R } } _ { m }$ .
+
+This frozen, task-family-level diagnosis makes the harness auditable, avoids test-time updates, and prevents the policy from observing test labels. While the framework can support learned per-instance routing, our experiments evaluate the controlled setting where each family instantiates one dominant failure mode. Appendix C lists the failure signals and intervention sets, while Appendix D provides representative development-trace diagnosis examples.
+
+The output of diagnosis is not a longer prompt; it is a constrained recovery space. ALFWorld receives an actionvalidity harness, AppWorld receives a procedural-knowledge harness, and Finance receives a format-precision harness based on retrieval demonstrations. This restriction is the key diference from a universal playbook: interventions that cannot address the diagnosed failure mode are excluded before policy search, reducing irrelevant or conflicting recovery context.
+
+## 4.2 Recovery-Policy Distillation
+
+Given $\mathcal { R } _ { m }$ , DARC estimates which intervention or intervention sequence should be used at deployment time. For each training task $x _ { i }$ and intervention $r _ { j } .$ , we collect
+
+$$
+E _ { i , j } = { \big ( } s ( x _ { i } , r _ { j } ) , c ( x _ { i } , r _ { j } ) { \big ) } ,\tag{3}
+$$
+
+where success is measured by the same task verifier used for training-set adaptation and cost is measured in the relevant budget unit. This uses training-set success feedback; it does not use test labels. Section 5 reports this accounting explicitly for all methods.
+
+DARC evaluates a candidate policy $\pi = ( r _ { 1 } , \ldots , r _ { L } )$ as a short-circuit policy: the agent tries interventions in order and stops when one succeeds. The halting index is
+
+$$
+\begin{array} { r } { h _ { i } ^ { * } ( \pi ) = \left. \begin{array} { l l } { \operatorname* { m i n } \lbrace t : s ( x _ { i } , r _ { t } ) = 1 \rbrace , } & { \mathrm { i f ~ a n y ~ i n t e r v e n t i o n ~ i n ~ } \pi \mathrm { ~ s u c c e e d s } , } \\ { L , } & { \mathrm { o t h e r w i s e } . } \end{array} \right. } \end{array}
+$$
+
+The empirical success and cost are
+
+(4)
+
+$$
+\widehat { \operatorname { s u c c } } ( \pi ) = \frac { 1 } { | \mathcal { D } _ { \mathrm { t r a i n } } | } \sum _ { i } \operatorname* { m a x } _ { r _ { t } \in \pi } s ( x _ { i } , r _ { t } ) ,\tag{5}
+$$
+
+$$
+\widehat { \mathrm { c o s t } } ( \pi ) = \frac { 1 } { | \mathcal { D } _ { \mathrm { t r a i n } } | } \sum _ { i } \sum _ { t = 1 } ^ { h _ { i } ^ { * } ( \pi ) } c ( x _ { i } , r _ { t } ) .\tag{6}
+$$
+
+The deployed policy maximizes
+
+$$
+J ( \pi ) = \widehat { \mathrm { s u c c } } ( \pi ) - \lambda \operatorname* { m a x } ( 0 , \widehat { \mathrm { c o s t } } ( \pi ) - \tau _ { \mathrm { f r e e } } ) .\tag{7}
+$$
+
+The short-circuit estimate assumes that intervention attempts are evaluated under a controlled retry protocol: later interventions are invoked only after an earlier intervention fails, and the verifier can attribute success and cost to the invoked intervention. In resettable environments, each intervention can be evaluated from the same initial state; in retrieval and extraction settings, interventions difer only in the supplied evidence budget. This assumption is explicit because it determines when an ofline evidence matrix is a valid proxy for deployment. Table 1 summarizes the deployment semantics used by each benchmark family.
+
+## 4.3 Structural Properties
+
+The success term in DARC is a coverage objective over recovery interventions. For a subset $A \subseteq \mathcal { R } _ { m }$ , define $f ( A ) =$ $\begin{array} { r } { \frac { 1 } { n } \sum _ { i } \operatorname* { m a x } _ { r \in A } s ( x _ { i } , r ) } \end{array}$ . Then � is monotone and submodular, because adding an intervention can only cover additional tasks and marginal gains shrink as the covered set grows. This explains why short policies can capture most of the reachable recovery set in our finite candidate spaces.
+
+The full objective in Eq. 7 is an ordered, cost-penalized policy objective, so the coverage result alone does not establish optimal cost-aware ordering. Instead, diagnosis reduces the candidate space and policy distillation enumerates bounded policies inside that space. For a fixed finite policy class $\Sigma _ { K }$ , standard uniform convergence gives that the empirical maximizer approaches the best population policy at rate $O ( \sqrt { \log | \Sigma _ { K } | / n } )$ under bounded per-task costs. Since $\left| \Sigma _ { K } \right|$ decreases with $| { \mathcal { R } } _ { m } | .$ , diagnosis-guided restriction supports selection within a fixed finite candidate class; transfer across new failure modes remains an empirical question.
+
+Table 1: Deployment semantics for the reported DARC policies. The policy is frozen before test evaluation; later interventions are invoked only after earlier interventions fail under the benchmark verifier.
+<table><tr><td>Benchmark</td><td>Later intervention observes</td><td>Side-effect control</td><td>Reported cost</td></tr><tr><td>ALFWorld</td><td>Same episode specification with a stricter action-validity harness</td><td>Resettable evaluation from the same initial environment state</td><td>Environment steps, invalid actions, seconds per episode</td></tr><tr><td>AppWorld</td><td>Richer procedural context after a cheaper procedural source fails</td><td>Controlled task attempts with suc- cess attributed by the task verifier</td><td>Environment steps and task/s- cenario completion</td></tr><tr><td>Finance</td><td>Same extraction query with a different retrieval-demonstration budget</td><td>Stateless extraction; no environment side effects</td><td>Retrieval budget k and an- swer accuracy</td></tr></table>
+
+## 5 Experiments
+
+We evaluate whether diagnosis-guided recovery improves agent self-correction under controlled adaptation budgets. The experiments answer four questions:
+
+• RQ1 (Performance): How does DARC compare with base agents and generic playbook baselines?
+
+• RQ2 (Transfer): Do frozen recovery policies transfer across related splits or tasks?
+
+• RQ3 (Diagnosis): How much does selecting the correct diagnosis-guided recovery policy matter relative to generic or mismatched policies?
+
+• RQ4 (Cost): Does the distilled policy reduce unnecessary environment steps or retrieval budget?
+
+## 5.1 Experimental Setup
+
+Benchmarks and recovery diagnoses. We instantiate one dominant failure diagnosis per benchmark family (Appendix C). ALFWorld [65] is treated as an action-validity setting, so the recovery harness contains task-specific action guards. AppWorld [73] is treated as a proceduralknowledge setting, so the harness contains Auto-Knowledge, local induction, and retrieval fallback interventions. XBRL Finance [45, 74] is treated as a format-precision setting, so the harness restricts interventions to retrieval-based demonstrations and distills the retrieval budget �.
+
+Baselines. We compare against Base LLM, ICL [1], MIPROv2 [48], GEPA [3], and ACE [94]. These baselines cover many-shot in-context learning, instruction/demonstration optimization, and reflective prompt evolution [28]. All ofline-adaptation methods use the same training split and adaptation budget available to DARC unless a baseline is not applicable to a benchmark. Appendix G summarizes the mechanisms.
+
+Table 2: Information used during adaptation. “Train success” denotes training-set verifier or task-success feedback used to score candidate policies. “Answer labels” denotes direct use of groundtruth answers to construct prompts, demonstrations, or optimized instructions. No method uses test labels.
+<table><tr><td>Method</td><td>Train success</td><td>Answer labels</td><td>Test labels</td></tr><tr><td>Base LLM</td><td>No</td><td>No</td><td>No</td></tr><tr><td>ICL</td><td>No</td><td>Yes</td><td>No</td></tr><tr><td>MIPROv2 / GEPA</td><td>Yes</td><td>Yes</td><td>No</td></tr><tr><td>ACE</td><td>Yes</td><td>No</td><td>No</td></tr><tr><td>DARC</td><td>Yes</td><td>No</td><td>No</td></tr></table>
+
+Supervision and feedback accounting. DARC uses training-set verifier outcomes to estimate intervention success in the evidence matrix; it does not use test labels. This difers from prompt-optimization baselines that directly use answer labels to construct prompts or demonstrations. Table 2 separates these forms of information.
+
+Evaluation scope. We report all quantitative metrics as empirical estimates across the respective evaluation splits, and we complement the headline comparison with scenariocluster bootstrap confidence intervals and paired significance tests to assess whether the observed gaps exceed split-level sampling noise (Figure 2). To isolate the impact of our diagnosis-guided restriction, the ablation studies compare three recovery strategies: (1) the correct policy, which aligns interventions with the diagnosed failure mode; (2) a generic baseline that uses a standard, unconstrained recovery playbook; and (3) a mismatched policy that acts as a negative control by applying an incompatible intervention set. This design separates the actual benefits of targeted recovery from the simple efect of adding more context.
+
+## 5.2 Main Benchmark Results
+
+Tables 3 and 4 report the main results. Across the evaluated settings, DARC generally improves average performance over base agents and generic playbooks, but the gains are not uniform across every metric. In particular, ACE matches or exceeds DARC on some AppWorld challenge metrics for Qwen3.5-27B and Qwen3.6-27B [57, 58]. We therefore interpret these results as evidence for the average utility of diagnosis-guided recovery, though the gains vary by metric.
+
+![](images/0cbf3c592d3a571c52cb07ab8de6eec6cd55666b238bedbad071160674e0c605.jpg)
+
+![](images/5d10a3d547ab4e4213bfd7aa17ce560451096fe1d104cd2eab6e0d9d1c21308e.jpg)  
+Figure 2: AppWorld Test-Normal completion for DeepSeek-V4- Flash with 95% scenario-cluster bootstrap confidence intervals (20,000 resamples over 56 scenarios). The intervals of DARC do not overlap those of ACE or the base agent on either TGC or SGC, and paired scenario-level tests with Holm correction confirm the gaps are significant.
+
+On ALFWorld, the action-validity recovery policy substantially improves both seen and unseen splits. With DeepSeek-V4-Flash, valid-unseen success increases from 39.55% for the base agent and 54.48% for ACE to 90.30%. On App-World, the procedural recovery policy gives the strongest gains on Test-Normal and improves average TGC for all three base models, while challenge-split SGC remains competitive with ACE rather than uniformly better. On Finance, the format-precision policy reaches 94.50% macro accuracy with DeepSeek-V4-Flash, compared with 80.50% for ACE and 74.00% for MIPROv2 under the reported protocol. As detailed in Table 4, “Answer Labels” follows Table 2: whether ground-truth answers are directly used to construct prompts or demonstrations during adaptation. DARC uses training-set verifier outcomes to score retrieval budgets but does not use test labels.
+
+Statistical significance. Because agent benchmarks are evaluated on finite task splits, we quantify the uncertainty of the headline AppWorld comparison at the scenario level. AppWorld Test-Normal contains 168 tasks nested within 56 scenarios (three tasks per scenario); since outcomes within the same scenario are correlated, we treat the scenario rather than the individual task as the independent statistical unit. We align all methods by task identifier, compute per-scenario TGC as the fraction of completed tasks and SGC as an indicator that all three tasks are completed, and estimate 95% confidence intervals with 20,000 scenario-cluster bootstrap resamples shared across methods. Figure 2 reports the resulting intervals for DeepSeek-V4-Flash: those of DARC do not overlap those of ACE or the base agent. Using a two-sided paired �-test for per-scenario TGC and an exact McNemar test for paired SGC outcomes, we confirm that all DARC-versus-baseline comparisons remain significant across the 56 scenarios after Holm correction. These intervals quantify scenario-sampling uncertainty rather than variation across model-training seeds.
+
+## 5.3 Cross-Task Transferability
+
+We next test whether a frozen recovery policy can transfer across related tasks. For Finance, we distill a retrieval-budget policy on Formula and deploy it on FiNER tags, and vice versa. For ALFWorld, we distill on valid\_seen and deploy on valid\_unseen. As shown in Table 5, the target-tuned row is shown only when a target-specific policy was available.
+
+These within-family transfer results suggest that the frozen recovery policy can preserve much of the target-tuned performance when the failure mode remains similar. For Finance, the frozen retrieval-budget policy remains close to the target-tuned policy: Formula-to-FiNER reaches 89.50% versus 90.00%, and FiNER-to-Formula reaches 96.00% versus 99.00%. For ALFWorld, the same action-validity policy transfers from valid\_seen to valid\_unseen and reaches 90.30%.
+
+## 6 Analysis and Ablation
+
+The diagnosis-guided view predicts that recovery interventions are not interchangeable across failure modes. A retrieval demonstration can help Finance formatting but cannot make an ALFWorld action admissible. An action guard can prune embodied commands but cannot supply the AppWorld API procedure needed for a multi-application workflow. We test this prediction by comparing correct, generic, and mismatched recovery policies.
+
+## 6.1 Ablation: Recovery Diagnosis
+
+Table 6 shows that the correct recovery policy (aligned with the diagnosed failure mode) outperforms both a generic playbook and a mismatched intervention set across all evaluated settings. For AppWorld Test-Normal (evaluated under a stricter 25-step budget not comparable to Table 3), correct diagnosis reaches 70.24% TGC compared to 61.90% (generic) and 64.88% (mismatched), while achieving the best SGC with fewer environment steps than the generic playbook (36.60 vs. 42.97).
+
+While AppWorld confidence intervals overlap, the directional advantage is consistent. Notably, the mismatched policy exceeds the generic playbook on AppWorld TGC. This supports our premise that excessive irrelevant context (generic) can be more harmful than largely inert mismatched interventions, though the expected ordering holds under the stricter SGC metric. The penalty for mismatched interventions is much larger on ALFWorld and Finance, where they actively conflict with the required recovery behavior.
+
+Overall, these results highlight the necessity of diagnosis guided restriction: adding context only helps when interventions match the underlying failure mode. Further ablations (Appendix H) confirm that isolating the diagnosis step maintains accuracy while significantly improving search eficiency and stability.
+
+Table 3: Benchmark results on ALFWorld and AppWorld. For ALFWorld, we report success rates on valid\_seen and valid\_unseen. For AppWorld, TGC is Task Goal Completion and SGC is Scenario Goal Completion. Bold marks the best value within each base-model block and metric.
+<table><tr><td rowspan="3">Method</td><td colspan="3">ALFWorld</td><td colspan="6">AppWorld</td></tr><tr><td rowspan="2">valid_seen↑</td><td rowspan="2">valid_unseen↑</td><td rowspan="2">Macro Avg.↑</td><td colspan="2">Test-Normal</td><td colspan="2">Test-Challenge</td><td colspan="2">Average</td></tr><tr><td>TGC↑</td><td>SGC↑</td><td>TGC↑</td><td>SGC↑</td><td>TGC↑</td><td>SGC↑</td></tr><tr><td colspan="10">DeepSeek-V4-Flash</td></tr><tr><td>Base LLM</td><td>40.71%</td><td>39.55%</td><td>40.13%</td><td>23.21%</td><td>7.14%</td><td>13.43%</td><td>6.47%</td><td>18.32%</td><td>6.81%</td></tr><tr><td>ICL</td><td>46.43%</td><td>42.54%</td><td>44.48%</td><td>59.52%</td><td>42.86%</td><td>37.17%</td><td>19.42%</td><td>48.35%</td><td>31.14%</td></tr><tr><td>MIPROv2</td><td>54.29%</td><td>49.25%</td><td>51.77%</td><td>57.14%</td><td>35.71%</td><td>32.85%</td><td>10.07%</td><td>45.00%</td><td>22.89%</td></tr><tr><td>GEPA</td><td>59.29%</td><td>63.43%</td><td>61.36%</td><td>54.17%</td><td>30.36%</td><td>33.57%</td><td>12.95%</td><td>43.87%</td><td>21.65%</td></tr><tr><td>ACE</td><td>50.00%</td><td>54.48%</td><td>52.24%</td><td>54.76%</td><td>39.29%</td><td>35.73%</td><td>17.99%</td><td>45.25%</td><td>28.64%</td></tr><tr><td>DARC</td><td>93.57%</td><td>90.30%</td><td>91.94%</td><td>95.83%</td><td>87.50%</td><td>53.96%</td><td>30.22%</td><td>74.90%</td><td>58.86%</td></tr><tr><td colspan="10">Qwen3.5-27B</td></tr><tr><td>Base LLM</td><td>58.57%</td><td>55.22%</td><td>56.90%</td><td>42.26%</td><td>23.21%</td><td>23.74%</td><td>12.23%</td><td>33.00%</td><td>17.72%</td></tr><tr><td>ICL</td><td>72.14%</td><td>70.90%</td><td>71.52% 64.87%</td><td>75.00%</td><td>57.14%</td><td>59.71%</td><td>38.13%</td><td>67.36%</td><td>47.64%</td></tr><tr><td>MIPROv2</td><td>69.29%</td><td>60.45% 72.39%</td><td>75.84%</td><td>4.76% 50.60%</td><td>0.00% 17.86%</td><td>6.95%</td><td>0.72%</td><td>5.86%</td><td>0.36%</td></tr><tr><td>GEPA</td><td>79.29% 80.00%</td><td>81.34%</td><td>80.67%</td><td>79.17%</td><td>64.29%</td><td>34.29%</td><td>12.95% 51.08%</td><td>42.44%</td><td>15.40%</td></tr><tr><td>ACE DARC</td><td>94.29%</td><td>95.52%</td><td>94.90%</td><td>93.45%</td><td>89.29%</td><td>74.58% 65.47%</td><td>41.01%</td><td>76.88%</td><td>57.68%</td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>79.46%</td><td>65.15%</td></tr><tr><td colspan="10">Qwen3.6-27B</td></tr><tr><td>Base LLM</td><td>59.29%</td><td>56.72%</td><td>58.00%</td><td>42.86%</td><td>32.14%</td><td>26.14%</td><td>12.95%</td><td>34.50%</td><td>22.55%</td></tr><tr><td>ICL</td><td>75.00%</td><td>76.12%</td><td>75.56%</td><td>60.71%</td><td>46.43%</td><td>41.73%</td><td>25.18%</td><td>51.22%</td><td>35.80%</td></tr><tr><td>MIPROv2</td><td>63.57%</td><td>55.22%</td><td>59.40%</td><td>14.29%</td><td>8.93%</td><td>6.47%</td><td>2.88%</td><td>10.38%</td><td>5.91%</td></tr><tr><td>GEPA</td><td>90.00%</td><td>83.58%</td><td>86.79%</td><td>45.83%</td><td>30.36%</td><td>34.53%</td><td>18.71%</td><td>40.18%</td><td>24.53%</td></tr><tr><td>ACE</td><td>80.71%</td><td>78.36%</td><td>79.54%</td><td>67.86%</td><td>55.36%</td><td>53.00%</td><td>32.37%</td><td>60.43%</td><td>43.86%</td></tr><tr><td>DARC</td><td>97.14%</td><td>95.52%</td><td>96.33%</td><td>86.31%</td><td>78.57%</td><td>47.72%</td><td>32.37%</td><td>67.02%</td><td>55.47%</td></tr></table>
+
+Table 4: Finance benchmark results on FiNER tags and Formula extraction.
+<table><tr><td>Method</td><td>Answer Labels</td><td>FiNER / Tags Acc↑</td><td>Formula Acc↑</td><td>Average↑</td></tr><tr><td colspan="5">DeepSeek-V4-Flash</td></tr><tr><td>Base LLM ICL</td><td>No Yes</td><td>68.00% 77.50% 78.50%</td><td>8.00% 66.00%</td><td>38.00% 71.75%</td></tr><tr><td>MIPROv2 GEPA ACE DARC</td><td>Yes Yes No No</td><td>82.50% 83.00% 90.00%</td><td>69.50% 61.00% 78.00% 99.00%</td><td>74.00% 71.75% 80.50% 94.50%</td></tr><tr><td colspan="5">Qwen3.5-27B</td></tr><tr><td>Base LLM ICL MIPROv2</td><td>No Yes Yes</td><td>47.50% 69.50% 72.00%</td><td>24.00% 45.50% 58.00%</td><td>35.75% 57.50% 65.00%</td></tr><tr><td>GEPA ACE</td><td>Yes No</td><td>68.00% 82.00%</td><td>61.00% 79.00%</td><td>64.50% 80.50%</td></tr><tr><td>DARC</td><td>No</td><td>87.50%</td><td>98.50%</td><td>93.00%</td></tr><tr><td colspan="5">Qwen3.6-27B</td></tr><tr><td>Base LLM</td><td>No</td><td>53.00%</td><td>36.00%</td><td>44.50%</td></tr><tr><td>ICL</td><td>Yes</td><td>67.00%</td><td>46.00%</td><td>56.50%</td></tr><tr><td>MIPROv2</td><td>Yes</td><td>72.50%</td><td>60.00%</td><td>66.25%</td></tr><tr><td>GEPA</td><td>Yes</td><td>77.50%</td><td>60.00%</td><td>68.75%</td></tr><tr><td>ACE</td><td>No</td><td>81.50%</td><td>75.00%</td><td>78.25%</td></tr><tr><td>DARC</td><td>No</td><td>86.50%</td><td>98.50%</td><td>92.50%</td></tr></table>
+
+## 6.2 Matched-Information Fairness
+
+The large ALFWorld gain invites a fairness concern: does DARC win only because its action-validity guard sees privileged admissibility information that baselines do not? We test this directly on the full 134-task valid\_unseen split, with all methods using the same DeepSeek-V4-Flash backbone, identical environment observations, the full set of admissible actions returned by the environment, a 50-step budget, and the same evaluation script. Crucially, DARC’s guard is not a model-probability ranker and does not read the environment’s ground-truth action: it is a deterministic, diagnosis-aware rule scorer that ranks each admissible command � by
+
+Table 5: Cross-task transferability of frozen DARC policies. Finance transfers between the Formula and FiNER-tags tasks; ALFWorld transfers from valid\_seen to valid\_unseen.
+<table><tr><td rowspan="2">Method</td><td colspan="2">Finance (Acc↑)</td><td>ALFWorld (Succ↑)</td></tr><tr><td>Formula → FiNER</td><td>FiNER → Formula</td><td>seen → unseen</td></tr><tr><td>Base LLM</td><td>68.00%</td><td>8.00%</td><td>39.55%</td></tr><tr><td>ICL</td><td>77.50%</td><td>66.00%</td><td>42.54%</td></tr><tr><td>MIPROv2</td><td>78.50%</td><td>69.50%</td><td>49.25%</td></tr><tr><td>GEPA</td><td>82.50%</td><td>61.00%</td><td>63.43%</td></tr><tr><td>ACE</td><td>83.00%</td><td>78.00%</td><td>54.48%</td></tr><tr><td>DARC (Frozen)</td><td>89.50%</td><td>96.00%</td><td>90.30%</td></tr><tr><td>DARC (Target-Tuned)</td><td>90.00%</td><td>99.00%</td><td></td></tr></table>
+
+Table 6: Impact of selecting the correct recovery diagnosis.
+<table><tr><td>Benchmark</td><td>Metric</td><td>Correct</td><td>Generic</td><td>Mismatched</td></tr><tr><td>ALFWorld</td><td>Success↑</td><td>91.94%</td><td>52.24%</td><td>52.24%</td></tr><tr><td>AppWorld</td><td>TGC↑</td><td>70.24%</td><td>61.90%</td><td>64.88%</td></tr><tr><td>AppWorld</td><td>SGC↑</td><td>53.57%</td><td>50.00%</td><td>46.43%</td></tr><tr><td>Finance</td><td>Macro↑</td><td>94.50%</td><td>80.50%</td><td>37.75%</td></tr></table>
+
+$$
+S ( a ) = S _ { \mathrm { g o a l } } + S _ { \mathrm { p h a s e } } + S _ { \mathrm { s e a r c h } } + S _ { \mathrm { t r a i n - p r i o r } } - S _ { \mathrm { c o n f i c t } } - S _ { \mathrm { l o o p } } ,\tag{8}
+$$
+
+and keeps the top 12. All terms are computed from the task description and training-set priors; none use test labels or environment-provided correct actions.
+
+Table 7 decomposes the sources of the gain. In this table, “Base + matched metadata” adds only parsed task type, target object, and movable/goal containers on top of the full action set, without diagnosis, ranking, or direct execution. Numbers are a same-day matched rerun under the 50-step budget; the ranked-recovery row is the run reported as DARC valid\_unseen in Table 3 (90.30%). They are not directly comparable to the valid\_seen-selected frozen cascade in Table 14 (99.25%, diferent selection protocol). Granting the base agent the same parsed metadata (task type, target object, movable and goal containers) improves success only marginally (39.55%→43.28%), so information access alone is not the driver. Restricting the action view to a random top-12 collapses ACE (54.48%→25.37%), so action-space restriction by itself is not a free lunch and can hurt. Diagnosis as a bare label, without the ranked recovery operator, stays at base level (38.81%). The gain materializes only with the ranked recovery operator, which reaches 89–90% while cutting invalid actions per episode to 0.11. The ALFWorld improvement is therefore attributable to the quality of the diagnosis-guided ranking of already-available admissible actions, not to privileged information or restriction alone.
+
+![](images/ba37c9b603fa123bcdd648622f6167cfc8f739c508f44b3593346a963cc497bf.jpg)  
+Figure 3: Cumulative solved episodes on ALFWorld as the maximum environment-step budget increases. DARC solves more episodes at lower budgets because the action-validity recovery policy reduces invalid or ineficient actions.
+
+Appendix F isolates this further with a 2 × 2 factorial over the two components of the harness. Neither component works alone: the recovery prompt on the full action set is worth −0.75 pp, the ranked action view without the recovery prompt is worth +3.73 pp, and forcing the guard’s top-1 command with no language model in the loop reaches only 40.33%. The two components together are worth +49.26 pp, an interaction of +46.27 pp. The ALFWorld gain is thus a property of the recovery interface, where restriction and instruction are explicitly matched to each other, rather than of either prompt content or action pruning in isolation.
+
+Table 7: Matched-information fairness evaluation on the ALF-World valid\_unseen split.
+<table><tr><td>Method</td><td>Action view</td><td>Success↑</td><td>Steps↓</td><td>Invalid/ep↓</td><td>Vs. ACE</td></tr><tr><td>Base LLM</td><td>Full</td><td>39.55%</td><td>35.25</td><td>1.709</td><td>-14.93</td></tr><tr><td>Base + matched metadata</td><td>Full</td><td>43.28%</td><td>34.02</td><td>1.560</td><td>-11.19</td></tr><tr><td>ACE</td><td>Full</td><td>54.48%</td><td>30.06</td><td>1.784</td><td>0.00</td></tr><tr><td>ACE + random top-k</td><td>Random top-12</td><td>25.37%</td><td>42.16</td><td>7.403</td><td>-29.10</td></tr><tr><td>DARC, diagnosis only</td><td>Full</td><td>38.81%</td><td>34.69</td><td>2.507</td><td>-15.67</td></tr><tr><td>DARC, ranked recovery</td><td>Ranked top-12</td><td>90.30%</td><td>16.50</td><td>0.575</td><td>+35.82</td></tr><tr><td>DARC, full guard</td><td>Ranked top-12</td><td>89.55%</td><td>18.38</td><td>0.112</td><td>+35.07</td></tr></table>
+
+## 6.3 Weight-Space Training Extension
+
+Beyond test-time recovery, we conduct a preliminary probe into extending DARC to weight-space training. Using Qwen3-8B, we compare two full-parameter fine-tuning methods guided by a DARC-derived two-stage curriculum (diverse\_replay then uniform\_rollout, allocating 5.0M and 2.5M tokens respectively). DARC-GRPO updates weights using standard GRPO, while DARC-OPSD adds an online exponential-moving-average (EMA) teacher for policy self-distillation. Table 8 summarizes the results for the final checkpoints.
+
+Table 8: Full evaluation of weight-space training extensions on ALFWorld. Models are fine-tuned from Qwen3-8B using a DARCderived two-stage curriculum.
+<table><tr><td>Method</td><td>valid_seen</td><td>valid_unseen</td><td>Macro↑</td><td>∆ Base</td></tr><tr><td>Base Qwen3-8B</td><td>7.14%</td><td>4.48%</td><td>5.81%</td><td></td></tr><tr><td>DARC-GRPO</td><td>12.14%</td><td>8.96%</td><td>10.55%</td><td>+4.74 pp</td></tr><tr><td>DARC-OPSD</td><td>9.29%</td><td>6.72%</td><td>8.00%</td><td>+2.19 pp</td></tr></table>
+
+Both weight-space variants improve success over the base model, suggesting that the DARC-derived curriculum transfers to weight-space training. DARC-GRPO improves macro success by 4.74 percentage points, while DARC-OPSD yields a smaller 2.19 pp gain, indicating that online self-distillation does not provide additional benefit over standard GRPO in this setting. Because these are singleseed runs with modest absolute gains, we treat this as a proof of concept rather than a fully verified training recipe.
+
+## 6.4 Benchmark-Specific Failure Modes
+
+Action validity in ALFWorld. The ALFWorld recovery policy restricts the agent to state-compatible actions. With DeepSeek-V4-Flash, DARC reduces invalid actions per episode to 0.091 (Table 10) and improves macro success to 91.94% (Table 3). This supports the interpretation that action validity is the dominant failure mode in this setting.
+
+Procedure breadth in AppWorld. AppWorld requires multi-step API knowledge. The procedural recovery policy uses a fallback chain because the interventions are complementary: a local induction rule can recover tasks that an Auto-Knowledge source misses. The gains are strongest on Test-Normal; the Test-Challenge split remains harder and includes metrics where ACE is competitive or better.
+
+Format precision in Finance. Finance shows that a recovery policy may tune a single intervention dimension rather than switch among heterogeneous interventions. Once the admissible set is restricted to retrieval demonstrations, DARC selects how much evidence to retrieve. Table 9 shows that larger retrieval budgets are not monotonic: � = 8 and � = 16 slightly reduce tag accuracy relative to smaller budgets. The distilled policy uses � = 2 for Formula and � = 1 for Tags, staying in the top macro-accuracy band while reducing the mean retrieval budget to 1.5 demonstrations.
+
+Table 9: Finance retrieval-budget distillation. The DARC policy selects � = 2 for Formula and � = 1 for Tags, staying in the top macro-accuracy band with a mean budget of 1.5 demonstrations.
+<table><tr><td>Method</td><td>Answer Labels</td><td>Formula</td><td>Tags</td><td>Macro</td><td>Mean k</td></tr><tr><td>Base LLM</td><td>No</td><td>8.0%</td><td>68.0%</td><td>38.00%</td><td>一</td></tr><tr><td>ICL</td><td>Yes</td><td>66.0%</td><td>77.5%</td><td>71.75%</td><td>4.0</td></tr><tr><td>MIPROv2</td><td>Yes</td><td>69.5%</td><td>78.5%</td><td>74.00%</td><td></td></tr><tr><td>GEPA</td><td>Yes</td><td>61.0%</td><td>82.5%</td><td>71.75%</td><td>一</td></tr><tr><td>ACE</td><td>No</td><td>78.0%</td><td>83.0%</td><td>80.50%</td><td>一</td></tr><tr><td>Fixed retrieval k = 1</td><td>No</td><td>96.0%</td><td>90.0%</td><td>93.00%</td><td>1.0</td></tr><tr><td>Fixed retrieval k = 2</td><td>No</td><td>99.0%</td><td>89.5%</td><td>94.25%</td><td>2.0</td></tr><tr><td>Fixed retrieval k = 4</td><td>No</td><td>99.0%</td><td>89.5%</td><td>94.25%</td><td>4.0</td></tr><tr><td>Fixed retrieval k = 8</td><td>No</td><td>99.0%</td><td>89.0%</td><td>94.00%</td><td>8.0</td></tr><tr><td>Fixed retrieval k = 16</td><td>No</td><td>99.0%</td><td>88.0%</td><td>93.50%</td><td>16.0</td></tr><tr><td>DARC policy</td><td>No</td><td>99.0%</td><td>90.0%</td><td>94.50%</td><td>1.5</td></tr></table>
+
+## 6.5 Cost-Success Tradeoff
+
+![](images/51ff6f9e8e6855d8a51d6c485254a381eaf3011f4c70d30323981e9b4367b481.jpg)  
+Figure 4: Cost-success tradeof on AppWorld. The red star marks the distilled DARC policy; points farther right use more environment steps.
+
+Figure 4 visualizes the candidate AppWorld policies. A policy that stacks many interventions can improve coverage but increases mean environment steps. A policy that is too short saves cost but misses recoverable tasks. The selected DARC policy lies on the observed high-success, lower-cost frontier for this candidate set.
+
+## 6.6 Cost and Speed Efficiency
+
+Table 10: Cost and speed eficiency on ALFWorld with DeepSeek-V4-Flash. DARC improves success per 100 environment steps by reducing invalid actions and shortening trajectories.
+<table><tr><td>Method</td><td>Env Steps↓</td><td>Invalid/ep.↓</td><td>Sec./ep.↓</td><td>Succ./100 steps↑</td></tr><tr><td>Base LLM</td><td>34.56</td><td>1.288</td><td>155.4</td><td>1.16</td></tr><tr><td>ICL</td><td>32.25</td><td>2.453</td><td>23.3</td><td>1.38</td></tr><tr><td>GEPA</td><td>26.51</td><td>1.489</td><td>20.0</td><td>2.31</td></tr><tr><td>ACE</td><td>30.53</td><td>1.343</td><td>143.8</td><td>1.71</td></tr><tr><td>DARC</td><td>15.83</td><td>0.091</td><td>10.3</td><td>6.02</td></tr></table>
+
+Table 10 shows the cost side of the ALFWorld recovery policy. Relative to the base agent, DARC reduces average environment steps by 54.2% and invalid actions by 92.9%. It also improves success per 100 steps from 1.16 to 6.02.
+
+Figure 3 shows the budget-level view of the same efect: DARC solves more episodes than each baseline at every maximum environment-step budget. These numbers support the claim that diagnosis-guided recovery can improve both success and cost in an action-validity setting.
+
+## 7 Conclusion and Limitations
+
+In this work, we introduced DARC, a framework that recasts agent self-correction from indiscriminate context expansion to diagnosis-guided recovery. By profiling task-family failure modes to restrict admissible interventions and distilling a cost-aware policy, DARC improves success across ALF-World, AppWorld, and XBRL Finance while mitigating the overhead and interference of generic playbooks. Future work includes extending our static diagnosis to dynamic, instancelevel routing for mixed-mode failures, developing more sample-eficient policy distillation methods, and expanding full-library cascade comparisons to broader domains.
+
+## References
+
+[1] Rishabh Agarwal, Avi Singh, Lei Zhang, Bernd Bohnet, Luis Rosias, Stephanie Chan, Biao Zhang, Ankesh Anand, Zaheer Abbas, Azade Nova, et al. Many-shot in-context learning. Advances in Neural Information Processing Systems, 37:76930–76966, 2024.
+
+[2] Pranjal Aggarwal, Aman Madaan, Ankit Anand, Srividya Pranavi Potharaju, Swaroop Mishra, Pei Zhou, Aditya Gupta, Dheeraj Rajagopal, Karthik Kappaganthu, Yiming Yang, Shyam Upadhyay, Manaal Faruqui, and Mausam. Automix: Automatically mixing language models. arXiv preprint arXiv:2310.12963, 2023.
+
+[3] Lakshya A Agrawal, Shangyin Tan, Dilara Soylu, Noah Ziems, Rishi Khare, Krista Opsahl-Ong, Arnav Singhvi, Herumb Shandilya, Michael J Ryan, Meng Jiang, et al. Gepa: Reflective prompt evolution can outperform reinforcement learning. arXiv preprint arXiv:2507.19457, 2025.
+
+[4] Arash Ahmadian, Chris Cremer, Matthias Gallé, Marzieh Fadaee, Julia Kreutzer, Olivier Pietquin, Ahmet Üstün, and Sara Hooker. Back to basics: Revisiting reinforce-style optimization for learning from human feedback in llms. In Proceedings ofthe 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 12248–12267, 2024.
+
+[5] Akari Asai, Zeqiu Wu, Yizhong Wang, Avirup Sil, and Hannaneh Hajishirzi. Self-RAG: Learning to retrieve, generate, and critique through self-reflection. In International Conference on Learning Representations, 2024.
+
+[6] Jacob Austin, Augustus Odena, Maxwell Nye, Maarten Bosma, Henryk Michalewski, David Dohan, Ellen Jiang, Carrie Cai, Michael Terry, Quoc Le, and Charles Sutton. Program synthesis with large language models. In arXiv preprint arXiv:2108.07732, 2021.
+
+[7] Hao Bai, Yifei Zhou, Mert Cemri, Jiayi Pan, Alane Suhr, Sergey Levine, and Aviral Kumar. Digirl: Training in-the-wild device-control agents with autonomous reinforcement learning. Advances in Neural Information Processing Systems, 37:12461–12495, 2024.
+
+[8] Yuntao Bai, Saurav Kadavath, Sandipan Kundu, Amanda Askell, Jackson Kernion, Andy Jones, Anna Chen, Anna Goldie, Azalia Mirhoseini, Cameron McKinnon, et al. Constitutional ai: Harmlessness from ai feedback. In arXiv preprint arXiv:2212.08073, 2022.
+
+[9] Yushi Bai, Xin Lv, Jiajie Zhang, Hongchang Lyu, Jiankai Tang, Zhidian Huang, Zhengxiao Du, Xiao Liu, Aohan Zeng, Lei Hou, et al. Longbench: A bilingual, multitask benchmark for long context understanding. In Proceedings of the 62nd annual meeting of the association for computational linguistics (volume 1: Long papers), pages 3119–3137, 2024.
+
+[10] Bei Chen, Fengji Zhang, Anh Nguyen, Daoguang Zan, Zeqi Lin, Jian-Guang Lou, and Weizhu Chen. Codet: Code generation with generated tests. arXiv preprint arXiv:2207.10397, 2022.
+
+[11] Lingjiao Chen, Matei Zaharia, and James Zou. Frugal gpt: How to use large language models while reducing cost and improving performance. arXiv preprint arXiv:2305.05176, 2023.
+
+[12] Mark Chen, Jerry Tworek, Heewoo Jun, Qiming Yuan, Henrique Ponde de Oliveira Pinto, Jared Kaplan, Harri Edwards, Yuri Burda, Nicholas Joseph, Greg Brockman, et al. Evaluating large language models trained on code. In arXiv preprint arXiv:2107.03374, 2021.
+
+[13] Xinyun Chen, Maxwell Lin, Nathanael Schärli, and Denny Zhou. Teaching large language models to self-debug. In International Conference on Learning Representations, 2024.
+
+[14] Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano, et al. Training verifiers to solve math word problems. In arXiv preprint arXiv:2110.14168, 2021.
+
+[15] Adam Fourney, Gagan Bansal, Hussein Mozannar, Cheng Tan, Eduardo Salinas, Friederike Niedtner, Grace Proebsting, Grifin Bassman, Jack Gerrits, Jacob Alber, et al. Magentic-one: A generalist multi-agent
+
+system for solving complex tasks. arXiv preprint arXiv:2411.04468, 2024.
+
+[16] Luyu Gao, Xueguang Ma, Jimmy Lin, and Jamie Callan. Precise zero-shot dense retrieval without relevance labels. In Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 1762–1777, 2023.
+
+[17] Kelvin Guu, Kenton Lee, Zora Tung, Panupong Pasupat, and Ming-Wei Chang. REALM: Retrievalaugmented language model pre-training. In International Conference on Machine Learning, pages 3929– 3938, 2020.
+
+[18] Dan Hendrycks, Collin Burns, Steven Basart, Andy Zou, Mantas Mazeika, Dawn Song, and Jacob Steinhardt. Measuring massive multitask language understanding. In International Conference on Learning Representations, 2021.
+
+[19] Sirui Hong, Xiawu Zheng, Jonathan Chen, Yuheng Cheng, Jinlin Wang, Ceyao Zhang, Zili Wang, Steven Ka Shing Yau, Zijuan Lin, Liyang Zhou, et al. MetaGPT: Meta programming for a multi-agent collaborative framework. International Conference on Learning Representations, 2024.
+
+[20] Cheng-Ping Hsieh, Simeng Sun, Samuel Kriman, Shantanu Acharya, Dima Rekesh, Fei Jia, and Boris Ginsburg. RULER: What’s the real context size of your long-context language models? arXiv preprint arXiv:2404.06654, 2024.
+
+[21] Yihao Hu, Zhihao Wen, Xiujin Liu, Pan Wang, Xin Zhang, and Wei Wu. Seal: Synergistic co-evolution of agents and learning environments. arXiv preprint arXiv:2605.24426, 2026.
+
+[22] Gautier Izacard and Edouard Grave. Leveraging passage retrieval with generative models for open domain question answering. In Proceedings ofthe 16th Conference ofthe European Chapter ofthe Associationfor Computational Linguistics, pages 874–880, 2021.
+
+[23] Gautier Izacard, Patrick Lewis, Maria Lomeli, Lucas Hosseini, Fabio Petroni, Timo Schick, Jane Dwivedi-Yu, Armand Joulin, Sebastian Riedel, and Edouard Grave. Few-shot learning with retrieval augmented language models. arXiv preprint arXiv:2208.03299, 1 (2):4, 2022.
+
+[24] Soyeong Jeong, Jinheon Baek, Sukmin Cho, Sung Ju Hwang, and Jong C Park. Adaptive-rag: Learning to adapt retrieval-augmented large language models through question complexity. In Proceedings of the
+
+2024 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers), pages 7036–7050, 2024.
+
+[25] Carlos E. Jimenez, John Yang, Alexander Wettig, Shunyu Yao, Kexin Pei, Ofir Press, and Karthik Narasimhan. SWE-bench: Can language models resolve real-world github issues? International Conference on Learning Representations, 2024.
+
+[26] Eyal Karpas, Omri Abend, Yonatan Belinkov, Barak Lenz, Opher Lieber, Nir Ratner, Yoav Shoham, Haggai Bata, Yoav Levine, Kevin Leyton-Brown, et al. MRKL systems: A modular, neuro-symbolic architecture that combines large language models, external knowledge sources and discrete reasoning. In arXiv preprint arXiv:2205.00445, 2022.
+
+[27] Vladimir Karpukhin, Barlas Oguz, Sewon Min, Patrick Lewis, Ledell Wu, Sergey Edunov, Danqi Chen, and Wen-tau Yih. Dense passage retrieval for open-domain question answering. In Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing, pages 6769–6781, 2020.
+
+[28] Omar Khattab, Arnav Singhvi, Paridhi Maheshwari, Zhiyuan Zhang, Keshav Santhanam, Sri Vardhamanan, Saiful Haq, Ashutosh Sharma, Thomas T Joshi, Hanna Moazam, et al. Dspy: Compiling declarative language model calls into self-improving pipelines. arXiv preprint arXiv:2310.03714, 2023.
+
+[29] Tushar Khot, Harsh Trivedi, Matthew Finlayson, Yao Fu, Kyle Richardson, Peter Clark, and Ashish Sabharwal. Decomposed prompting: A modular approach for solving complex tasks. International Conference on Learning Representations, 2023.
+
+[30] Geunwoo Kim, Pierre Baldi, and Stephen McAleer. Language models can solve computer tasks. Advances in Neural Information Processing Systems, 36:39648– 39677, 2023.
+
+[31] Takeshi Kojima, Shixiang Shane Gu, Machel Reid, Yutaka Matsuo, and Yusuke Iwasawa. Large language models are zero-shot reasoners. In Advances in Neural Information Processing Systems, volume 35, pages 22199–22213, 2022.
+
+[32] Harrison Lee, Sang Michael Xie Phatale, Hassan Mansoor, Thomas Mesnard, Johan Ferret, Kelvin Lu, Colton Bishop, Ethan Hall, Victor Carbune, Abhinav Rastogi, and Sushant Prakash. RLAIF: Scaling reinforcement learning from human feedback with ai feedback. In arXiv preprint arXiv:2309.00267, 2023.
+
+[33] Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich Küttler, Mike Lewis, Wen-tau Yih, Tim Rocktäschel, et al. Retrieval-augmented generation for knowledgeintensive nlp tasks. Advances in neural information processing systems, 33:9459–9474, 2020.
+
+[34] Guohao Li, Hasan Abed Al Kader Hammoud, Hani Itani, Dmitrii Khizbullin, and Bernard Ghanem. CAMEL: Communicative agents for mind exploration of large language model society. Advances in Neural Information Processing Systems, 36:51991–52008, 2023.
+
+[35] Jiaqi Li, Mengmeng Wang, Zilong Zheng, and Muhan Zhang. LooGLE: Can long-context language models understand long contexts? arXiv preprint arXiv:2311.04939, 2024.
+
+[36] Minghao Li, Feifan Song, Bowen Yu, Haiyang Yu, Zhoujun Li, Fei Huang, and Yongbin Li. API-bank: A comprehensive benchmark for tool-augmented llms. arXiv preprint arXiv:2304.08244, 2023.
+
+[37] Zeping Li, Hongru Wang, Yiwen Zhao, Guanhua Chen, Yixia Li, Keyang Chen, Yixin Cao, Guangnan Ye, Hongfeng Chai, and Zhenfei Yin. Rethinking the role of entropy in optimizing tool-use behaviors for large language model agents. In Proceedings of the 64th Annual Meeting ofthe Associationfor Computational Linguistics (Volume 1: Long Papers), pages 27955– 27967, 2026.
+
+[38] Ziniu Li, Tian Xu, Yushun Zhang, Zhihang Lin, Yang Yu, Ruoyu Sun, and Zhi-Quan Luo. Remax: A simple, efective, and eficient reinforcement learning method for aligning large language models. arXiv preprint arXiv:2310.10505, 2023.
+
+[39] Percy Liang, Rishi Bommasani, Tony Lee, Dimitris Tsipras, Dilara Soylu, Michihiro Yasunaga, Yian Zhang, Deepak Narayanan, Yuhuai Wu, Ananya Kumar, et al. Holistic evaluation of language models. In Transactions on Machine Learning Research, 2023.
+
+[40] Hunter Lightman, Vineet Kosaraju, Yura Burda, Harrison Edwards, Bowen Baker, Teddy Lee, Jan Leike, John Schulman, Ilya Sutskever, and Karl Cobbe. Let’s verify step by step. In International Conference on Learning Representations, 2024.
+
+[41] Zi Lin, Zihan Wang, Yongqi Tong, Yangkun Wang, Yuxin Guo, Yujia Wang, and Jingbo Shang. Toxicchat: Unveiling hidden challenges of toxicity detection in real-world user-ai conversation. In Findings of the Associationfor Computational Linguistics: EMNLP 2023, 2023.
+
+[42] Nelson F. Liu, Kevin Lin, John Hewitt, Ashwin Paranjape, Michele Bevilacqua, Fabio Petroni, and Percy Liang. Lost in the middle: How language models use long contexts. Transactions of the Association for Computational Linguistics, 12:157–173, 2024.
+
+[43] Xiao Liu, Hao Yu, Hanchen Zhang, Yifan Xu, Xuanyu Lei, Hanyu Lai, Yu Gu, Hangliang Ding, Kaiwen Men, Kejuan Yang, et al. Agentbench: Evaluating llms as agents. In International Conference on Learning Representations, volume 2024, pages 52989–53046, 2024.
+
+[44] Zhiwei Liu, Weiran Yao, Jianguo Zhang, Liangwei Yang, Zuxin Liu, Juntao Tan, Prafulla K Choubey, Tian Lan, Jason Wu, Huan Wang, et al. Agentlite: A lightweight library for building and advancing task-oriented llm agent system. arXiv preprint arXiv:2402.15538, 2024.
+
+[45] Lefteris Loukas, Manos Fergadiotis, Ilias Chalkidis, Eirini Spyropoulou, Prodromos Malakasiotis, Ion Androutsopoulos, and Georgios Paliouras. Finer: Financial numeric entity recognition for xbrl tagging. In Proceedings ofthe 60th Annual Meeting ofthe Association for Computational Linguistics (Volume 1: Long Papers), pages 4419–4431, 2022.
+
+[46] Aman Madaan, Niket Tandon, Prakhar Gupta, Skyler Hallinan, Luyu Gao, Sarah Wiegrefe, Uri Alon, Nouha Dziri, Shrimai Prabhumoye, Yiming Yang, et al. Selfrefine: Iterative refinement with self-feedback. In Advances in Neural Information Processing Systems, volume 36, pages 46534–46594, 2023.
+
+[47] Ansong Ni, Srini Iyer, Dragomir Radev, Veselin Stoyanov, Wen-tau Yih, Sida Wang, and Xi Victoria Lin. Lever: Learning to verify language-to-code generation with execution. In International Conference on Machine Learning, pages 26106–26128. PMLR, 2023.
+
+[48] Krista Opsahl-Ong, Michael J Ryan, Josh Purtell, David Broman, Christopher Potts, Matei Zaharia, and Omar Khattab. Optimizing instructions and demonstrations for multi-stage language model programs. In Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing, pages 9340–9366, 2024.
+
+[49] Long Ouyang, Jefrey Wu, Xu Jiang, Diogo Almeida, Carroll Wainwright, Pamela Mishkin, Chong Zhang, Sandhini Agarwal, Katarina Slama, Alex Ray, et al. Training language models to follow instructions with human feedback. In Advances in Neural Information Processing Systems, volume 35, pages 27730–27744, 2022.
+
+[50] Licheng Pan, Yongqi Tong, Xin Zhang, Xiaolu Zhang, Jun Zhou, and Zhixuan Chu. Understanding and mitigating overrefusal in llms from an unveiling perspective of safety decision boundary. In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing, pages 21057–21075, 2025.
+
+[51] Licheng Pan, Haochen Yang, Haoxuan Li, Yunsheng Lu, Yongqi Tong, Yinuo Wang, Shijian Wang, Zhixuan Chu, Lei Shen, Yuan Lu, and Hao Wang. Optimal transport for llm reward modeling from noisy preference. arXiv preprint arXiv:2605.06036, 2026.
+
+[52] Bhargavi Paranjape, Scott Lundberg, Sameer Singh, Hannaneh Hajishirzi, Luke Zettlemoyer, and Marco Tulio Ribeiro. ART: Automatic multi-step reasoning and tool-use for large language models. In arXiv preprint arXiv:2303.09014, 2023.
+
+[53] Joon Sung Park, Joseph C. O’Brien, Carrie J. Cai, Meredith Ringel Morris, Percy Liang, and Michael S. Bernstein. Generative agents: Interactive simulacra of human behavior. arXiv preprint arXiv:2304.03442, 2023.
+
+[54] Shishir G Patil, Tianjun Zhang, Xin Wang, and Joseph E Gonzalez. Gorilla: Large language model connected with massive apis. Advances in Neural Information Processing Systems, 37:126544–126565, 2024.
+
+[55] Zehan Qi, Xiao Liu, Iat Long Iong, Hanyu Lai, Xueqiao Sun, Jiadai Sun, Xinyue Yang, Yu Yang, Shuntian Yao, Wei Xu, et al. Webrl: Training llm web agents via selfevolving online curriculum reinforcement learning. In International Conference on Learning Representations, volume 2025, pages 79791–79821, 2025.
+
+[56] Yujia Qin, Shihao Liang, Yining Ye, Kunlun Zhu, Lan Yan, Yaxi Lu, Yankai Lin, Xin Cong, Xiangru Tang, Bill Qian, et al. Toolllm: Facilitating large language models to master 16000+ real-world apis. In The twelfth international conference on learning representations, 2023.
+
+[57] Qwen Team. Qwen3.5: Towards native multimodal agents, February 2026. URL https://qwen.ai/blog?id= qwen3.5.
+
+[58] Qwen Team. Qwen3.6-27B: Flagship-level coding in a 27B dense model, April 2026. URL https://qwen.ai/ blog?id=qwen3.6-27b.
+
+[59] Rafael Rafailov, Archit Sharma, Eric Mitchell, Christopher D Manning, Stefano Ermon, and Chelsea Finn. Direct preference optimization: Your language model is secretly a reward model. Advances in neural information processing systems, 36:53728–53741, 2023.
+
+[60] Timo Schick, Jane Dwivedi-Yu, Roberto Dessì, Roberta Raileanu, Maria Lomeli, Eric Hambro, Luke Zettlemoyer, Nicola Cancedda, and Thomas Scialom. Toolformer: Language models can teach themselves to use tools. Advances in neural information processing systems, 36:68539–68551, 2023.
+
+[61] Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei Zhang, Mingchuan Zhang, YK Li, Yang Wu, et al. Deepseekmath: Pushing the limits of mathematical reasoning in open language models. arXiv preprint arXiv:2402.03300, 2024.
+
+[62] Yongliang Shen, Kaitao Song, Xu Tan, Dongsheng Li, Weiming Lu, and Yueting Zhuang. HuggingGPT: Solving ai tasks with chatgpt and its friends in hugging face. Advances in Neural Information Processing Systems, 36:38154–38180, 2023.
+
+[63] Freda Shi, Xinyun Chen, Kanishka Misra, Nathan Scales, David Dohan, Ed H. Chi, Nathanael Schärli, and Denny Zhou. Large language models can be easily distracted by irrelevant context. In Proceedings of the 40th International Conference on Machine Learning, pages 31210–31227, 2023.
+
+[64] Noah Shinn, Federico Cassano, Ashwin Gopinath, Karthik Narasimhan, and Shunyu Yao. Reflexion: Language agents with verbal reinforcement learning. Advances in neural information processing systems, 36:8634–8652, 2023.
+
+[65] Mohit Shridhar, Xingdi Yuan, Marc-Alexandre Côté, Yonatan Bisk, Adam Trischler, and Matthew Hausknecht. Alfworld: Aligning text and embodied environments for interactive learning. arXiv preprint arXiv:2010.03768, 2020.
+
+[66] Aarohi Srivastava, Abhinav Rastogi, Abhishek Rao, Abu Awal Md Shoeb, Abubakar Abid, Adam Fisch, Austin Brown, Adam Santoro, Aditya Gupta, Adrià Garriga-Alonso, et al. Beyond the imitation game: Quantifying and extrapolating the capabilities of language models. Transactions on Machine Learning Research, 2023.
+
+[67] Theodore R Sumers, Shunyu Yao, Karthik Narasimhan, and Thomas L Grifiths. Cognitive architectures for language agents. arXiv preprint arXiv:2309.02427, 2023.
+
+[68] Mirac Suzgun, Nathan Scales, Nathanael Schärli, Sebastian Gehrmann, Yi Tay, Hyung Won Chung, Aakanksha Chowdhery, Quoc V. Le, Ed H. Chi, Denny Zhou, et al. Challenging big-bench tasks and whether chain-of-thought can solve them. In Findings of the Association for Computational Linguistics: ACL 2023, pages 13003–13051, 2023.
+
+[69] Zhi Rui Tam, Cheng-Kuang Wu, Yi-Lin Tsai, Chieh-Yen Lin, Hung-yi Lee, and Yun-Nung Chen. Let me speak freely? a study on the impact of format restrictions on performance of large language models. arXiv preprint arXiv:2408.02442, 2024.
+
+[70] Yongqi Tong, Yifan Wang, Dawei Li, Sizhe Wang, Zi Lin, Simeng Han, and Jingbo Shang. Eliminating reasoning via inferring with planning: A new framework to guide llms’ non-linear thinking. arXiv preprint arXiv:2310.12342, 2023.
+
+[71] Yongqi Tong, Dawei Li, Sizhe Wang, Yujia Wang, Fei Teng, and Jingbo Shang. Can llms learn from previous mistakes? investigating llms’ errors to boost for reasoning. In Proceedings of the 62nd Annual Meeting of the Associationfor Computational Linguistics (Volume 1: Long Papers), pages 3065–3080, 2024.
+
+[72] Yongqi Tong, Sizhe Wang, Dawei Li, Yifan Wang, Simeng Han, Zi Lin, Chengsong Huang, Jiaxin Huang, and Jingbo Shang. Optimizing language model’s reasoning abilities with weak supervision. arXiv preprint arXiv:2405.04086, 2024.
+
+[73] Harsh Trivedi, Tushar Khot, Mareike Hartmann, Ruskin Manku, Vinty Dong, Edward Li, Shashank Gupta, Ashish Sabharwal, and Niranjan Balasubramanian. Appworld: A controllable world of apps and people for benchmarking interactive coding agents. In Proceedings ofthe 62nd Annual Meeting ofthe Associationfor Computational Linguistics (Volume 1: Long Papers), pages 16022–16076, 2024.
+
+[74] Dannong Wang, Jaisal Patel, Daochen Zha, Steve Y Yang, and Xiao-Yang Liu. Finlora: Benchmarking lora methods for fine-tuning llms on financial datasets. arXiv preprint arXiv:2505.19819, 2025.
+
+[75] Guanzhi Wang, Yuqi Xie, Yunfan Jiang, Ajay Mandlekar, Chaowei Xiao, Yuke Zhu, Linxi Fan, and Anima Anandkumar. Voyager: An open-ended embodied agent with large language models. arXiv preprint arXiv:2305.16291, 2023.
+
+[76] Pan Wang. REFLEX: Reflective evolution from LLM experience. In ICML 2026 AI for Science Workshop, 2026. URL https://openreview.net/forum?id= xftknNrW7n.
+
+[77] Pan Wang, Yihao Hu, Xiujin Liu, Jingchu Yang, Hang Wang, and Zhihao Wen. Atlasva: Self-evolving visual skill memory for teacher-free vlm agents. arXiv preprint arXiv:2605.17933, 2026.
+
+[78] Renxi Wang, Haonan Li, Xudong Han, Yixuan Zhang, and Timothy Baldwin. Learning from failure: Integrating negative examples when fine-tuning large language
+
+models as agents. arXiv preprint arXiv:2402.11651, 2024.
+
+[79] Sizhe Wang, Yongqi Tong, Hengyuan Zhang, Dawei Li, Xin Zhang, and Tianlong Chen. BPO: Towards balanced preference optimization between knowledge breadth and depth in alignment. In Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers), pages 8811–8826, 2025.
+
+[80] Xingyao Wang, Boxuan Li, Yufan Song, Frank F. Xu, Xiangru Tang, Mingchen Zhuge, Jiayi Pan, Yue Song, Bowen Li, Jaskirat Singh, et al. OpenDevin: An open platform for ai software developers as generalist agents. arXiv preprint arXiv:2407.16741, 2024.
+
+[81] Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc Le, Ed Chi, Sharan Narang, Aakanksha Chowdhery, and Denny Zhou. Self-consistency improves chain of thought reasoning in language models. arXiv preprint arXiv:2203.11171, 2022.
+
+[82] Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Fei Xia, Ed Chi, Quoc V. Le, and Denny Zhou. Chain-of-thought prompting elicits reasoning in large language models. In Advances in Neural Information Processing Systems, volume 35, pages 24824–24837, 2022.
+
+[83] Sean Welleck, Ximing Lu, Peter West, Faeze Brahman, Tianxiao Shen, Daniel Khashabi, and Yejin Choi. Generating sequences by learning to selfcorrect. In The Eleventh International Conference on Learning Representations, 2023. URL https: //openreview.net/forum?id=hH36JeQZDaO.
+
+[84] Qingyun Wu, Gagan Bansal, Jieyu Zhang, Yiran Wu, Beibin Li, Erkang Zhu, Li Jiang, Xiaoyun Zhang, Shaokun Zhang, Jiale Liu, et al. Autogen: Enabling next-gen llm applications via multi-agent conversations. In First conference on language modeling, 2024.
+
+[85] Chunqiu Steven Xia, Yinlin Deng, Sam Dunn, and Lingming Zhang. Agentless: Demystifying llmbased software engineering agents. arXiv preprint arXiv:2407.01489, 2024.
+
+[86] Zhihao Xu, Yongqi Tong, Xin Zhang, Jun Zhou, and Xiting Wang. Understanding conflicts in multiobjective alignment through reward consistency. In Findings ofthe Associationfor Computational Linguistics: ACL 2026, pages 5450–5472, 2026.
+
+[87] Shi-Qi Yan, Jia-Chen Gu, Yun Zhu, and Zhen-Hua Ling. Corrective retrieval augmented generation. arXiv preprint arXiv:2401.15884, 2024.
+
+[88] John Yang, Carlos E Jimenez, Alexander Wettig, Kilian Lieret, Shunyu Yao, Karthik Narasimhan, and Ofir Press. SWE-agent: Agent-computer interfaces enable automated software engineering. In Advances in Neural Information Processing Systems, volume 37, 2024.
+
+[89] Minglai Yang, Ethan Huang, Liang Zhang, Mihai Surdeanu, William Yang Wang, and Liangming Pan. How is llm reasoning distracted by irrelevant context? an analysis using a controlled benchmark. In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing, pages 13340–13358, 2025.
+
+[90] Shunyu Yao, Jefrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan, and Yuan Cao. React: Synergizing reasoning and acting in language models. arXiv preprint arXiv:2210.03629, 2022.
+
+[91] Shunyu Yao, Dian Yu, Jefrey Zhao, Izhak Shafran, Thomas L. Grifiths, Yuan Cao, and Karthik Narasimhan. Tree of thoughts: Deliberate problem solving with large language models. In Advances in Neural Information Processing Systems, volume 36, pages 11809–11822, 2023.
+
+[92] Shunyu Yao, Noah Shinn, Pedram Razavi, and Karthik Narasimhan. �-bench: : A benchmark for tool-agentuser interaction in real-world domains. arXiv preprint arXiv:2406.12045, 2024.
+
+[93] Eric Zelikman, Yuhuai Wu, Jesse Mu, and Noah D. Goodman. STaR: Bootstrapping reasoning with reasoning. In Advances in Neural Information Processing Systems, volume 35, pages 15476–15488, 2022.
+
+[94] Qizheng Zhang, Changran Hu, Shubhangi Upasani, Boyuan Ma, Fenglu Hong, Vamsidhar Kamanuru, Jay Rainton, Chen Wu, Mengmeng Ji, Hanchen Li, Urmish Thakker, James Zou, and Kunle Olukotun. Agentic context engineering: Evolving contexts for self-improving language models. In The Fourteenth International Conference on Learning Representations, 2026. URL https://openreview.net/forum?id=eC4ygDs02R.
+
+[95] Li Zhong, Zilong Wang, and Jingbo Shang. Debug like a human: A large language model debugger via verifying runtime execution step-by-step. In Findings ofthe Associationfor Computational Linguistics: ACL 2024, pages 851–870, 2024.
+
+[96] Denny Zhou, Nathanael Schärli, Le Hou, Jason Wei, Nathan Scales, Xuezhi Wang, Dale Schuurmans, Olivier Bousquet, Quoc Le, and Ed Chi. Least-tomost prompting enables complex reasoning in large language models. In International Conference on Learning Representations, 2023.
+
+[97] Yifei Zhou, Andrea Zanette, Jiayi Pan, Sergey Levine, and Aviral Kumar. Archer: Training language model agents via hierarchical multi-turn rl. arXiv preprint arXiv:2402.19446, 2024.
+
+## A Theoretical Proofs
+
+## A.1 Proof of Monotone Submodularity
+
+For an intervention subset �, a task is covered if at least one intervention in � succeeds on it. Thus $\begin{array} { r } { f ( A ) = \frac { 1 } { n } \sum _ { i } \mathbf { 1 } [ \exists r \in } \end{array}$ $A : s ( x _ { i } , r ) = 1 ]$ is a standard coverage function. Coverage functions are monotone because adding an intervention cannot remove a covered task, and submodular because the marginal gain of adding an intervention decreases as the covered set grows.
+
+## A.2 Uniform-Convergence Bound for a Fixed Chain Class
+
+Let $\Sigma _ { K }$ be a finite class of duplicate-free chains of length at most �, and suppose per-task cost is bounded by $C _ { \mathrm { m a x } }$ . For a fixed chain �, Hoefding’s inequality bounds the deviation of both empirical success and empirical cost. Applying a union bound over $\Sigma _ { K }$ yields a uniform deviation term of order $O ( \sqrt { \log | \Sigma _ { K } | / n } )$ for the penalized objective. The empirical maximizer is therefore near the best chain in the fixed class up to twice this deviation. This bound does not replace empirical validation; it only explains why reducing $\left. \Sigma _ { K } \right.$ can reduce finite-sample search risk.
+
+## B Extended Related Work
+
+Cascades and adaptive computation. DARC is structurally related to LLM cascades and adaptive computation. Frugal-GPT [11] and AutoMix [2] route among language models to reduce cost, while Adaptive-RAG [24] adjusts retrieval complexity. DARC instead routes among recovery interventions inside an agent harness. The base model is fixed; what changes is whether the agent receives an action guard, procedural source, retrieval evidence, or another admissible recovery operation.
+
+Broader evaluation context. The benchmarks in this paper sit within a broader evaluation ecosystem for languagemodel capability, instruction following, tool use, and interactive autonomy [18, 39, 43, 66, 68, 92]. This ecosystem increasingly shifts from single-turn answer quality toward process observability: intermediate reasoning, external tool calls, state changes, and verifiable task completion [15, 29, 44, 53]. DARC follows this shift but focuses on what to do after failure: it treats failures as signals for selecting recovery interventions rather than as final outcomes alone.
+
+![](images/874c6934bc09cc849bb410ee8974fac83d93b13bc3b27a362001d028e9ead3be.jpg)  
+Figure 5: Example AppWorld recovery trace. The distilled procedural policy invokes additional context only after a cheaper intervention fails.
+
+## C Recovery-Harness Mapping
+
+Table 11 summarizes the evaluated task-family mappings. The mapping is frozen before test evaluation and should be interpreted as the recovery-harness instantiation used in this paper, not as a learned universal diagnostic router.
+
+## D Representative Diagnosis Records
+
+Table 12 makes the diagnosis interface concrete. The diagnostic LLM receives only development-set trajectory summaries and verifier-visible failure signals, then maps the dominant recurring pattern to one label from the fixed failuremode vocabulary. These task-family diagnoses and their associated intervention sets are frozen before test evaluation.
+
+## E Generated Recovery Trace Example
+
+Figure 5 illustrates the AppWorld procedural recovery harness. The distilled policy first uses a lower-cost procedural source and invokes richer context only when the earlier intervention fails, reducing unnecessary context calls while preserving recovery capacity.
+
+## F Factorial Decomposition of the ALFWorld Recovery Harness
+
+Section 6.2 shows that neither privileged information nor action-space restriction alone explains the ALFWorld gain. This appendix reports the underlying $2 \times 2$ factorial experiment that separates the two components of the action-validity harness: the restricted action view produced by the guard of Eq. 8, and the recovery prompt that instructs the agent how to act inside that view.
+
+Protocol. All configurations run on the full ALFWorld valid\_unseen split (134 tasks) with DeepSeek-V4-Flash, the full set of admissible actions returned by the environment, a 50-step budget, temperature 0, and the same evaluation script. The two factors are toggled independently: the action view is either the full admissible set or the guard-ranked top-12, and the recovery prompt is either absent or present. We report exact task counts so that paired tests can be reproduced from the released per-task outcomes. Success is reported as solved task count over 134. Neither factor is efective in isolation; the gain appears only when the recovery prompt is paired with the restricted action view.
+
+Table 11: Frozen task-family to recovery-harness mapping. The diagnostic signal is measured on development tasks; the admissible intervention set is then fixed for test-time policy distillation and deployment.
+<table><tr><td>Task Family</td><td>Development-Set Signal</td><td>Failure Mode</td><td>Admissible Intervention Set</td></tr><tr><td>ALFWorld</td><td>Invalid / state-incompatible actions</td><td>Action validity</td><td>Action pruning and admissibility guards</td></tr><tr><td>AppWorld</td><td>Missing API workflow / multi-step procedure failures</td><td>Procedure breadth</td><td>Auto-Knowledge, local induction, retrieval fallback</td></tr><tr><td>Finance</td><td>Exact formula/tag format errors</td><td>Format precision</td><td>Retrieval few-shot demonstrations and budget selection</td></tr></table>
+
+Table 12: Representative development-trace diagnosis examples. The trace summaries compress recurring observable failures; no test labels or hidden benchmark state are supplied to the diagnostic LLM.
+<table><tr><td>Benchmark</td><td>Observed Failure Trace</td><td>LLM Diagnosis</td></tr><tr><td>ALFWorld</td><td>The agent repeatedly issues actions that are unavailable in the current environment state, making no state progress across consecutive steps.</td><td>Action validity</td></tr><tr><td>AppWorld</td><td>API calls omit a required upstream dependency, such as resolving an entity Procedure breadth or resource identifier before invoking the downstream cross-application operation.</td><td></td></tr><tr><td>Finance</td><td>The retrieved evidence supports the correct formula or tag, but the response Format precision contains prose, extra fields, or a malformed schema that fails exact-match evaluation.</td><td></td></tr></table>
+
+Table 13: Factorial decomposition of the action-validity harness on ALFWorld valid\_unseen.
+<table><tr><td>Action view</td><td>Recovery prompt</td><td>Solved</td><td>Success↑</td></tr><tr><td>Full admissible set</td><td>Absent</td><td>53 /134</td><td>39.55%</td></tr><tr><td>Full admissible set</td><td>Present</td><td>52 / 134</td><td>38.81%</td></tr><tr><td>Guard-ranked top-12</td><td>Absent</td><td>58 /134</td><td>43.28%</td></tr><tr><td>Guard-ranked top-12</td><td>Present</td><td>119/134</td><td>88.81%</td></tr></table>
+
+The efect is an interaction, not a sum of main efects. Holding the action view at the full admissible set, adding the recovery prompt changes success by −0.75 pp (53 → 52 tasks). Holding the recovery prompt absent, restricting the action view to the guard-ranked top-12 changes success by +3.73 pp (53 → 58 tasks). The two single-factor efects therefore account for +2.98 pp in total, whereas enabling both factors yields +49.26 pp (53 → 119 tasks). The diference-in-diferences interaction term is
+
+$$
+8 8 . 8 1 - 4 3 . 2 8 - 3 8 . 8 1 + 3 9 . 5 5 = + 4 6 . 2 7 { \mathrm { ~ p p } } ,\tag{9}
+$$
+
+so essentially the entire efect is attributable to the pairing rather than to either component. This is the empirical form of the Intervention Mismatch argument in Section 1: a recovery signal is only useful when it lands on an interface that can execute it.
+
+Invalid actions explain the mechanism. The three configurations for which we measured action-level statistics show why the prompt is inert without the restricted view. On the full admissible set, the recovery prompt increases invalid actions per episode from 1.709 to 2.507 (Table 7):
+
+the prompt tells the agent what the task requires, but many of the resulting commands are not executable in the current state, so the additional guidance is spent on rejected actions. Under the guard-ranked view the same guidance becomes executable and invalid actions fall to 0.575. The recovery prompt does not add knowledge the agent lacked; it becomes actionable only once the action interface is compatible with it.
+
+Auxiliary controls. Two further controls bound the contribution of the guard itself. First, forcing the top-1 guardranked command at every step without any language model in the loop reaches 40.33%, statistically indistinguishable from the 39.55% base agent. The guard is therefore a high-recall candidate filter rather than a hand-written solver: its top-1 ordering is usually not the correct action, but the correct action is retained within the top-12 while distractors are removed. Second, attaching the same ranked view and recovery prompt to a plain base agent, without the remaining harness components, reaches 82.28%, so most of the efect is carried by the restriction-prompt pairing and 6.53 pp remain attributable to the rest of the harness.
+
+Scope of this decomposition. These are single-run results at temperature 0 on one split and one backbone, so the small single-factor efects (−0.75 pp and +3.73 pp, i.e. one and five tasks) should be read as null rather than as measured directions. The joint efect (66 tasks) is far outside this range. We report the decomposition for ALFWorld only; the corresponding factorial for the AppWorld procedural harness and the Finance retrieval harness is not available, and whether the same superadditive structure holds for those failure modes remains an open question.
+
+## G Baseline Descriptions
+
+We compare against two groups of methods:
+
+• Base LLM: The unaugmented model using a standard ReAct-style execution loop without additional recoveryharness construction.
+
+• ICL: Standard prompting with a fixed set of demonstrations sampled or retrieved from the training set.
+
+• MIPROv2: A DSPy prompt-optimization method that jointly tunes instructions and demonstrations.
+
+• GEPA: A reflective prompt-evolution method that mutates prompts based on execution feedback.
+
+• ACE: a broad recovery-playbook baseline constructed from training-set execution feedback.
+
+All applicable ofline-adaptation baselines use the same training split and adaptation budget as DARC. We further include a stronger matched baseline that performs validationselected intervention-chain search without diagnosis-guided restriction (the full-library cascade in Table 14); extending it from ALFWorld to the other task families remains future work.
+
+## H Isolating the Diagnosis Step
+
+The generic and mismatched conditions in Section 6 vary the intervention set but do not run the same policy search as DARC. We therefore add the strongest matched control: a full-library cascade that performs the identical validation-selected policy search as DARC. This control shares the same base outputs, verifier, clean-restart protocol, maximum chain length $L { = } 3$ , cost penalty $\lambda { = } 0 . 0 2$ , and selection splits, but it omits the diagnosis step that first restricts the candidate library. Table 14 reports the result on ALFWorld. Both cascades share the same base outputs, verifier, clean-restart protocol, maximum chain length $L { = } 3 .$ , and cost penalty $\lambda { = } 0 . 0 2$ , and are selected on valid\_seen and frozen for valid\_unseen; the only variable is whether diagnosis restricts the candidate recovery library before search. The diagnosed row re-selects a cascade (type\_saturation → loop\_fallback → action\_pruni over the four action-validity harnesses, so its accuracy difers from the fixed single-harness DARC reported in Table 3. Removing diagnosis does not produce a significant accuracy gain: the full-library cascade reaches 98.51% test accuracy versus 99.25% for the diagnosed cascade (Δ=+0.75 pp, 95% CI [0.00, 2.24]; not significant). Diagnosis therefore does not trade accuracy for eficiency—it attains statistically indistinguishable accuracy while searching a 10× smaller policy space (40 vs. 400 candidate policies) and selecting a markedly more stable policy (14 vs. 34 distinct chains under resampling). This empirically supports the finite-sample argument in Section 4.3: restricting $\mathcal { R } _ { m }$ shrinks $\left. \Sigma _ { K } \right.$ and the associated search risk at no measured accuracy cost.
+
+Table 14: Isolating the diagnosis step on ALFWorld (DeepSeek-V4-Flash).
+<table><tr><td>Method</td><td>Search space</td><td>Selection</td><td>Test</td><td>Distinct chains</td></tr><tr><td>DARC (diagnosed)</td><td>40</td><td>97.14%</td><td>99.25%</td><td>14</td></tr><tr><td>Full-library cascade</td><td>400</td><td>97.86%</td><td>98.51%</td><td>34</td></tr></table>
+
+## I Automatic Diagnosis Evaluation
+
+To validate the reliability of the LLM-based failure diagnosis used in DARC, we evaluate its agreement against a verifierbacked reference on a sample of 72 development traces. Table 15 reports the agreement rate and Macro-F1 score. The LLM automatic diagnosis achieves 97.22% agreement with the reference, demonstrating that the failure profiling step reliably identifies the correct dominant failure mode without requiring human labels.
+
+Table 15: Evaluation of the automatic failure diagnosis.
+<table><tr><td>Method</td><td>Human Labels</td><td>N</td><td>Agreement</td><td>Macro-F1</td></tr><tr><td>Majority</td><td>No</td><td>72</td><td>33.33%</td><td>一</td></tr><tr><td>Uniform Random</td><td>No</td><td>72</td><td>33.33%</td><td>1</td></tr><tr><td>LLM Automatic Diagnosis</td><td>No</td><td>72</td><td>97.22%</td><td>0.972</td></tr><tr><td>Verifier-backed Reference</td><td>No</td><td>72</td><td>100.00%</td><td>1.000</td></tr></table>
