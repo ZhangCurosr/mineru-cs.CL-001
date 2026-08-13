@@ -1,0 +1,2794 @@
+[
+    {
+        "type": "text",
+        "text": "On Weak Bisimilarities in CCSK",
+        "text_level": 1,
+        "bbox": [
+            302,
+            123,
+            695,
+            142
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "<sub>Baptiste</sub> <sub>Vall´ee</sub>1[0009-0002-1268-3761] <sub>and</sub> <sub>Ivan</sub> <sub>Lanese</sub>2[0000-0003-2527-9995]",
+        "bbox": [
+            210,
+            168,
+            786,
+            187
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "baptistevalleedupont@gmail.com, ivan.lanese@gmail.com",
+        "bbox": [
+            262,
+            191,
+            736,
+            205
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "<sup>1</sup> Ecole Normale Sup´erieure Paris-Saclay (France)<sup>´</sup>",
+        "bbox": [
+            324,
+            218,
+            672,
+            234
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "<sup>2</sup> Olas Team, University of Bologna/INRIA (Italy)",
+        "bbox": [
+            322,
+            235,
+            675,
+            250
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "This is a pre-copy-editing, author-produced PDF of an article accepted for publication in RC 2026 following peer review. The definitive publisher-authenticated version is available online at https://link.springer.com/chapter/10.1007/978-3-032-30839-9",
+        "bbox": [
+            174,
+            265,
+            820,
+            313
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Abstract. In the context of CCSK, a reversible extension of CCS, we study diferent notions of bisimilarity (strong/weak, forward-only/reversible) and highlight their diferences and commonalities. In particular, for the weak reversible case, not previously studied in the literature, we propose two variants, dubbed directional and mixed bisimilarity, depending on whether τ actions should be in the same direction (forward/backward) as the action being matched or not. We show, in particular, that mixed bisimilarity is a congruence and completely abstracts away from τ actions.",
+        "bbox": [
+            223,
+            336,
+            774,
+            466
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Keywords: CCS, CCSK, Reversible Computation, Weak Bisimilarity, Behavioral Theory",
+        "bbox": [
+            223,
+            482,
+            773,
+            514
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "1 Introduction",
+        "text_level": 2,
+        "bbox": [
+            178,
+            542,
+            341,
+            557
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Building concurrent systems is challenging due to the complexity of reasoning about numerous possible interleavings, yet concurrency is essential in modern systems like the Internet, cloud computing, and parallel processing. Reversible computing, which allows systems to execute both forwards and backwards, recovering past states, has significant applications in low-energy computing [9], simulation [5], biological modeling [4,19], and program debugging [8,13,10]. Many of these applications involve concurrent systems, leading to the development of reversible extensions of concurrent process calculi such as CCS [7,18] and the π-calculus [6], and even of concurrent programming languages such as Erlang [11] and Go [17].",
+        "bbox": [
+            174,
+            576,
+            821,
+            734
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "A main notion in the theory of process calculi is the notion of bisimilarity [20], allowing one to prove two processes equivalent, e.g., to prove an implementation equivalent to a more abstract specification. In particular, bisimilarity requires equivalent processes to be able to match each other actions, and in doing so going to processes which are still equivalent. While strong and weak bisimilarity (weak bisimilarity difers from the strong one as the former abstracts away from internal actions, focusing only on interactions with the context) have been extensively studied in concurrent systems, the literature lacks an analysis of weak bisimilarities in a reversible setting. Our study addresses this gap by investigating the relationships between diferent notions of bisimilarity (strong/weak, forward-only/reversible) in the context of CCSK [18], a causal-consistent reversible extension of Milner CCS [15]. In particular, in the definition of weak reversible bisimilarity, a main decision is whether auxiliary τ actions (representing internal steps) allowed in the simulation of some action α need to be in the same direction as α or not. The two alternatives lead to diferent equivalences.",
+        "bbox": [
+            174,
+            736,
+            821,
+            877
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "aside_text",
+        "text": "arXiv:2608.11531v1 [cs.CL] 12 Aug 2026",
+        "bbox": [
+            30,
+            363,
+            67,
+            783
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            174,
+            129,
+            821,
+            233
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "We consider this work as a first step in the exploration of weak bisimilarity in a reversible setting, paving the way for a deeper exploration in the future. We claim as our main contributions the proposal of two notions of weak reversible bisimilarity (mixed bisimilarity in Definition 3.13 and directional bisimilarity in Definition 3.15, both in Section 3), the study of the relations between diferent notions of bisimilarity in CCSK (Section 4), and the study of which of these notions are congruences (Section 5). In particular, we show that mixed bisimilarity is a congruence (Theorem 5.6) and completely abstracts away from τ actions (Proposition 5.5 and Theorem 5.7). Another surprising result is that extending CCS bisimilarities to CCSK gives equivalences which are not congruences (Proposition 5.2), even when they are congruences in CCS, as in the case of strong bisimilarity.",
+        "bbox": [
+            174,
+            239,
+            821,
+            434
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "2 CCSK",
+        "text_level": 2,
+        "bbox": [
+            176,
+            474,
+            280,
+            489
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "In this section we recall the main elements of CCSK, while referring to [18] for further details. We assume an infinite set of Names A, ranged over by $a , b , c , \\ldots$ and a disjoint infinite set of Co-names ${ \\overline { { \\mathcal { A } } } } ,$ ranged over by ${ \\overline { { a } } } , { \\overline { { b } } } , { \\overline { { c } } } , \\dots ,$ where ∗ is an operator such that ${ \\overline { { \\overline { { a } } } } } = a$ . We call actions the elements of ${ \\mathcal { A } } \\cup { \\overline { { { \\mathcal { A } } } } } \\cup \\{ \\tau \\}$ where $\\tau \\not \\in { \\mathcal { A } }$ and $\\overline { { \\tau } }$ is undefined, ranged over by $\\alpha , \\beta , \\ldots$ . Intuitively, names represent input actions, co-names represent output actions, and $\\tau$ is an internal synchronisation. CCS processes, which we shall also call standard processes, are given by:",
+        "bbox": [
+            174,
+            525,
+            821,
+            648
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "equation",
+        "img_path": "images/deec4be281d58467af22ffef921071e8013b26cf0be180ddfbf3769cb93e80a5.jpg",
+        "text": "$$\nP , Q : = 0 \\left| \\left| \\alpha . P \\right. \\right| \\left| \\ J + Q \\right. \\left| \\left| \\ J \\right. \\right| Q \\left| \\right| ( \\nu a ) P\n$$",
+        "text_format": "latex",
+        "bbox": [
+            346,
+            664,
+            652,
+            680
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "Intuitively, 0 is the inactive process, α.P is a process that performs action α and continues as $P , P + Q$ is nondeterministic choice, $P \\mid Q$ is parallel composition and restriction $( \\nu a ) P$ binds name a and the corresponding co-name a inside P. A name is bound if it is inside the scope of a restriction operator, free otherwise. Function $\\mathtt { f n } ( P )$ computes the set of free names in process P. We set this convention: unary operators bind stronger than binary operators.",
+        "bbox": [
+            174,
+            697,
+            821,
+            802
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "CCSK extends CCS with the possibility of executing backwards. In order to remember which input interacted with which output while going forwards, fresh keys are created at each forward step, and the same key is used to label an input and the corresponding output during a synchronisation.",
+        "bbox": [
+            174,
+            807,
+            821,
+            877
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "page_number",
+        "text": "2",
+        "bbox": [
+            178,
+            99,
+            189,
+            110
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "header",
+        "text": "B. Vall´ee, I. Lanese",
+        "bbox": [
+            233,
+            99,
+            369,
+            111
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "We denote the set of keys by Keys, ranged over by $m , n , k , \\ldots$ Prefixes, ranged over by π, are of the form $\\alpha [ m ]$ or α. The former denotes that α has already been executed, the latter that it has not.",
+        "bbox": [
+            176,
+            129,
+            820,
+            179
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "CCSK processes are given by:",
+        "bbox": [
+            201,
+            181,
+            426,
+            197
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/607741576316e351fd504b72eba8fa7f723dd0ea2883388ae896d741e0715ea0.jpg",
+        "text": "$$\nP , Q : = 0 \\left| \\left| \\pi . P \\right. \\right| \\left| \\ P + Q \\right. \\left| \\left| \\ P \\right. \\right| Q \\left| \\right| ( \\nu a ) P\n$$",
+        "text_format": "latex",
+        "bbox": [
+            346,
+            214,
+            652,
+            230
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "hence they are like CCS processes but for the fact that prefixes may be labelled with a key. In the following, we may drop trailing 0s.",
+        "bbox": [
+            174,
+            247,
+            820,
+            280
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Definition 2.1 (Context). A CCSK context is a process with a hole, as generated by the grammar below:",
+        "bbox": [
+            176,
+            292,
+            821,
+            326
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/6cdb28c3b91ce36a178af4425b4b9ba961ed66ccc5cff6914280d47ac9943037.jpg",
+        "text": "$$\nC : = \\bullet \\parallel \\pi . C \\parallel C + Q \\parallel P + C \\parallel C \\lvert Q \\rvert \\parallel P \\lvert C \\rvert \\parallel ( \\nu a ) C\n$$",
+        "text_format": "latex",
+        "bbox": [
+            294,
+            342,
+            702,
+            359
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "We denote with $C [ P ]$ the process obtained by replacing • with P inside C.",
+        "bbox": [
+            178,
+            375,
+            724,
+            391
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "We use predicate std $( P )$ to mean that P is standard, that is none of its actions has been executed, hence it has no keys. We assume function $\\mathtt { t o S t d } ( P )$ that takes a CCSK process P and gives back the standard process obtained by removing all keys from P.",
+        "bbox": [
+            174,
+            404,
+            820,
+            455
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "We take from [12, Def. 2.1] the notions of free and bound keys.",
+        "bbox": [
+            201,
+            457,
+            670,
+            473
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Definition 2.2 (Free and bound keys). A key k is bound in a process X if it occurs either twice, attached to complementary prefixes, or once, attached to $a \\tau p r e f i x .$ A key k is free if it occurs once, attached to a non-τ prefix.",
+        "bbox": [
+            174,
+            485,
+            821,
+            537
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Figure 1 shows the forward rules of CCSK. Backward rules in Figure 2 are obtained from forward rules by reversing the direction of transitions. Both relations rely on a definition of structural congruence allowing one to α-convert bound keys, applicable only at top level (this condition is needed to ensure that there are no other occurences of n in the context):",
+        "bbox": [
+            174,
+            549,
+            821,
+            636
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/998df5cbf4bb8feabdf27c3e541cbf94382182b433386eea33898f6ab77bf434.jpg",
+        "text": "$$\nP \\equiv P [ n / m ] \\qquad m { \\mathrm { ~ b o u n d ~ i n ~ } } P , n \\not \\in \\mathrm { k e y s } ( P )\n$$",
+        "text_format": "latex",
+        "bbox": [
+            332,
+            656,
+            665,
+            671
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Rule (TOP) allows a prefix to execute. The rule generates a key m. Freshness of m is guaranteed by the side conditions of the other rules (cf. rule (PAR)). Rule (PREFIX) states that an executed prefix does not block execution. The two rules for (CHOICE) and the two for (PAR) allow processes to execute inside a choice or a parallel composition. The side condition of rule (CHOICE) ensures that at most one branch can execute. Rule (SYNCH) allows two complementary actions to synchronise producing $\\mathrm { ~ a ~ } \\tau .$ The key of the two actions needs to be the same. Rule (RES) allows an action which does not involve the restricted name to propagate through restriction.",
+        "bbox": [
+            174,
+            683,
+            821,
+            824
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "The forward semantics of a CCSK process is the smallest relation $ { } _ { f }$ closed under the rules in Figure 1. Analogously, its backward semantics is the smallest relation $ _ { r }$ closed under the rules in Figure 2. The semantics is the union of the two relations. From",
+        "bbox": [
+            174,
+            825,
+            821,
+            877
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "header",
+        "text": "On Weak Bisimilarities in CCSK",
+        "bbox": [
+            536,
+            98,
+            764,
+            111
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "page_number",
+        "text": "3",
+        "bbox": [
+            808,
+            99,
+            820,
+            110
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/ae7598cda625f973dcc6123e5801899c96667946ad6a5e2eccd67d8520592e53.jpg",
+        "text": "$$\n\\begin{array} { r l } { \\mathrm { ( T o P ) } \\quad } & { \\underset { ( \\mathcal { A } , P ) \\leq M } { \\leq \\mathrm { a d } } ( P ) } \\\\ & { \\underset { ( \\mathcal { A } , P ) \\leq \\nu } { \\leq \\mathrm { a d } } \\underset { f ( \\mathcal { A } | \\mathcal { C } ) \\leq P } { \\leq \\mathrm { a d } } , \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad }  \\\\ & { \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad }  \\\\ & { \\quad \\mathrm { ( c d u o t A ) } \\quad \\quad \\quad \\underset { ( \\mathcal { A } , P ) < \\nu } { \\leq \\mathrm { a d } } \\underset { ( P ) < \\nu } { \\leq \\mathrm { a d } } { \\leq \\mathrm { a d } } \\underset { f ( \\mathcal { A } ) < \\nu } { \\leq \\mathrm { a d } } { \\leq \\mathrm { a d } } } \\\\ & { \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad } \\\\ &  \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\quad \\end{array}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            218,
+            128,
+            781,
+            395
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Fig. 1. Forward SOS rules for CCSK",
+        "bbox": [
+            368,
+            412,
+            628,
+            425
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "now on, we let ϑ range over α[m] and $\\mu$ range over α[m] with α $\\neq \\tau .$ Let $x , y , . . .$ . range over the set of directions $\\{ f , r \\}$ , for forward and reverse.",
+        "bbox": [
+            174,
+            450,
+            820,
+            482
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "As standard in reversible computing (see, e.g., [18] or the notion of coherent process in [7]), all the developments consider only processes reachable from a standard process.",
+        "bbox": [
+            174,
+            485,
+            820,
+            519
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Definition 2.3 (Reachable process). A process $Q$ is reachable $i f f$ there exists a standard process P and a finite sequence of transitions from P to $Q$",
+        "bbox": [
+            174,
+            527,
+            820,
+            562
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "3 Bisimilarities",
+        "text_level": 2,
+        "bbox": [
+            176,
+            585,
+            347,
+            600
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "In this section we introduce the various notions of bisimilarity we study. We start from CCS bisimilarities, and then move to bisimilarities specific for CCSK. Note that CCS can be seen as a subset of CCSK, considering only standard processes and only forward semantics. Hence, we will extend CCS bisimulations to CCSK by just considering forward transitions of CCSK terms. As a consequence, history becomes inaccessible, hence ideally irrelevant. However, requiring that a transition is matched by a transition with identical label would leak information on which keys are used in the history, as shown by the following example.",
+        "bbox": [
+            174,
+            615,
+            821,
+            755
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Example 3.1. We have $b { \\xrightarrow { \\ b [ n ] \\ } } _ { f } \\ b [ n ]$ while no transition with the same label is enabled from $a [ n ] . b$ . The second process hence cannot match the transition of the first one in the bisimulation game if equality of labels is required. Hence, keys of forward transitions leak information about which keys are used in the history.",
+        "bbox": [
+            174,
+            763,
+            821,
+            834
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "In order to avoid this issue, we will remove keys from the labels. Hence, we define CCS semantics for CCSK processes as follows:",
+        "bbox": [
+            174,
+            843,
+            820,
+            876
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "page_number",
+        "text": "4",
+        "bbox": [
+            178,
+            99,
+            191,
+            110
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "header",
+        "text": "B. Vall´ee, I. Lanese",
+        "bbox": [
+            231,
+            99,
+            371,
+            111
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "equation",
+        "img_path": "images/18ea0ae9f7817819a1d459058466403bd5dee64c84c79cdbf0f97cc704b12ab0.jpg",
+        "text": "$$\n\\begin{array} { r l } & { \\begin{array} { r l } & { \\mathrm { ~ i n K e r n } } \\\\ & { \\mathrm { ~ s i n i t y } } \\\\ & { \\mathrm { ( i n K e ~ r i n g l e r ) } } \\\\ & { \\mathrm { ( i n K e ~ t r i g n i t ) } } \\end{array} \\quad \\begin{array} { r l } { \\mathrm { s i n i t } ( P ) } & { \\mathrm { ( i n K e ~ r n , F r ) } } \\\\ & { \\mathrm { ( i n K e ~ r n , F r ) } } \\\\ & { \\mathrm { ( i n K e ~ r n ) } } \\end{array} } \\\\ & { \\begin{array} { r l } { \\mathrm { ( i n K e ~ t r a l t ) } } & { \\mathrm { ~ i n K e r n } } \\\\ & { \\mathrm { ( i n K e ~ r n u t ) } } \\end{array} \\quad \\frac { P } { P } \\frac { \\mathrm { d i s i n g } } { P } _ { \\mathrm { t } } \\cdot \\begin{array} { r l } { \\mathrm { e n e q } ( Q ) } & { Q } \\\\ & { \\mathrm { P l } } \\end{array} \\begin{array} { r l } & { \\mathrm { d i s i n g } _ { \\mathrm { r } } } \\\\ & { \\mathrm { P l } } \\end{array} \\begin{array} { r l } & { \\mathrm { ( i n K e ~ r n u t ) } } \\\\ & { \\mathrm { P l } } \\end{array} \\begin{array} { r l } & { \\mathrm { ~ i n K e r n } } \\\\ & { \\mathrm { P l } } \\end{array} \\end{array} } \\\\ & { \\begin{array} { r l } & { \\mathrm { ( i n K e ~ r n u t ) } } \\end{array} \\begin{array} { r l } & { \\mathrm { ( i n K e ~ r n u t ) } } \\\\ & { \\mathrm { ( i n K e ~ r n u t ) } } \\end{array} \\begin{array} { r l } & { \\mathrm { ~ i n K e r n } } \\\\ & { \\mathrm { P l } } \\end{array} \\end{array} } \\\\ & { \\begin{array} { r l } & { \\mathrm { ( i n K e ~ r n u t ) } } \\end{array} \\begin{array} { r l } & { \\mathrm { ~ i n K e r n } } \\\\ & { \\mathrm { ( i n K e ~ r n u t ) } } \\end{array} \\begin{array} { r l } & { \\mathrm { ~ i n K e r n } } \\\\ & { \\mathrm { ( i n K e ~ r n u t ) } } \\end{array} } \\\\ &  \\begin{array} { r l } & { \\mathrm { ( i n K e ~ r n u t ) } } \\end{array} \\begin{array} { r l } &  \\mathrm { ~ o p ~ } \\begin{array}  \\end{array}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            188,
+            141,
+            810,
+            406
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Fig. 2. Reverse SOS rules for CCSK",
+        "bbox": [
+            371,
+            426,
+            625,
+            441
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Definition 3.2 (CCS semantics for CCSK processes). Given a CCSK process $P ,$ $P \\stackrel { \\alpha } {  } P ^ { \\prime }$ if there is k such that $P \\xrightarrow { \\alpha [ k ] } _ { f } P ^ { \\prime }$",
+        "bbox": [
+            174,
+            466,
+            818,
+            501
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "We show now that the semantics above, defined on all CCSK processes, is indeed strictly related to the classical semantics of CCS defined in [14, Chapter $5 ] ^ { 3 }$ , which we denote as $ _ { c c s }$ . Let delHist() be the function that extracts the standard part of a process.",
+        "bbox": [
+            174,
+            511,
+            821,
+            580
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Definition 3.3 (delHist()). The delHist() function is inductively defined as follows:",
+        "bbox": [
+            176,
+            589,
+            821,
+            605
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "equation",
+        "img_path": "images/5f72d25be87f92dfd24d8caa6909993cef42df8e202849c73ea0ce529a491ad4.jpg",
+        "text": "$$\n\\mathsf { d e l H i s t } ( P ) = P \\ i f \\ \\mathsf { s t d } ( P )\n$$",
+        "text_format": "latex",
+        "bbox": [
+            363,
+            620,
+            569,
+            634
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "equation",
+        "img_path": "images/87e795a9b2d5112c066342e475b31e4657bb66b98fa512070f720f7dbf1451b1.jpg",
+        "text": "$$\n{ \\bf d e l H i s t } ( a [ n ] . P ) = { \\bf d e l H i s t } ( P )\n$$",
+        "text_format": "latex",
+        "bbox": [
+            329,
+            638,
+            569,
+            653
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "equation",
+        "img_path": "images/9c64c2d041fb55752bf0eb543e4b35e2722b3a74c8ddeb9e7c4c3efd5fbaf07e.jpg",
+        "text": "$$\n{ \\bf d e l H i s t } ( P + Q ) = { \\bf d e l H i s t } ( P ) ~ i f \\neg { \\bf s t d } ( P )\n$$",
+        "text_format": "latex",
+        "bbox": [
+            329,
+            655,
+            653,
+            671
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "equation",
+        "img_path": "images/b3cd69a05fa21a69f2863fd4c5160498cace6ddc740a4825412d3a40ea94e9d2.jpg",
+        "text": "$$\n{ \\tt d e l H i s t } ( P + Q ) = { \\tt d e l H i s t } ( Q ) \\ i f \\neg { \\tt s t d } ( Q )\n$$",
+        "text_format": "latex",
+        "bbox": [
+            329,
+            674,
+            653,
+            689
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "equation",
+        "img_path": "images/ec7de6f9fe1f6362c98f521f4de07ff1808f517cd416cedfa7d5d0525efcb652.jpg",
+        "text": "$$\n{ \\bf d e l H i s t } ( P | Q ) = { \\bf d e l H i s t } ( P ) | { \\bf d e l H i s t } ( Q )\n$$",
+        "text_format": "latex",
+        "bbox": [
+            339,
+            692,
+            665,
+            706
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "equation",
+        "img_path": "images/d974df32c7c243ea3243d9a8aea72f4df7ef5b1832766df1900251f77cd04b99.jpg",
+        "text": "$$\n{ \\tt d e l H i s t } ( ( \\nu a ) P ) = ( \\nu a ) { \\tt d e l H i s t } ( P )\n$$",
+        "text_format": "latex",
+        "bbox": [
+            332,
+            708,
+            600,
+            725
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "The following proposition holds.",
+        "bbox": [
+            200,
+            739,
+            443,
+            753
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Proposition 3.4. Let $P , P ^ { \\prime }$ be CCSK processes, and Q a CCS process. $I f P \\stackrel { \\alpha } {  } P ^ { \\prime }$ then delHist $( P ) \\stackrel { \\alpha } { \\to } _ { c c s }$ delHist(P<sup>′</sup>). If delHist $( P ) { \\stackrel { \\alpha } { \\to } } _ { c c s } Q$ then there exists $P ^ { \\prime }$ in CCSK such that $P \\ { \\stackrel { \\alpha } { \\to } } \\ P ^ { \\prime }$ and $Q = \\mathsf { d e l H i s t } ( P ^ { \\prime } )$",
+        "bbox": [
+            174,
+            764,
+            821,
+            816
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Proof. $\\mathrm { B y }$ rule inspection.",
+        "bbox": [
+            176,
+            828,
+            373,
+            844
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "header",
+        "text": "On Weak Bisimilarities in CCSK",
+        "bbox": [
+            536,
+            98,
+            764,
+            111
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "page_number",
+        "text": "5",
+        "bbox": [
+            808,
+            99,
+            820,
+            110
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "page_footnote",
+        "text": "<sup>3</sup> Actually, the semantics in [14, Chapter 5] includes additional operators, as well as value passing. We consider its restriction to the operators we use in CCSK.",
+        "bbox": [
+            179,
+            847,
+            820,
+            876
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Bisimilarities for CCS We start with the classical notion of CCS bisimilarity, extended as mentioned above.",
+        "bbox": [
+            176,
+            129,
+            820,
+            161
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Definition 3.5 (Strong Bisimulation). A symmetric relation R on CCSK processes is a strong bisimulation if whenever $P \\mathcal { R } Q .$",
+        "bbox": [
+            176,
+            173,
+            820,
+            206
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "$- \\ i f \\ P \\ { \\stackrel { \\alpha } { \\to } } \\ P ^ { \\prime }$ then there exists $Q ^ { \\prime }$ such that $Q \\stackrel { \\alpha } { \\to } Q ^ { \\prime }$ and $P ^ { \\prime } \\mathcal { R } Q ^ { \\prime }$",
+        "bbox": [
+            184,
+            217,
+            675,
+            234
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Let ∼ be the largest strong bisimulation. Two CCSK processes $P , Q$ are strongly bisimilar $i f \\left( P , Q \\right) \\in \\sim$",
+        "bbox": [
+            176,
+            246,
+            820,
+            278
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "We give below some examples of strongly bisimilar processes.",
+        "bbox": [
+            200,
+            291,
+            657,
+            306
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Example 3.6 (Strongly Bisimilar CCSK Processes).",
+        "bbox": [
+            178,
+            316,
+            559,
+            331
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "1. $a + a \\sim a$",
+        "bbox": [
+            183,
+            343,
+            282,
+            356
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "2. $a | a \\sim a . a$",
+        "bbox": [
+            183,
+            361,
+            285,
+            375
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "3. $a [ m ] \\sim b [ n ]$",
+        "bbox": [
+            183,
+            378,
+            292,
+            393
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "4. $a | b \\sim a . b + b . a$",
+        "bbox": [
+            183,
+            395,
+            322,
+            410
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Note that Item 3 shows that strong bisimilarity (like all other CCS bisimilarities) abstracts away from the history. Item 4 is actually an instance of the Expansion Law [15], a cornerstone of the theory of classical CCS bisimilarity, whose general form is as follows:",
+        "bbox": [
+            174,
+            423,
+            820,
+            474
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "equation",
+        "img_path": "images/27c1388fc7b0d01d58261fa10e30e0f9492da902f32f19833a99ae6ecb142cf4.jpg",
+        "text": "$$\n\\begin{array} { l } { { P _ { 1 } \\mid P _ { 2 } = \\sum \\{ \\alpha . ( P _ { 1 } ^ { \\prime } \\mid P _ { 2 } ) : P _ { 1 } \\stackrel { \\alpha } {  } P _ { 1 } ^ { \\prime } \\} + \\sum \\{ \\alpha . ( P _ { 1 } \\mid P _ { 2 } ^ { \\prime } ) : P _ { 2 } \\stackrel { \\alpha } {  } P _ { 2 } ^ { \\prime } \\} + } } \\\\ { { \\phantom { \\sum \\{ \\alpha . ( P _ { 1 } ^ { \\prime } \\mid P _ { 2 } ^ { \\prime } ) : P _ { 1 } \\stackrel { \\alpha } {  } P _ { 1 } ^ { \\prime } , \\stackrel { \\alpha } {  } \\stackrel { \\alpha } {  } P _ { 2 } ^ { \\prime } , \\alpha \\stackrel { \\alpha } {  } \\tau \\} } } } \\end{array}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            243,
+            487,
+            749,
+            532
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "where $\\displaystyle \\sum$ is n-ary choice.",
+        "bbox": [
+            176,
+            548,
+            366,
+            563
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "It is well-known [18] that the Expansion Law does not hold for reversible calculi, and indeed we can provide a counterexample using strong forward-reverse bisimilarity (cf. Def. 3.11 and Ex. 3.12).",
+        "bbox": [
+            176,
+            565,
+            820,
+            615
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "In order to introduce weaker notions of bisimilarity we need the notation below. Let $\\Rightarrow = ( \\stackrel { \\tau } {  } ) ^ { * }$ be the reflexive and transitive closure of τ steps.",
+        "bbox": [
+            176,
+            619,
+            820,
+            652
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Definition 3.7 (Weak Bisimulation). A symmetric relation R on CCSK processes is a weak bisimulation if whenever $P \\mathcal { R } Q$",
+        "bbox": [
+            176,
+            664,
+            820,
+            697
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "$- \\ i f \\ P \\stackrel { \\tau } { \\to } P ^ { \\prime }$ then there exists $Q ^ { \\prime }$ such that $Q \\Rightarrow Q ^ { \\prime }$ and $P ^ { \\prime } \\mathcal { R } Q ^ { \\prime }$ ;",
+        "bbox": [
+            184,
+            708,
+            673,
+            724
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "$- \\ i f \\ P \\ { \\stackrel { \\alpha } { \\to } } \\ P ^ { \\prime }$ with α ̸= τ then there exists $Q ^ { \\prime }$ such that $Q \\Rightarrow { \\xrightarrow { \\alpha } } \\Rightarrow Q ^ { \\prime }$ and $P ^ { \\prime } \\mathcal { R } Q ^ { \\prime }$",
+        "bbox": [
+            184,
+            725,
+            793,
+            741
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Let ≈ be the largest weak bisimulation. Two CCSK processes $P , Q$ are weakly bisimilar $i f \\left( P , Q \\right) \\in \\approx$",
+        "bbox": [
+            176,
+            753,
+            820,
+            787
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Example 3.8 (Weakly Bisimilar CCSK Processes).",
+        "bbox": [
+            178,
+            799,
+            549,
+            814
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "1. $\\tau . a \\approx a$",
+        "bbox": [
+            184,
+            826,
+            265,
+            839
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "2. $a + \\tau . a \\approx a$",
+        "bbox": [
+            184,
+            845,
+            294,
+            857
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "3. $a [ m ] \\approx b [ n ]$",
+        "bbox": [
+            184,
+            860,
+            292,
+            877
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "page_number",
+        "text": "6",
+        "bbox": [
+            178,
+            99,
+            191,
+            110
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "header",
+        "text": "B. Vall´ee, I. Lanese",
+        "bbox": [
+            233,
+            99,
+            371,
+            111
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "4. $a \\left| b \\approx a . b + b . a \\right|$",
+        "bbox": [
+            183,
+            128,
+            322,
+            143
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "We introduce also an intermediate notion, taken from [16], where $\\tau$ steps need to be matched by at least one τ step.",
+        "bbox": [
+            176,
+            158,
+            820,
+            191
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Definition 3.9 (Semi-Weak Bisimulation). A symmetric relation R on CCSK processes is a semi-weak bisimulation if whenever $P \\mathcal { R } Q$",
+        "bbox": [
+            176,
+            204,
+            818,
+            237
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "if $P \\ { \\stackrel { \\alpha } { \\to } } \\ P ^ { \\prime }$ then there is $Q ^ { \\prime }$ such that $Q \\Rightarrow { \\xrightarrow { \\alpha } } \\Rightarrow Q ^ { \\prime }$ and $P ^ { \\prime } \\mathcal { R } Q ^ { \\prime }$",
+        "bbox": [
+            205,
+            249,
+            680,
+            265
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "$L e t \\cong$ be the largest semi-weak bisimulation. Two CCSK processes $P , Q$ are semi-weak bisimilar if $( P , Q ) \\in { \\cong }$",
+        "bbox": [
+            176,
+            278,
+            821,
+            311
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Example 3.10 (Semi-Weakly Bisimilar Processes).",
+        "bbox": [
+            176,
+            325,
+            549,
+            341
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "equation",
+        "img_path": "images/8042ec16efd2987ebcb3ee02b5e404679979183dbe06e0b9bd05f764f4da80ae.jpg",
+        "text": "$$\n- \\ a + a \\cong a\n$$",
+        "text_format": "latex",
+        "bbox": [
+            184,
+            354,
+            282,
+            367
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "equation",
+        "img_path": "images/a50dc590ccc455270976d56b0e102c527990354e6db2c3be772c375dd9df533d.jpg",
+        "text": "$$\na | a \\cong a . a\n$$",
+        "text_format": "latex",
+        "bbox": [
+            201,
+            372,
+            285,
+            386
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "equation",
+        "img_path": "images/433e9d5c51802f2448c3d03afb9bdafdd7e387a607fd5891c6e600cb521e522a.jpg",
+        "text": "$$\na [ n ] \\cong b [ m ]\n$$",
+        "text_format": "latex",
+        "bbox": [
+            203,
+            388,
+            294,
+            405
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "equation",
+        "img_path": "images/33fd1d2192bbbdf7e4a25c072ee60097b88c668d50085dfddd1fb8af2439b932.jpg",
+        "text": "$$\n- \\ a + \\tau . a \\cong \\tau . a\n$$",
+        "text_format": "latex",
+        "bbox": [
+            186,
+            409,
+            307,
+            422
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Bisimilarities for CCSK The bisimulations below make sense only in reversible calculi, since they consider both forward and backward transitions. We start with the notion of (revised) forward-reverse bisimulation from [12].",
+        "bbox": [
+            174,
+            447,
+            820,
+            499
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Definition 3.11 (Strong Forward-Reverse Bisimulation). A symmetric relation R is a strong forward-reverse bisimulation (also called FR-bisimulation) if whenever $P \\mathcal { R } Q .$",
+        "bbox": [
+            174,
+            512,
+            821,
+            562
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "if $P \\stackrel { \\vartheta } {  } _ { x } P ^ { \\prime }$ then there is $Q ^ { \\prime }$ such that $Q \\stackrel { \\vartheta } {  } _ { x } Q ^ { \\prime }$ and $P ^ { \\prime } \\mathcal { R } Q ^ { \\prime }$",
+        "bbox": [
+            205,
+            574,
+            663,
+            590
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Let ${ \\sim } _ { F R }$ be the largest FR-bisimulation. Two CCSK processes $P , Q$ are FR-bisimilar if $( P , Q ) \\in \\sim _ { F R }$",
+        "bbox": [
+            176,
+            602,
+            821,
+            638
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Example 3.12 (FR Bisimilar Processes).",
+        "bbox": [
+            176,
+            650,
+            478,
+            665
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "equation",
+        "img_path": "images/476bdc6d42ff325c3bd3d944e632a28c5abd7aa0392d69e56cc0627f44e434a1.jpg",
+        "text": "$$\n- \\ a + a \\sim _ { F R } a\n$$",
+        "text_format": "latex",
+        "bbox": [
+            184,
+            681,
+            304,
+            694
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "equation",
+        "img_path": "images/aa8f9d0b8c7ee75d3f800403c404b9684dba06386e79d596d5b293c778fba8a8.jpg",
+        "text": "$$\n- \\ a | a \\ \\nearrow _ { F R } a . a\n$$",
+        "text_format": "latex",
+        "bbox": [
+            184,
+            697,
+            307,
+            712
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "equation",
+        "img_path": "images/5aaccfe8d42b8d279b6223d19b00b86f2ad7c47bc121b1a2e9c1e4416cc376c1.jpg",
+        "text": "$$\n- \\ a | b \\not \\sim _ { F R } \\ a . b + b . a\n$$",
+        "text_format": "latex",
+        "bbox": [
+            184,
+            714,
+            344,
+            730
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "As expected, instances of the Expansion Law do not hold any more.",
+        "bbox": [
+            176,
+            743,
+            682,
+            758
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "We now introduce notations to study the weak bisimulations in CCSK, and to manipulate τ steps easily. Let $\\Rightarrow _ { x } = ( \\stackrel { \\tau } { \\to } _ { x } ) ^ { * }$ the reflexive and transitive closure of τ steps in the direction x. Let mixed τ reachability be $\\Rightarrow _ { m } = ( \\stackrel { \\tau } { \\to } _ { f } \\cup \\stackrel { \\tau } { \\to } _ { r } ) ^ { * }$ <sup>∗</sup>. This is an equivalence relation. Let $P \\stackrel { \\mu } { \\Rightarrow } _ { m , x } P ^ { \\prime }$ if ∃Q, Q<sup>′</sup> s.t. $( P \\Rightarrow _ { m } Q \\stackrel { \\mu } {  } _ { x } Q ^ { \\prime } \\Rightarrow _ { m } P ^ { \\prime } )$",
+        "bbox": [
+            174,
+            772,
+            820,
+            840
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "We now define two variants of weak reversible bisimulation, which difer in whether the τ steps used to match some action $\\mu$ need to be in the same direction as $\\mu$ or not.",
+        "bbox": [
+            174,
+            843,
+            820,
+            876
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "header",
+        "text": "On Weak Bisimilarities in CCSK",
+        "bbox": [
+            536,
+            98,
+            764,
+            111
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "page_number",
+        "text": "7",
+        "bbox": [
+            808,
+            99,
+            820,
+            110
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Definition 3.13 (Weak Mixed Bisimulation). A symmetric relation R is a weak mixed bisimulation (called mixed bisimulation) if whenever $P \\mathcal { R } Q$ :",
+        "bbox": [
+            176,
+            129,
+            820,
+            161
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "1. if $P \\stackrel { \\tau } { \\to } _ { x } P ^ { \\prime }$ then there exists $Q ^ { \\prime }$ such that $Q \\Rightarrow m \\ Q ^ { \\prime }$ and $P ^ { \\prime } \\mathcal { R } Q ^ { \\prime } ;$",
+        "bbox": [
+            183,
+            173,
+            695,
+            189
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "2. if $P \\ { \\stackrel { \\mu } { \\to } } _ { x } P ^ { \\prime }$ then there exists $Q ^ { \\prime }$ such that $Q \\stackrel { \\mu } { \\Rightarrow } _ { m , x } Q ^ { \\prime }$ and $P ^ { \\prime } \\mathcal { R } Q ^ { \\prime }$",
+        "bbox": [
+            183,
+            190,
+            705,
+            206
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Let $\\approx _ { m }$ be the largest mixed weak bisimulation. Two CCSK processes $P , Q$ are weakly mixed bisimilar $i f \\left( P , Q \\right) \\in \\approx _ { m }$",
+        "bbox": [
+            176,
+            219,
+            820,
+            253
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Intuitively, weak mixed bisimilarity abstracts away all the τ steps.",
+        "bbox": [
+            201,
+            263,
+            694,
+            279
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Example 3.14 (Mixed Bisimilar Processes).",
+        "bbox": [
+            178,
+            292,
+            499,
+            307
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "equation",
+        "img_path": "images/efc608bc9e2c23c782d3669f80474fa73a2a04f1bd8fcfa2482c66176eab8e2a.jpg",
+        "text": "$$\n\\textrm { -- } \\tau . a \\approx _ { m } a\n$$",
+        "text_format": "latex",
+        "bbox": [
+            184,
+            323,
+            280,
+            336
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "equation",
+        "img_path": "images/f2da869453b50c088ad69fde7a6cb763689a38a9aaf8de6df75d15b19b1c8382.jpg",
+        "text": "$$\n- \\ \\tau \\mid a \\approx _ { m } a\n$$",
+        "text_format": "latex",
+        "bbox": [
+            186,
+            338,
+            285,
+            354
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "equation",
+        "img_path": "images/6ab01b241f7ea82e73a6d6738e38ac22b33b9f35684ebfb6b34a9acd953151d5.jpg",
+        "text": "$$\n\\tau + a \\approx _ { m } a\n$$",
+        "text_format": "latex",
+        "bbox": [
+            205,
+            359,
+            295,
+            372
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "equation",
+        "img_path": "images/73d88cf96979a685029a741a4f8cb5019787cb7e5daf072577578a055602febd.jpg",
+        "text": "$$\n- \\ \\tau [ m ] + a \\approx _ { m } a\n$$",
+        "text_format": "latex",
+        "bbox": [
+            186,
+            375,
+            319,
+            390
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "We also introduce a ”directional” weak bisimulation, in which the τ steps have to be in the same direction as the action $\\mu .$ Let $P \\stackrel { \\mu } { \\Rightarrow } _ { d , x } P ^ { \\prime } \\mathrm { i f f } \\exists Q , Q ^ { \\prime }$ s.t. $( P \\Rightarrow _ { x } Q \\stackrel { \\mu } { \\to } _ { x } Q ^ { \\prime } \\Rightarrow _ { x }$ $P ^ { \\prime } )$",
+        "bbox": [
+            176,
+            404,
+            820,
+            455
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Definition 3.15 (Weak Directional Bisimulation). A symmetric relation R is a weak directional bisimulation (called directional bisimulation) if whenever $P \\mathcal { R } Q$",
+        "bbox": [
+            176,
+            468,
+            820,
+            501
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "1. if $P \\stackrel { \\tau } { \\to } _ { x } P ^ { \\prime }$ then there exists $Q ^ { \\prime }$ such that $Q \\Rightarrow _ { x } Q ^ { \\prime }$ and $P ^ { \\prime } \\mathcal { R } Q ^ { \\prime } ,$",
+        "bbox": [
+            183,
+            513,
+            690,
+            529
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "2. if $P \\ { \\stackrel { \\mu } { \\to } } _ { x } P ^ { \\prime }$ then there exists $Q ^ { \\prime }$ such that $Q \\stackrel { \\mu } { \\Rightarrow } _ { d , x } Q ^ { \\prime }$ and $P ^ { \\prime } \\mathcal { R } Q ^ { \\prime } ;$",
+        "bbox": [
+            183,
+            531,
+            702,
+            548
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Let ${ \\approx } _ { d }$ be the largest directional bisimulation. Two CCSK processes $P , Q$ are directionally bisimilar if $( P , Q ) \\in \\approx _ { d }$",
+        "bbox": [
+            176,
+            560,
+            820,
+            593
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Example 3.16 (Directionally Bisimilar Processes).",
+        "bbox": [
+            178,
+            606,
+            547,
+            621
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "equation",
+        "img_path": "images/04115f742e87029a5103477e5c454ae1c4dd3686d5e638cc6cfc4914f2bbca33.jpg",
+        "text": "$$\n\\begin{array} { l } { -  { \\tau } . a \\approx _ { d } a } \\\\ { -  { \\tau } | a \\approx _ { d } a } \\\\ { -  { \\tau } + a \\approx _ { d } a } \\end{array}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            184,
+            637,
+            289,
+            686
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "4 Relations between Bisimilarities",
+        "text_level": 2,
+        "bbox": [
+            176,
+            712,
+            534,
+            727
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "We now compare the notions of bisimilarity introduced in the previous section. Interestingly, the considered notions give rise to two hierarchies.",
+        "bbox": [
+            176,
+            746,
+            820,
+            778
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Proposition 4.1 (Hierarchies of Bisimilarities).",
+        "bbox": [
+            176,
+            793,
+            573,
+            808
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "equation",
+        "img_path": "images/eab9e542da8f9e2603fe5a80758d1a9df439a937b0a592f14dc4bb52602bd170.jpg",
+        "text": "$$\n\\begin{array} { r } { 2 . \\sim _ { F R } \\subset \\approx _ { d } \\subset \\left\\{ \\begin{array} { l l } { \\approx _ { m } } & { . } \\\\ { \\approx } & { . } \\end{array} \\right. } \\end{array}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            183,
+            835,
+            361,
+            878
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "equation",
+        "img_path": "images/5dbf3a4500c48f618c59a005d9c92c7aaecf5549d2a564c45475d1acb0c8b39c.jpg",
+        "text": "$$\n{ \\sim } _ { F R } { \\subset } { \\sim } { \\subset } \\cong { \\subset } { \\approx } ;\n$$",
+        "text_format": "latex",
+        "bbox": [
+            206,
+            821,
+            327,
+            834
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "page_number",
+        "text": "8",
+        "bbox": [
+            178,
+            99,
+            191,
+            110
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "header",
+        "text": "B. Vall´ee, I. Lanese",
+        "bbox": [
+            233,
+            99,
+            369,
+            111
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "image",
+        "img_path": "images/1188d4f59741f3dd82a27125c7ea98555b889f12788f261fc5329e5b5ffa3465.jpg",
+        "image_caption": [
+            "Fig. 3. Hierarchies of bisimilarities"
+        ],
+        "image_footnote": [],
+        "bbox": [
+            176,
+            126,
+            794,
+            574
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "Proof. Inclusions follow directly from the definitions. The proof of their strictness will actually be deferred to Proposition 4.2, providing witnesses for each of them. □",
+        "bbox": [
+            176,
+            630,
+            820,
+            664
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "The first hierarchy relates strong forward-reverse bisimilarity to CCS bisimilarities. The second hierarchy instead focuses on reversible bisimilarities. Note that $\\approx _ { d }$ is included in both $\\approx _ { m }$ and ≈ (hence in their intersection). The two hierarchies are graphically represented in Fig. 3. The relations are written just inside the elliptical set they represent. The lines on the set for ${ \\approx } _ { d }$ are just a visual help to distinguish the corresponding ellipse.",
+        "bbox": [
+            174,
+            682,
+            820,
+            769
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "We now show that there are no other inclusions beyond the ones in Proposition 4.1, and that all the inclusions there are actually strict. Graphically, it means that all the areas in Figure 3 are not empty. We show this by providing examples of pairs of processes in each of them. Notably, all the examples are made of standard processes, hence none of these notions collapse when restricting the attention to standard processes. In other words, all these notions induce diferent equivalence relations on CCS processes.",
+        "bbox": [
+            174,
+            772,
+            821,
+            877
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "header",
+        "text": "On Weak Bisimilarities in CCSK",
+        "bbox": [
+            536,
+            98,
+            764,
+            111
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "page_number",
+        "text": "9",
+        "bbox": [
+            808,
+            99,
+            820,
+            110
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "Proposition 4.2 (Hierarchies are Strict on Standard Processes). All the areas in Fig. 3 are not empty, and each of them contains at least a pair of standard processes.",
+        "bbox": [
+            176,
+            128,
+            820,
+            161
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "Proof. The ones below are witnesses for every area.",
+        "bbox": [
+            176,
+            174,
+            561,
+            189
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "1. ${ \\sim } _ { F R } : ( a + a , a )$ . The two as are indistinguishable.",
+        "bbox": [
+            181,
+            203,
+            584,
+            217
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "2. $( \\sim \\cap \\approx _ { d } ) \\backslash \\sim _ { F R } : ~ ( \\tau . \\tau . ( a . b + b . a ) + \\tau . ( a \\mid b ) , ~ \\tau . \\tau . ( a \\mid b ) + \\tau . ( a . b + b . a ) )$ . We have that $a . b + b . a \\sim a \\mid b$ is an instance of the expansion law, but the same equivalence is not valid for ${ \\sim } _ { F R }$ . Under ${ \\approx } _ { d }$ one can use equal subterms to match the challenge since they can be reached by taking a diferent number of τ steps.",
+        "bbox": [
+            181,
+            221,
+            820,
+            288
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "3. $( \\sim \\cap \\approx _ { m } ) \\backslash \\approx _ { d } : ( \\tau . ( ( a . b + b . a ) + ( c | d ) ) + \\tau . ( ( a | b ) + \\tau . ( c . d + d . c ) ) , \\tau . ( ( a | b ) + \\tau . ( c . d . ) ) ,$ $\\tau . ( c \\left| \\boldsymbol { d } \\right. ) + \\tau . ( ( a . b + b . a ) + ( c . d + d . c ) )$ . The equivalence holds under ∼ thanks to the expansion law. It holds also under $\\approx _ { m }$ since the choice of which τ to execute can always be undone to select the desired branch. This is not the case under $\\approx _ { d }$ where on the left one can reach a state where the only forward actions enabled are from $c . d + d . c .$ , while on the right no such state exists (if c.d + d.c is forward enabled, then also $a . b + b . a$ is enabled).",
+        "bbox": [
+            181,
+            291,
+            820,
+            412
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "4. $\\sim \\backslash \\approx _ { m } : ( a \\ : | \\ : b , \\ a . b + b . a )$ . We use again an instance of the expansion law.",
+        "bbox": [
+            183,
+            416,
+            757,
+            431
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "$5 . \\ \\cong \\ \\backslash ( \\sim \\cup \\approx _ { m } ) ~ : ~ ( b \\mid ( a + a . \\tau ) , ~ a . ( \\tau \\mid b ) + a . b + b . a . \\tau )$ . This fails under $\\approx _ { m } .$ since the right hand side has no a | b to match the left hand side one. This fails under ∼ since on the right if one starts from $b ,$ there is no way to avoid $\\mathrm { ~ a ~ } \\tau ,$ , while this can be avoided on the left. This is not an issue under <sup>∼</sup>= since the a without τ can be matched by executing both a and τ.",
+        "bbox": [
+            183,
+            434,
+            821,
+            519
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "6. ≈ $\\backslash ( \\cong \\cup \\approx _ { m } ) : ( a . \\tau | b , a . b + b . a )$ . This holds under ≈ thanks to the expansion law and since the τ can be abstracted away. Instead, the expansion law fails under $\\approx _ { m }$ and the τ needs to be matched by another τ under <sup>∼</sup>=.",
+        "bbox": [
+            183,
+            523,
+            820,
+            573
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "7. $( \\cong \\cap \\approx _ { d } ) \\backslash \\sim : ( a + a . \\tau , \\ a . \\tau )$ . This fails under ∼ since on the left executing an a leads to a state where no τ can be performed. This is not an issue for $\\approx _ { d }$ where the τ can be matched by staying idle. For <sup>∼</sup>=, left a can be matched by executing both a and τ.",
+        "bbox": [
+            183,
+            576,
+            821,
+            643
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "8. $\\approx _ { d } \\ \\backslash \\ \\cong \\ : \\ ( \\tau , \\ 0 )$ . This fails under <sup>∼</sup>= since the τ cannot be matched, instead under ${ \\approx } _ { d }$ the τ can be matched by staying idle.",
+        "bbox": [
+            183,
+            646,
+            820,
+            680
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "9. (≈ . (≈ $\\cap \\approx _ { m } ) \\backslash ( \\cong \\cup \\approx _ { d } )$",
+        "bbox": [
+            183,
+            683,
+            374,
+            697
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "$( \\tau . ( ( a . b + b . a ) + ( c | d ) ) + \\tau . ( ( a | b ) + \\tau . ( c . d + d . c ) ) + \\tau . \\tau . ( ( a | b ) + \\tau . ( c | d ) ) + \\tau . ( ( a . b + d . c . ) ) ,$ $b . a ) + ( c . d + d . c ) ) + \\tau . \\tau$ . This holds under ≈ thanks to the expansion law, and since τ and τ.τ are weakly bisimilar. However, the latter are not semi-weakly bisimilar, hence <sup>∼</sup>= fails. Also, this holds under $\\approx _ { m } .$ , since it abstracts away from τ actions. $\\approx _ { d }$ fails as well, for the same reason as in item 3.",
+        "bbox": [
+            196,
+            692,
+            820,
+            787
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "10. ${ \\approx } _ { m } ~ \\backslash \\approx : ~ ( a , ~ a + \\tau )$ . This is well-known not to hold under ≈. Instead under $\\approx _ { m }$ the τ step can be mimicked by staying idle since the a action remains enabled also after the $\\tau ,$ since the τ can be undone to do a.",
+        "bbox": [
+            176,
+            789,
+            820,
+            840
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "equation",
+        "img_path": "images/c2b7477cb1e99f6c64ff081fc22db08b04cc73439546cb14a966a9dd5a42c5f3.jpg",
+        "text": "$$\n1 1 . ~ ( \\cong \\cap \\approx _ { m } ) \\backslash ( \\sim \\cup \\approx _ { d } ) ~ : ~ ( \\tau . ( a . b + b . a + \\tau + \\tau . \\tau ) + ( a \\mid b ) , \\tau . ( a . b + b . a + ( a \\mid b ) + \\tau . \\tau ) ) .\n$$",
+        "text_format": "latex",
+        "bbox": [
+            176,
+            843,
+            816,
+            858
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "This fails under ∼ since $\\tau \\cdot \\tau$ is not matched on the right, since afterwards a third $\\tau$ would be enabled. This fails under $\\approx _ { d }$ since after the first τ we can still go to $( a | b )$ on the right, but not on the left. This succeeds under $\\approx _ { m }$ since τs are abstracted away, and terms without τ s are identical. This succeeds under $\\cong$ since τ s can always be matched, and thanks to the expansion law. □",
+        "bbox": [
+            203,
+            860,
+            820,
+            875
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "page_number",
+        "text": "10",
+        "bbox": [
+            178,
+            99,
+            198,
+            110
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "header",
+        "text": "B. Vall´ee, I. Lanese",
+        "bbox": [
+            233,
+            99,
+            371,
+            111
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            203,
+            129,
+            821,
+            197
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "If instead of considering only pairs of standard processes we consider only pairs of non-standard processes, then all the areas remain non-empty.",
+        "bbox": [
+            174,
+            210,
+            821,
+            243
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "Proposition 4.3. Each of the areas in $F i g .$ . 3 contains at least a pair of non-standard processes.",
+        "bbox": [
+            176,
+            253,
+            821,
+            286
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "Proof. One can take the witnesses from the proof of Proposition 4.2 add ${ \\mathrm { ~ a ~ } } \\tau [ n ]$ prefix in front of both processes to obtain witnesses made of non-standard processes. □",
+        "bbox": [
+            176,
+            299,
+            821,
+            332
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "Finally, if we consider pairs made of a non-standard process and a standard one, then ${ \\sim } _ { F R }$ becomes empty. The other areas remain non-empty.",
+        "bbox": [
+            176,
+            346,
+            820,
+            379
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "Proposition 4.4. Each of the areas in $F i g .$ 3 contains at least a pair made of a nonstandard process and a standard one, but for the area $^ { 1 , }$ corresponding $t o \\sim _ { F R }$",
+        "bbox": [
+            176,
+            388,
+            820,
+            423
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "Proof. The area for ${ \\sim } _ { F R }$ is empty since $\\sim _ { F R }$ can always distinguish a non-standard process, that can make a backward move, from a standard one, that cannot. For the others, one can take the witnesses from the proof of Proposition 4.2 add ${ \\mathrm { ~ a ~ } } \\tau [ n ]$ prefix in front of only one of the two components. This preserves all the CCS bisimilarities, which cannot observe the history, as well as the weak CCSK bisimilarities, where the backward $\\tau [ n ]$ can be matched by the other process by staying idle. □",
+        "bbox": [
+            174,
+            435,
+            821,
+            539
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "5 Congruence Properties of Bisimilarities",
+        "text_level": 2,
+        "bbox": [
+            176,
+            564,
+            606,
+            581
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "We first discuss whether the considered equivalences are congruences or not, namely in the case of strong CCS bisimilarity whether $P \\sim Q \\implies C [ P ] \\sim C [ Q ]$ . Note that this implication makes sense only if all the involved processes are well-formed, hence we only consider this case.",
+        "bbox": [
+            174,
+            598,
+            820,
+            665
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "Strong bisimilarity is a congruence in CCS [15]. Somehow surprisingly, its extension to CCSK is not a congruence, as shown in the counterexample below.",
+        "bbox": [
+            176,
+            668,
+            820,
+            702
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "Example 5.1 (∼ is not a congruence).",
+        "bbox": [
+            178,
+            714,
+            460,
+            730
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "equation",
+        "img_path": "images/eaac9440eeefb726b9031118f0e0127dc6ce1bce45880167ecdecf26831f3c68.jpg",
+        "text": "$$\n\\tau [ n ] \\sim 0 \\implies a + \\tau [ n ] \\sim a + 0\n$$",
+        "text_format": "latex",
+        "bbox": [
+            383,
+            746,
+            615,
+            763
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "Processes on the left are strongly bisimilar since ∼ abstracts away from the history. Processes on the right are not strongly bisimilar since $a + \\tau [ n ]$ cannot execute any forward move, while $a + 0$ can execute a.",
+        "bbox": [
+            176,
+            781,
+            820,
+            831
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "The key point here is that forward equivalences abstract away from the history, but adding a choice where the added branch is a non-standard process disables the other",
+        "bbox": [
+            174,
+            843,
+            821,
+            876
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "header",
+        "text": "On Weak Bisimilarities in CCSK",
+        "bbox": [
+            536,
+            98,
+            764,
+            111
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "page_number",
+        "text": "11",
+        "bbox": [
+            801,
+            99,
+            818,
+            110
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "branch (which needs to be standard to ensure well-formedness). Thus, the same issue also occurs for the other forward equivalences we consider, namely weak (≈) and semi-weak (<sup>∼</sup>=) bisimilarities, as stated below.",
+        "bbox": [
+            174,
+            129,
+            820,
+            179
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "Proposition 5.2 (Forward equivalences are not congruences in CCSK). None $o f \\sim , \\approx a n d \\cong$ are congruences on CCSK terms.",
+        "bbox": [
+            176,
+            195,
+            820,
+            228
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "Proof. Counterexample 5.1 proves the thesis for all the equivalences.",
+        "bbox": [
+            176,
+            242,
+            684,
+            258
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "Note that for ≈ the usual problem of CCS that τ.a ≈ $a \\implies \\tau . a + b \\approx a + b$ remains. However, $\\cong$ is a congruence in CCS [16], but not in CCSK for the reason above.",
+        "bbox": [
+            176,
+            272,
+            818,
+            305
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "Concerning reversible equivalences, ∼<sub>FR</sub> has been proved to be a congruence in [12, Proposition 4.9]. Instead, for weak directional bisimilarity a problem similar to the one above occurs.",
+        "bbox": [
+            174,
+            307,
+            821,
+            359
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "Proposition 5.3 (Weak directional bisimilarity is not a congruence). $\\approx _ { d }$ is not a congruence on CCSK terms.",
+        "bbox": [
+            176,
+            374,
+            821,
+            407
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "Proof. The following counterexample proves the thesis:",
+        "bbox": [
+            176,
+            422,
+            586,
+            436
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "equation",
+        "img_path": "images/34d651b2f31d3eee35f4debad7034beb10082c86a8aac6e9abdee15030fc1012.jpg",
+        "text": "$$\n\\tau [ n ] \\approx _ { d } 0 \\implies a + \\tau [ n ] \\approx _ { d } a + 0\n$$",
+        "text_format": "latex",
+        "bbox": [
+            176,
+            439,
+            423,
+            455
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "This is not the case for weak mixed bisimilarity, which, somehow surprisingly is a congruence. In order to clarify why this is the case, we first show a property of $\\approx _ { m }$ which rules out counterexamples as the ones above.",
+        "bbox": [
+            174,
+            469,
+            821,
+            520
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "Proposition 5.4. Assume $P \\approx _ { m } Q$ where P is standard. Then $Q \\ \\Rightarrow _ { m } \\ Q ^ { \\prime }$ with $Q ^ { \\prime }$ standard.",
+        "bbox": [
+            176,
+            535,
+            820,
+            568
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "Proof. Assume towards a contradiction that there is no such $Q ^ { \\prime } .$ . By definition, we have $Q ( \\stackrel { \\theta } { \\to } _ { r } ) ^ { * } { \\sf t o S t d } ( Q )$ . At least one of the steps is not a τ , otherwise we would have proven the thesis. Let us take the first such action. Then $Q$ can perform a backward non-τ action. However, such an action cannot be matched by $P ,$ , since $P$ is standard (and executing τ steps only enables backward τ steps, while we need to match a non-τ backward action).",
+        "bbox": [
+            174,
+            583,
+            821,
+            673
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "We also show that indeed weak mixed bisimilarity completely abstracts away from τ steps.",
+        "bbox": [
+            174,
+            702,
+            820,
+            734
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "Proposition 5.5 (Weak mixed bisimilarity abstracts away from τ steps). $P \\Rightarrow _ { m } Q$ implies $P \\approx _ { m } Q$",
+        "bbox": [
+            176,
+            746,
+            784,
+            781
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "Proof. Thanks to the Loop Lemma (cf. [18, Prop. 5.1]), we also have $Q \\Rightarrow _ { m } P$ . Hence, any challenge from $P$ can be matched by Q by first reducing to $P ,$ and vice versa.",
+        "bbox": [
+            176,
+            795,
+            820,
+            828
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "Note that even if $P \\Rightarrow _ { m } Q$ and $P \\approx _ { m } Q$ are both equivalence relations, they do not coincide. $\\mathrm { E . g . , } a + a \\approx _ { m } a .$ , but $a + a \\not \\to _ { m } a$",
+        "bbox": [
+            174,
+            843,
+            820,
+            876
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "page_number",
+        "text": "12",
+        "bbox": [
+            178,
+            99,
+            198,
+            110
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "header",
+        "text": "B. Vall´ee, I. Lanese",
+        "bbox": [
+            233,
+            98,
+            371,
+            112
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "Theorem 5.6 (Weak mixed bisimilarity is a congruence). $\\approx _ { m }$ is a congruence on CCSK terms.",
+        "bbox": [
+            176,
+            129,
+            821,
+            161
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "Proof. We prove the thesis by induction on the structure of the context, with a case for each operator. Cases for prefix and restriction are trivial. Let us consider choice and parallel composition.",
+        "bbox": [
+            174,
+            171,
+            820,
+            222
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "Choice: we have to show that if $P \\approx _ { m } Q$ then $P + R \\approx _ { m } Q + R$ . Note that at most one among P and R can be non-standard due to well-formedness. Assume first both P and R are standard. If the challenge is from P, then Q inside $Q + R$ can match the challenge with the same sequence of moves used in $Q$ alone, all lifted thanks to rule (CHOICE). If R moves, and Q is standard, then the very same moves can be performed in both the cases, again using rule (CHOICE) to lift them. If Q is not standard, thanks to Proposition 5.4 above, we can first reduce $Q$ to toStd(Q), and then match the moves from R as above. Note that $Q$ and $\\tt t o S t d ( Q )$ are mixed bisimilar thanks to Proposition 5.5, hence the reduction preserves mixed bisimilarity. Assume now P is non-standard. Then only P can move, and transitions can be lifted using rule (CHOICE) since by well-formedness R is standard. Assume now R is nonstandard. Analogously to the above, only R can move, in both the cases since P and Q need to be standard due to well-formedness.",
+        "bbox": [
+            176,
+            230,
+            821,
+            457
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "Parallel composition: we have to show that if $P \\approx _ { m } Q$ then $P \\left| R \\approx _ { m } Q \\right| R$ . Assume $P \\mid R \\xrightarrow { \\alpha } _ { f }$ . There are three subcases depending on which component contributes to the transition.",
+        "bbox": [
+            176,
+            461,
+            820,
+            510
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "Transition from $P \\colon Q$ can match the transition, and the matching computation can be lifted to $Q \\mid R$ thanks to rule (PAR).",
+        "bbox": [
+            205,
+            512,
+            820,
+            545
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "Transition from R: the same transitions can be done on both the sides, remaining in the relation.",
+        "bbox": [
+            205,
+            546,
+            820,
+            580
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "Synchronization: Q can match transitions from P by hypothesis, and transitions from R can be performed on both the sides. This includes the components of the transitions that give rise to the synchronization. Hence we stay in the relation.   \nThe case of backward transitions is analogous.",
+        "bbox": [
+            205,
+            581,
+            820,
+            649
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "We believe that the notion of mixed bisimilarity is very relevant. Indeed it provides a notion of bisimilarity which completely abstracts away from τ actions, which is coinductive (since it can be formulated as a bisimulation), and which is a congruence. We are not aware of any other notion of bisimilarity which has all these properties.",
+        "bbox": [
+            174,
+            683,
+            820,
+            752
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "While leaving a more detailed analysis of this equivalence for future work, we discuss here some relevant axioms enabling to axiomatically reason on this equivalence. Notice that it makes sense to discuss about axioms since mixed bisimilarity is a congruence.",
+        "bbox": [
+            174,
+            755,
+            820,
+            804
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "Various correct axioms for $\\sim _ { F R }$ have been proposed in [12, Theorem 4.10]. While trivially all these axioms are correct also for $\\approx _ { m }$ , we focus here on axioms which are specific of weak mixed bisimilarity.",
+        "bbox": [
+            174,
+            807,
+            821,
+            858
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "The axioms in Fig. 4 hold for weak mixed bisimilarity.",
+        "bbox": [
+            200,
+            860,
+            606,
+            876
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "header",
+        "text": "On Weak Bisimilarities in CCSK",
+        "bbox": [
+            536,
+            98,
+            764,
+            111
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "page_number",
+        "text": "13",
+        "bbox": [
+            800,
+            99,
+            820,
+            110
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "equation",
+        "img_path": "images/d271e225c009641718d20897b6e7152020e836ae3da032d5995802ae18bc1216.jpg",
+        "text": "$$\n\\tau . P = P\\tag{TAU-PREF-M}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            482,
+            142,
+            551,
+            156
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "equation",
+        "img_path": "images/888333c2b2105aa6a7caac63e83fc78d8112950a4a47d650fc32452f744d44ac.jpg",
+        "text": "$$\n\\tau + P = P\\tag{TAU-CH-M}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            465,
+            160,
+            551,
+            174
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "equation",
+        "img_path": "images/5f2a0359a4be51509ea6409542996ccccedd459d9a4615213d26c4450b6ac025.jpg",
+        "text": "$$\n\\tau | P = P\\tag{TAU-PAR-M}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            475,
+            178,
+            551,
+            192
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "equation",
+        "img_path": "images/b3786a43aebfd50348cd30ebd33574865605f2add11868b6ad61d7c1188e7ce4.jpg",
+        "text": "$$\n\\tau [ n ] . P = P\n$$",
+        "text_format": "latex",
+        "bbox": [
+            463,
+            195,
+            551,
+            211
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "equation",
+        "img_path": "images/8d5c3d2f17e8cc721d2e9ead7888f3d138b802874b511979eb7815593a595e89.jpg",
+        "text": "$$\n\\tau [ n ] + P = P\\tag{TAU-PREF-K}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            447,
+            214,
+            551,
+            229
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "equation",
+        "img_path": "images/810fd77768b09d53958e0c03d49afb94b6006ba723eef69d9ddd2c347e3807e0.jpg",
+        "text": "$$\n\\tau [ n ] \\mid P = P\\tag{TAU-CH-K}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            457,
+            230,
+            551,
+            247
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "(TAU-PAR-K)",
+        "bbox": [
+            710,
+            231,
+            818,
+            247
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "Fig. 4. CCSK axioms for weak mixed bisimilarity $\\approx _ { m }$",
+        "bbox": [
+            310,
+            269,
+            684,
+            284
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "Theorem 5.7. The axioms in Figure $\\it 4$ are correct w.r.t. weak mixed bisimilarity.",
+        "bbox": [
+            174,
+            309,
+            784,
+            323
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "Proof. τ moves can always be matched by the other process by staying idle, while moves from P can be matched by first doing or undoing τ steps as needed. Note that executing τ-steps moves from the top-3 rows to the bottom ones. □",
+        "bbox": [
+            174,
+            336,
+            821,
+            387
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "The axioms in Fig. 4 are aligned with Proposition 5.5 in showing that mixed bisimilarity completely abstracts away from τ steps.",
+        "bbox": [
+            176,
+            399,
+            820,
+            434
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "We remark that as shown in Figure $^ { 3 , }$ axioms which hold for weak bisimilarity ≈ do not necessarily hold for $\\approx _ { m }$ . Let us now discuss the well-known Milner τ-laws of weak bisimilarity (collected in Fig. 5). The laws (TAU-CH) and (TAU-SEQ) follow directly from (TAU-PREF-M), and idempotence of + for the former.",
+        "bbox": [
+            174,
+            435,
+            821,
+            504
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "Instead (TAU-DUPL-CH) fails, as shown below.",
+        "bbox": [
+            200,
+            505,
+            563,
+            520
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "Example 5.8 ((TAU-DUPL-CH) does not hold). Consider the right-hand side challenge:",
+        "bbox": [
+            176,
+            533,
+            820,
+            549
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "equation",
+        "img_path": "images/01c197d3768b0d9819afb82dcfe30f0a621802a79ba59857c98dbd0e2bfdab0c.jpg",
+        "text": "$$\n\\alpha . ( P + \\tau . Q ) + \\alpha . Q \\stackrel { \\alpha [ n ] } { \\longrightarrow } _ { f } \\alpha . ( P + \\tau . Q ) + \\alpha [ n ] . Q\n$$",
+        "text_format": "latex",
+        "bbox": [
+            321,
+            563,
+            677,
+            585
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "There are two possible answers from the left-hand side, namely:",
+        "bbox": [
+            174,
+            600,
+            652,
+            615
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "equation",
+        "img_path": "images/45d1f8c4c33ff3fca27f7a22229d42773ab81f3190203780466e9fcf0e14892e.jpg",
+        "text": "$$\n\\begin{array} { r l } { \\alpha . ( P + \\tau . Q ) } & { \\xrightarrow { \\alpha [ n ] } _ { f } \\alpha [ n ] . ( P + \\tau . Q ) } \\\\ & { \\xrightarrow { \\alpha [ n ] } _ { f } \\underline { { \\tau [ m ] } } _ { f } \\alpha [ n ] . ( P + \\tau [ m ] . Q ) } \\end{array}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            331,
+            627,
+            663,
+            673
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "(We can also reach the same states after having undone and redone multiple times the $\\tau \\ \\mathrm { s t e p . } )$ In both the cases, actions from P are enabled, directly in the first case, and by first undoing $\\tau [ m ]$ in the second case. However, no action from P can be executed in the right-hand side above, since we need to undo one $\\alpha [ n ]$ and do α on the other side.",
+        "bbox": [
+            174,
+            689,
+            821,
+            758
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "6 Conclusion and Future Work",
+        "text_level": 2,
+        "bbox": [
+            176,
+            793,
+            504,
+            808
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "In this paper, we contrasted diferent notions of bisimilarity for CCSK processes, including two definitions of weak bisimilarities not previously discussed in the literature. We also proved that none of these notions are equivalent, not even if we restrict to standard",
+        "bbox": [
+            174,
+            825,
+            821,
+            877
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "page_number",
+        "text": "14",
+        "bbox": [
+            178,
+            99,
+            198,
+            110
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "header",
+        "text": "B. Vall´ee, I. Lanese",
+        "bbox": [
+            231,
+            98,
+            371,
+            112
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "equation",
+        "img_path": "images/ddaefec85d6bcfbe719fea7a610bca19eae12403b1a81dd382027e3f3903131a.jpg",
+        "text": "$$\nP + \\tau . P = \\tau . P\\tag{TAU-CH}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            334,
+            142,
+            450,
+            156
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "equation",
+        "img_path": "images/e5b7cb7e1a64427231aaeb14f8f678fce6c7dace18947f3525020189b3b185c5.jpg",
+        "text": "$$\n\\alpha . \\tau . P = \\alpha . P\\tag{TAU-SEQ}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            352,
+            160,
+            453,
+            174
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "equation",
+        "img_path": "images/2203d804d4ded8b13eda6390c63af7855a8f84f6f13ced0a6a744b58330f6bfa.jpg",
+        "text": "$$\n\\alpha . ( P + \\tau . Q ) = \\alpha . ( P + \\tau . Q ) + \\alpha . Q\\tag{TAU-DUPL-CH}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            305,
+            178,
+            561,
+            193
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "text",
+        "text": "Fig. 5. τ laws for weak bisimilarity ≈",
+        "bbox": [
+            366,
+            216,
+            630,
+            229
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "text",
+        "text": "processes only. Notably, weak mixed bisimilarity turns out to be coinductive, to be a congruence, and to completely abstract away from τ-steps, making it a very interesting equivalence.",
+        "bbox": [
+            174,
+            255,
+            821,
+            305
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "text",
+        "text": "We hope that these results can be the basis of a more detailed study of bisimilarities in CCSK. We remark that such a deeper understanding may also impact classical concurrency theory, since there are strong relations [1,2] between reversible strong bisimilarities and history-preserving [21] and hereditary history-preserving [3] bisimilarities. Also, weak mixed bisimilarity induces an equivalence on CCS, which is a congruence and abstracts away from τ steps. Notice however that its current definition is not coinductive in CCS, since it relies on CCSK terms.",
+        "bbox": [
+            174,
+            307,
+            821,
+            430
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "text",
+        "text": "We present now a few other items for future research. First, we remark that while giving correct axioms for weak mixed bisimilarity, we have not provided a complete axiomatization. This is definitely a relevant item for future work (given the interesting properties of weak mixed bisimilarity) but not easy. Indeed, there are no complete axiomatizations for forward-reverse bisimilarity either, which we expect to be needed as first step before tackling the mixed case.",
+        "bbox": [
+            174,
+            434,
+            821,
+            537
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "text",
+        "text": "Another interesting item would be to understand how other bisimilarities, and more in general behavioral equivalences, can be extended from CCS to CCSK. Given that reversibility provides quite a strong observational power (as shown by the relations with history-preserving and hereditary history-preserving bisimilarities), it may be the case that some of them collapse.",
+        "bbox": [
+            174,
+            539,
+            821,
+            626
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "text",
+        "text": "References",
+        "text_level": 2,
+        "bbox": [
+            178,
+            650,
+            289,
+            667
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "list",
+        "sub_type": "ref_text",
+        "list_items": [
+            "1. Cl´ement Aubert and Ioana Cristescu. How reversibility can solve traditional questions: The example of hereditary history-preserving bisimulation. In Igor Konnov and Laura Kov´acs, editors, 31st International Conference on Concurrency Theory, CONCUR 2020, Vienna, Austria (Virtual Conference), September 1-4, 2020, volume 171 of LIPIcs, pages 7:1–7:23. Schloss Dagstuhl - Leibniz-Zentrum f¨ur Informatik, 2020.",
+            "2. Cl´ement Aubert, Iain Phillips, and Irek Ulidowski. Bisimulations and reversibility. In Claudio Antares Mezzina and Alan Schmitt, editors, Components Operationally: Reversibility and System Engineering: Essays Dedicated to Jean-Bernard Stefani on the Occasion of His 65th Birthday, volume 16065 of Lecture Notes in Computer Science, pages 46–67. Springer, 2026.",
+            "3. M.A. Bednarczyk. Hereditary history preserving bisimulations or what is the power of the future perfect in program logics. Technical report, Polish Academy of Sciences, 1991."
+        ],
+        "bbox": [
+            184,
+            683,
+            820,
+            760
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "header",
+        "text": "On Weak Bisimilarities in CCSK",
+        "bbox": [
+            536,
+            98,
+            764,
+            111
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "page_number",
+        "text": "15",
+        "bbox": [
+            800,
+            99,
+            820,
+            110
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "list",
+        "sub_type": "ref_text",
+        "list_items": [
+            "4. Luca Cardelli and Cosimo Laneve. Reversibility in massive concurrent systems. Scientific Annals of Computer Science, 21(2):175, 2011.",
+            "5. Christopher D Carothers, Kalyan S Perumalla, and Richard M Fujimoto. Eficient optimistic parallel simulations using reverse computation. ACM Transactions on Modeling and Computer Simulation (TOMACS), 9(3):224–253, 1999.",
+            "6. Ioana Cristescu, Jean Krivine, and Daniele Varacca. A compositional semantics for the reversible π-calculus. In 28th Annual ACM/IEEE Symposium on Logic in Computer Science, LICS 2013, New Orleans, LA, USA, June 25-28, 2013, pages 388–397. IEEE Computer Society, 2013.",
+            "7. Vincent Danos and Jean Krivine. Reversible communicating systems. In International Conference on Concurrency Theory, pages 292–307. Springer, 2004.",
+            "8. Jakob Engblom. A review of reverse debugging. In Proceedings of the 2012 System, Software, SoC and Silicon Debug Conference, pages 1–6. IEEE, 2012.",
+            "9. Rolf Landauer. Irreversibility and heat generation in the computing process. IBM journal of research and development, 5(3):183–191, 1961.",
+            "10. Ivan Lanese, Naoki Nishida, Adri´an Palacios, and Germ´an Vidal. CauDEr: a causalconsistent reversible debugger for Erlang. In International Symposium on Functional and Logic Programming, pages 247–263. Springer, 2018.",
+            "11. Ivan Lanese, Naoki Nishida, Adri´an Palacios, and Germ´an Vidal. A theory of reversibility for Erlang. J. Log. Algebraic Methods Program., 100:71–97, 2018.",
+            "12. Ivan Lanese and Iain Phillips. Forward-reverse observational equivalences in CCSK. In RC, Lecture Notes in Computer Science, pages 126–143. Springer, 2021.",
+            "13. James McNellis, Jordi Mola, and Ken Sykes. Time travel debugging: Root causing bugs in commercial scale software. CppCon talk, 2017.",
+            "14. Robin Milner. A Calculus of Communicating Systems, volume 92 of Lecture Notes in Computer Science. Springer, 1980.",
+            "15. Robin Milner. Communication and concurrency. Prentice-Hall, Inc., 1989.",
+            "16. Ugo Montanari and Vladimiro Sassone. CCS dynamic bisimulation is progressing. In Andrzej Tarlecki, editor, Mathematical Foundations of Computer Science 1991, 16th International Symposium, MFCS’91, Kazimierz Dolny, Poland, September 9-13, 1991, Proceedings, volume 520 of Lecture Notes in Computer Science, pages 346–356. Springer, 1991.",
+            "17. Shunya Oguchi, Shoji Yuen, and Nobuko Yoshida. RevMiGo: Reversible channel-based communication in Go language. In Robert Gl¨uck and Robin Kaarsgaard, editors, Reversible Computation - 17th International Conference, RC 2025, Odense, Denmark, July 3-4, 2025, Proceedings, volume 15716 of Lecture Notes in Computer Science, pages 119–127. Springer, 2025.",
+            "18. Iain Phillips and Irek Ulidowski. Reversing algebraic process calculi. The Journal of Logic and Algebraic Programming, 73(1-2):70–96, 2007.",
+            "19. Iain Phillips, Irek Ulidowski, and Shoji Yuen. A reversible process calculus and the modelling of the ERK signalling pathway. In International Workshop on Reversible Computation, pages 218–232. Springer, 2012.",
+            "20. Davide Sangiorgi. Introduction to Bisimulation and Coinduction. Cambridge University Press, 2012.",
+            "21. Rob J. van Glabbeek and Ursula Goltz. Refinement of actions and equivalence notions for concurrent systems. Acta Informatica, 37(4/5):229–327, 2001."
+        ],
+        "bbox": [
+            183,
+            129,
+            821,
+            159
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "page_number",
+        "text": "16",
+        "bbox": [
+            178,
+            99,
+            198,
+            110
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "header",
+        "text": "B. Vall´ee, I. Lanese",
+        "bbox": [
+            233,
+            99,
+            371,
+            111
+        ],
+        "page_idx": 15
+    }
+]

@@ -1,0 +1,2503 @@
+[
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Hybrid Gated Attention"
+                    }
+                ],
+                "level": 1
+            },
+            "bbox": [
+                375,
+                119,
+                620,
+                141
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Zekun Zhou<sup>1,2</sup>, Ruobing Xie<sup>1∗</sup>, Lanrui Wang<sup>1</sup>, Weixuan Sun<sup>1</sup>"
+                    }
+                ]
+            },
+            "bbox": [
+                243,
+                160,
+                756,
+                179
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>1</sup>Tencent Hunyuan <sup>2</sup>Peking University"
+                    }
+                ]
+            },
+            "bbox": [
+                434,
+                185,
+                563,
+                215
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Abstract"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                250,
+                272,
+                315,
+                287
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Gated attention is an efective approach to mitigate attention sinks and enhance the representational capacity of attention. To further extend its efectiveness-eficiency Pareto frontier, we propose a Hybrid Gated Attention (HyGA) framework that contains three types of gating strategies. Specifically, these gates leverage diverse information from multiple stages of attention, and collaboratively build element-wise/head-wise gating from multiple perspectives, capturing intra-head and cross-head information interactions. Through our hybrid gating components, HyGA could provide multi-source modulation signals, enabling more comprehensive control over information flow and improving the representational capacity of attention. We also introduce low-rank matrix decomposition and learnable attention sink to further enhance training eficiency and stability. In experiments, we evaluate HyGA on widely-used benchmarks based on diferent backbones. The experimental results show that our HyGA comprehensively improves both training loss and various downstream performances compared with Gated attention. HyGA has also been verified to achieve the best performance at diferent computation costs, with comprehensive model analyses for better understanding. The proposed HyGA sheds light on a more efective, eficient, and stable attention mechanism."
+                    }
+                ]
+            },
+            "bbox": [
+                99,
+                295,
+                464,
+                588
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "1 Introduction"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                212,
+                608,
+                352,
+                622
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Multi-head attention (Vaswani et al. 2017) has become a core component of LLMs for contextual information interaction. Consequently, the information-processing capability of attention directly afects an LLM’s contextual understanding and information integration ability, and thus plays a critical role in determining the model’s representational capacity."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                627,
+                480,
+                712
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In recent years, a growing body of work has sought to improve the attention mechanism. One major research direction focuses on enhancing the eficiency of attention and reducing the KV-cache overhead, leading to representative approaches such as linear attention (Yang et al. 2023; Yang, Kautz, and Hatamizadeh 2025), SSMs (Dao and Gu 2024), sparse attention (Liu et al. 2025; Xu et al. 2026; Yuan et al. 2025), and KV-sharing or compression mechanisms such as GQA (Ainslie et al. 2023) and MLA (Liu et al. 2024)."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                712,
+                480,
+                837
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Another important direction aims to address the performance and stability issues associated with attention, among which the attention-sink phenomenon has been extensively studied. Attention sink (Xiao et al. 2024; Gu et al. 2025; Barbero et al. 2025; Su et al. 2026; Sun et al. 2026) refers to the phenomenon in which an attention module assigns a disproportionately large amount ofattention mass to a small number of tokens with limited semantic relevance, such as the BOS token. These tokens act as attention sinks by absorbing excess attention, efectively allowing certain attention heads to approximate a no-op operation. However, excessively concentrated attention may reduce the efective utilization of contextual information, which should be considered."
+                    }
+                ]
+            },
+            "bbox": [
+                83,
+                837,
+                480,
+                866
+            ]
+        },
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/a55f0a248f36beacdf30ab1ccc1f22c0f0111a6417f0c7813c3f7b9aa4b450c5.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 1: We propose HyGA with three gates, i.e., X-gate, H-gate, and C-gate, to enhance the attention’s gating strategy with more informative inputs and diverse control. It further incorporates low-rank matrix decomposition and learnable attention sinks for more eficient and stable training."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                537,
+                268,
+                893,
+                426
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                516,
+                539,
+                915,
+                693
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Gated attention is a representative approach for mitigating attention sinks and improving attention ability (Qiu et al. 2026b). It applies element-wise gating to Scaled Dot-Product Attention (SDPA) output, introducing non-linearity and sparsity to alleviate attention sinks and enhance model expressiveness. Nevertheless, several limitations still remain: (a) the original gated attention relies on the raw input X for gating, ignoring other information that is a good supplement to the current gating strategy. (b) Element-wise gating introduces considerable additional parameters and computational overhead, leaving substantial room for improving gating efficiency. And (c) existing gated attention still exhibits a nonnegligible BOS-token sink ratio, motivating us to further mitigate the attention-sink phenomenon for stable training."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                694,
+                915,
+                890
+            ]
+        },
+        {
+            "type": "page_aside_text",
+            "content": {
+                "page_aside_text_content": [
+                    {
+                        "type": "text",
+                        "content": "arXiv:2608.11805v1 [cs.CL] 12 Aug 2026"
+                    }
+                ]
+            },
+            "bbox": [
+                29,
+                354,
+                63,
+                800
+            ]
+        },
+        {
+            "type": "page_footnote",
+            "content": {
+                "page_footnote_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>∗</sup>Corresponding author."
+                    }
+                ]
+            },
+            "bbox": [
+                104,
+                875,
+                246,
+                888
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Motivated by the above observations, we substantially extend gated attention and propose our Hybrid Gated Attention (HyGA). Specifically, our HyGA contains three wellcoordinated attention gates to smartly adjust the output volume of SDPA from diverse aspects. Besides the classical attention gate controlled by the input X (X-gate), we first introduce an element-wise attention gate that takes the SDPA outputs "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "H _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "as the head-specific gate controller, noted as the H-gate, which contains richer contextual information after attention and thereby provides additional information gains. Since the two gates are conditioned on representations from diferent stages of attention, they can provide complementary modulation signals, enabling more comprehensive control over information flow and consequently improving the representational capacity of attention. To achieve a favorable efectiveness–eficiency Pareto frontier, we apply lowrank matrix factorization to the projections of both gates. In this case, HyGA could achieve comparable training loss and downstream performance with substantially fewer attention parameters than classical Gated attention."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                69,
+                480,
+                347
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Besides the H-gate that focus on the intra-head interactions to generate element-wise gating scores, we further design the cross-head gate (C-gate) to capture inter-head correlations. It jointly adopts all heads’ SDPA outputs to calculate headwise gating scores, which functions as a good supplement to the above fine-grained element-wise gating. All three gates cooperate well with each other, enriching the attention gating strategy with more comprehensive considerations on diverse features. To prevent potential training instability and output vanishing caused by the stacked multiplication of three gates, we adopt a gate fusion strategy. We also find that HyGA could be more stable armed with learnable attention sink (Agarwal et al. 2025), which seems to have potential functional overlap with gated attention."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                345,
+                480,
+                540
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In experiments, we evaluate HyGA across diferent models on widely-used benchmarks, where the results demonstrate that HyGA consistently outperforms the original Gated attention. Through appropriate low-rank compression settings, HyGA could achieve slightly better performance with only 26% of Gated attention’s gating computation cost. The contributions are summarized as follows:"
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                539,
+                480,
+                637
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• We propose HyGA, which jointly adopts three hybrid gating strategies to provide both head-wise and element-wise gate scoring calculated from diferent factors. Equipped with learnable sink, HyGA achieves more stable training."
+                    }
+                ]
+            },
+            "bbox": [
+                83,
+                641,
+                480,
+                698
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• We explore diferent low-rank matrix factorization settings in our hybrid gates to extend the efectiveness-eficiency Pareto frontier of Gated attention methods."
+                    }
+                ]
+            },
+            "bbox": [
+                83,
+                699,
+                480,
+                742
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Overall, HyGA achieves significant improvement compared to baselines with diferent backbones and model settings, shedding light on more efective, eficient, and stable gated attention modules in practice."
+                    }
+                ]
+            },
+            "bbox": [
+                83,
+                744,
+                480,
+                803
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "2 Preliminary"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                212,
+                813,
+                349,
+                830
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In this section, we first give a brief introduction and formulation on classical attention mechanisms used in this work. Grouped-Query Attention (GQA). GQA is widely-used in popular LLMs. Conventional multi-head attention mechanisms adopt query (Q), key (K), and value (V) to compute contextualized token representations, where each query head attends to its corresponding key-value head independently. GQA allows the queries from multiple attention heads to share a common set of key-value projections. Let "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\pmb { H } _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "denote the attention output of the i-th head, the formulas are:"
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                832,
+                480,
+                890
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                514,
+                69,
+                915,
+                154
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "H _ { i } = \\mathrm { S o f t m a x } \\left( \\frac { Q _ { i } K _ { g ( i ) } ^ { \\top } } { \\sqrt { d _ { h } } } \\right) V _ { g ( i ) } ,\\tag{1}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/ffc778019a03a48744af7dc8f95ed09dfaef449f2522b032865c866838fc4629.jpg"
+                }
+            },
+            "bbox": [
+                594,
+                160,
+                834,
+                202
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "g ( i )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "maps the i-th query head to its corresponding key-value group. Query heads within the same group share the same key and value representations, thereby substantially reducing the memory footprint of the KV cache while preserving most of the model’s inference capability."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                209,
+                915,
+                280
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Multi-latent Attention (MLA). MLA improves GQA by compressing K and V into a low-dimensional latent space through down-projection. Only the low-dimensional latent representation is cached in the KV cache, and the complete K and V matrices are up-projected during attention computation. The specific formulas are as follows: "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\begin{array} { r } { { \\pmb { c } } _ { t } ^ { K V } = \\dot { \\pmb { W } } ^ { D K V } { \\pmb { h } } _ { t } , { \\pmb { k } } _ { t } ^ { C } \\stackrel { \\star } { = } { \\pmb { W } } ^ { U K } { \\pmb { c } } _ { t } ^ { K V } , { \\pmb { v } } _ { t } ^ { C } = { \\pmb { W } } ^ { U V } { \\pmb { c } } _ { t } ^ { K V } } \\end{array}"
+                    },
+                    {
+                        "type": "text",
+                        "content": "where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "W ^ { D K V }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is the down-projection matrix and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\pmb { c } _ { t } ^ { K \\tilde { V } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is the compressed latent vector shared by keys and values. Compared with GQA, MLA achieves stronger KV cache compression and can save more memory in long-context inference."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                280,
+                915,
+                445
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Gated Attention. Gated Attention (Qiu et al. 2026b) refers to applying an element-wise gating operation to the output matrix after the original per-head attention. The typical gated attention function is adopted after SDPA output:"
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                445,
+                915,
+                503
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\pmb { H } _ { i } ^ { \\prime } = \\pmb { H } _ { i } \\odot \\sigma ( \\pmb { X } \\pmb { W } _ { i } ) , O = \\pmb { H } ^ { \\prime } \\pmb { W } _ { O } , \\pmb { W } _ { i } \\in \\mathbb { R } ^ { d _ { \\mathrm { m o d e l } } \\times d } .\\tag{2}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/1c33bc8e2f3284af3f3cd731b3ec4cf8805708dcd66760666ec957f061a42727.jpg"
+                }
+            },
+            "bbox": [
+                526,
+                511,
+                901,
+                529
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where d is the head dimension, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "d _ { \\mathrm { m o d e l } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is the model dimension, X is the input matrix and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "H ^ { \\prime }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is the gated output before "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "W _ { O }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". W represents the projection matrix for the i-th head, providing element-wise gating for d dimensions. It simultaneously provides nonlinear expressiveness and suppresses attention sink and massive activation, and thus could further improve the performance of both GQA and MLA."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                541,
+                915,
+                640
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3 Method"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                665,
+                654,
+                766,
+                669
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In this work, we propose Hybrid Gated Attention, which attempts to further optimize the efectiveness, eficiency, and training stability of gated attention."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                674,
+                915,
+                718
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.1 Overall Framework"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                516,
+                729,
+                714,
+                744
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "As shown in Fig. 2, HyGA mainly extends the original Gated attention with three gating mechanisms: (a) the original gate that takes the raw input X before the attention layer as input (X-gate), (b) the proposed gate that takes the output H after SDPA as input (H-gate), and (c) the proposed cross-head gate (C-gate), which captures the inter-head connections and provides head-level reweighting. We find that these three attention gates could cooperate well and jointly improve the performance. Next, we adopt a gate fusion strategy to get our final hybrid gated attention output, avoiding undesired dominating gates to ensure smooth training. Besides, to improve training stability, we implement HyGA with learnable attention sink to provide a double guarantee for training stability. Based on the above mechanisms, our HyGA efectively improves both model capability and training stability."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                750,
+                915,
+                891
+            ]
+        }
+    ],
+    [
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/5c2c96ff234b39682a8b92a0fbb7c1ad51891d45507cbc8527b8358bbf1e765a.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 2: Overview of the proposed HyGA, which contains three gates: X-gate "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( G _ { X } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", H-gate "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( G _ { H } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", and C-gate "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( G _ { C } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", armed with low-rank matrix decomposition (in H-gate and X-gate) and learnable attention sink (LS in SDPA)."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                176,
+                69,
+                820,
+                337
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                81,
+                405,
+                480,
+                477
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.2 Hybrid Gating Strategy"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                83,
+                487,
+                312,
+                503
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Hybrid Gating Inputs and Functions The original gated attention adopts the raw input X to control the element-wise gate as stated in Eq. (2). Through an analysis of the original gated attention, we observe that the output H contains richer token-interaction information after attention, maybe providing additional information gain besides X. Motivated by this observation, we propose to use the output after SDPA H as the input to control the attention gate as a supplement of X. We have:"
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                507,
+                480,
+                633
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\pmb { H } _ { i } ^ { \\prime } = \\pmb { H } _ { i } \\odot \\sigma ( \\pmb { X } \\pmb { W } _ { i } + \\mathrm { S i L U } ( \\pmb { H } _ { i } \\pmb { W } _ { i } ^ { d } ) \\pmb { W } _ { i } ^ { u } ) .\\tag{3}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/4dcb92e7b514a27ef19d9df4d1884106ece71376abd31a01ca505ba8cadef42c.jpg"
+                }
+            },
+            "bbox": [
+                129,
+                640,
+                431,
+                659
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "For the newly added H-gate, we adopt a 2-layer MLP form with SiLU (Elfwing, Uchibe, and Doya 2018) to enhance nonlinear modulation. This is because the above form can more conveniently perform low-rank parameter compression by adjusting the intermediate dimension, preparing for the eficiency improvements discussed below. Here, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\breve { W } _ { i } ^ { d } \\in \\mathbb { R } ^ { d \\times d _ { \\mathrm { i n t } } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathbf { \\bar { \\mathbf { W } } } _ { i } ^ { u ^ { \\star } } \\in \\mathbb { R } ^ { d _ { \\mathrm { i n t } } \\times d }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "are the down-projection and up-projection gating matrices for the i-th head, respectively, where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "d _ { \\mathrm { { i n t } } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "denotes the intermediate dimension that controls the bottleneck of the down-then-up projection."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                665,
+                480,
+                805
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "As can be seen from the above formulation, the original X-gate based on X and the added H-gate based on H exhibit strong functional complementarity. The former mainly captures the intrinsic features of input tokens before attention, while the latter mainly captures the features after contextual interaction through attention. Therefore, the information modeled by the two gates is diferent to some extent, and the two gates modulate information at diferent positions. Their joint efect can thus provide a more comprehensive capture and modeling of the information in attention output, enabling the model to better control the information flow through element-wise gating."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                805,
+                480,
+                890
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                514,
+                405,
+                915,
+                489
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Fused or separate X-/H- gates. Diferent from the fused form in Eq. (3), the hybrid X-/H- gates can also be separate:"
+                    }
+                ]
+            },
+            "bbox": [
+                516,
+                494,
+                913,
+                523
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\mathbf { } H _ { i } ^ { \\prime } = H _ { i } \\odot \\sigma ( \\mathbf { } X \\mathbf { } W _ { i } ) \\odot \\sigma ( \\mathbf { \\operatorname { S i L U } } ( H _ { i } W _ { i } ^ { d } ) W _ { i } ^ { u } ) ,\\tag{4}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/810bcbb9f9a325dbf105982b46bac1ceeb4fdb356f5a79e10d8bc61b89214c3c.jpg"
+                }
+            },
+            "bbox": [
+                542,
+                527,
+                867,
+                545
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "However, we choose the additive coupling form in Eq. (3) rather than that in Eq. (4). This is because the multiplicative coupling form in Eq. (4) multiplies two gates together. Since the sigmoid activation function has a value range of (0, 1), each gate generally acts as a suppressive modulator of the information flow. Multiplying too many gates may therefore lead to overly strong suppression, which may weaken gradient propagation and limit efective representation learning (especially with the cross-head gate in Sec. 3.3). In contrast, the fused gate in Eq. (3) first adds the pre-activation gate logits and then applies the activation function, allowing different factors to jointly control the information flow rather than to independently modulate it. This could lead to a more stable information flow and stronger expressive capacity."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                549,
+                915,
+                744
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Approaching the Efectiveness-Eficiency Pareto Frontier While pursuing improved model expressiveness, we also attempt to minimize the computation cost to extend the Pareto frontier between efectiveness and eficiency. Although the two gate mechanisms described above could cooperate well, there may still exist partial functional overlap between them, enabling them to withstand greater information compression. Therefore, we can use low-rank factorization to reduce computation and parameter cost while preserving most of the expressive capacity."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                750,
+                915,
+                890
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Specifically, we further decompose the X-based gate using the same low-rank matrix factorization adopted for our H-gate, also with a SiLU activation function in the middle to provide nonlinearity. By adjusting the intermediate dimension of "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "W ^ { d } / W ^ { u }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "in the two gates, we can control the maximum ranks of the two projections to balance efectiveness and eficiency. The formulation is given as follows:"
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                69,
+                480,
+                167
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\pmb { H } _ { i } ^ { \\prime } = \\pmb { H } _ { i } \\odot \\sigma \\big ( \\mathrm { S i L U } ( \\pmb { X } \\bar { \\pmb { W } } _ { i } ^ { d } ) \\bar { \\pmb { W } } _ { i } ^ { u } + \\mathrm { S i L U } ( \\pmb { H } _ { i } \\pmb { W } _ { i } ^ { d } ) \\pmb { W } _ { i } ^ { u } \\big ) ,\\tag{5}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/65494c589bae63e9cf7491d4262c3200bfcfee5689647192f199768b63d19910.jpg"
+                }
+            },
+            "bbox": [
+                88,
+                171,
+                473,
+                191
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "W _ { i } ^ { d } , ~ W _ { i } ^ { u }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\bar { \\mathbfcal W } _ { i } ^ { d } , \\ \\bar { \\mathbfcal W } _ { i } ^ { u }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "are diferent groups of weighting matrices. The maximum rank of each gating matrix can be controlled by adjusting the intermediate dimension. We find that appropriately reducing the ranks of both groups of matrices could better reduce the number of parameters and computational cost while largely preserving representational capacity, compared to the original gated attention. The resulting efectiveness-eficiency Pareto frontier is reported in the detailed experimental results in Section 4.4."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                210,
+                480,
+                339
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.3 Cross-Head Gating Strategy"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                83,
+                348,
+                346,
+                364
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The H-gate introduced above mainly works together with the original X-gate to regulate the element-wise information flow more finely and improve expressiveness. Although it enables a more fine-grained, hybrid, and eficient attention gating, the gating strategy still depends on the intra-head element interactions for each head’s output separately, while inter-heads mutual interactions are relatively neglected. In multi-head attention, diferent heads do not express information completely independently. Instead, information from diferent heads can interact with each other and be expressed collaboratively. Therefore, we hypothesize that the gating score of one head should also consider the opinions of other heads for reference. Based on this hypothesis, we further propose the cross-head gating module (i.e., C-gate)."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                366,
+                480,
+                561
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Specifically, we have the concatenated attention outputs of all heads H = concat "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\{ H _ { 1 } , H _ { 2 } , . . . , H _ { h } \\}"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". We use H as the input and apply a matrix transformation to obtain our head-wise gating as a supplement, formulated as:"
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                561,
+                480,
+                617
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\begin{array} { r l } & { \\pmb { H } _ { i } ^ { \\prime } = \\pmb { H } _ { i } \\odot \\sigma \\big ( \\mathrm { S i L U } ( \\pmb { X } \\pmb { \\bar { W } } _ { i } ^ { d } ) \\pmb { \\bar { W } } _ { i } ^ { u } + \\mathrm { S i L U } ( \\pmb { H } _ { i } \\pmb { W } _ { i } ^ { d } ) \\pmb { W } _ { i } ^ { u } \\big ) } \\\\ & { \\qquad \\odot \\sigma \\big ( \\mathrm { B r o a d c a s t } ( ( \\pmb { H } \\pmb { W } _ { c } ) _ { i } ) \\big ) . } \\end{array}\\tag{6}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/94fc07a1bd9be28d5a3c5297bddd61ec25520772a7813b649f33c95c3836073a.jpg"
+                }
+            },
+            "bbox": [
+                89,
+                622,
+                472,
+                657
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Here, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "W _ { c } \\in \\mathbb { R } ^ { h d \\times h }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "denotes the transformation matrix for computing the cross-head gate for h heads based on all heads’ elements. Note that "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "{ \\mathbf { } } H W _ { c }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is an h-dimensional vector, and Broadcast "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( ( H W _ { c } ) _ { i } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "denotes broadcasting its i-th dimension to the shape of "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "H _ { i } ,"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", indicating that this gate provides one gate score for all elements of one head. The reasons are: a) the C-gate is supplementary to the above element-wise Xgate and H-gate and thus should not bring in much additional computation, and b) the cross-head interactions are supposed to provide coarse-grained inter-head reweighting."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                679,
+                480,
+                820
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The cross-head gating strategy integrates information across heads and performs head-wise gating based on the integrated input. Since it can perceive the global head state during gating, it can dynamically adjust the relative contributions of diferent heads and encourage collaborative information modeling across heads. Specifically, this cross-head mechanism may suppress heads with lower contribution under the current input, emphasize more important heads, and dynamically allocate information flow across heads according to the current context. In conclusion, our C-gate mainly regulates coarse-grained head-wise information across heads, while the X-/H- gates mainly capture fine-grained elementwise information within each head from diferent aspects. In conclusion, all hybrid gates capture distinct modulation signals and exhibit limited functional overlap. Our experiments show that the cross-head gate can achieve further better performance."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                819,
+                480,
+                890
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                514,
+                69,
+                915,
+                236
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.4 HyGA with Learnable Attention Sink"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                516,
+                252,
+                849,
+                267
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The above methods improve the expressiveness of the gated attention module through the combination of multiple mechanisms. However, beyond representational expressiveness, training stability is also a critical concern in industrial-scale training of large language models. Attention sinks (Xiao et al. 2024) and massive activations are important factors that affect training stability. In the original work on Gated attention, the authors also mention that the head-specific gating mechanism of gated attention can introduce sparsity and mitigate attention sinks and massive activations."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                275,
+                915,
+                415
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "However, our experimental results show that, when using gated attention alone, its mitigation of the sink ratio is still not perfect, and massive activations occasional occur in production-scale training. Therefore, inspired by GPT-OSS (Agarwal et al. 2025), we implement HyGA with learnable attention sinks to provide an additional safeguard for training stability. Through experiments, we find that adding learnable attention sinks on top of HyGA can further reduce the sink ratio and efectively alleviate massive activations, even with slight loss advantages. In our observations, the hidden states become significantly smoother, and massive activations are substantially reduced."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                416,
+                915,
+                584
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4 Experiments"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                643,
+                602,
+                787,
+                617
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In this section, we conduct a series of experiments to verify the efectiveness of our HyGA with three research questions: (RQ1) Does HyGA outperform the original gated attention on diferent backbones and benchmarks (in Sec.4.2)? (RQ2) Are all components of HyGA efective (in Sec.4.3)? (RQ3) Can HyGA achieve the efectiveness-eficiency Pareto frontier with stable training (in Sec.4.4 and 4.5)?"
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                625,
+                915,
+                724
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.1 Experimental Setups"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                516,
+                739,
+                723,
+                756
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Datasets. We evaluate models on 14 popular benchmarks, including CEval (Huang et al. 2023), CMMLU (Li et al. 2024), MMLU (Hendrycks et al. 2020), AGIEval (Zhong et al. 2024), ARC (Clark et al. 2018), GPQA-Diamond (Rein et al. 2023), GSM8K (Cobbe et al. 2021), MATH (Hendrycks et al. 2021), MBPP+ (Austin et al. 2021; Liu et al. 2023), HellaSwag (Zellers et al. 2019), PIQA (Bisk et al. 2020), SIQA (Sap et al. 2019), Natural Questions (Kwiatkowski et al. 2019), and TriviaQA (Joshi et al. 2017)."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                763,
+                915,
+                890
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/2b81c565035976fafedb67a3bbe5b209981238441640100e8bc30b647b9ebc26.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 1: Results on 14 widely-used benchmarks of MoE-5B (MLA) trained on around 500B tokens."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Model</td><td>CEval</td><td>CMMLU</td><td>MMLU</td><td colspan=\"2\">AGIEval</td><td>ARC</td><td>GPQA-D</td><td>GSM8K</td></tr><tr><td rowspan=\"2\">Gated attention HyGA</td><td>50.33</td><td>50.44</td><td>50.82</td><td colspan=\"2\">30.33</td><td>53.34</td><td>13.08</td><td>28.51</td></tr><tr><td>51.57</td><td>50.58</td><td>51.64</td><td colspan=\"2\">31.13</td><td>57.53</td><td>14.87</td><td>29.87</td></tr><tr><td>Model</td><td>MATH</td><td>MBPP+</td><td>HellaSwag</td><td>PIQA</td><td>SIQA</td><td>NQ</td><td>TriviaQA</td><td>Average</td></tr><tr><td>Gated attention</td><td>14.95</td><td>35.19</td><td>62.47</td><td>73.94</td><td>53.99</td><td>14.27</td><td>38.19</td><td>40.70</td></tr><tr><td>HyGA</td><td>17.20</td><td>40.21</td><td>62.73</td><td>75.24</td><td>54.40</td><td>15.43</td><td>38.89</td><td>42.23</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                147,
+                65,
+                849,
+                179
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/2c4266aed6e93d2b20e7aa2f327cc209d2fa83c35305c859afbd898ef837f4d7.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 3: Training loss trends of the original Gated attention and our HyGA of MoE-5B trained on 500B token."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                125,
+                234,
+                441,
+                388
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Model Settings and Competitors. We mainly conduct experiments on an MoE (Jiang et al. 2024) model with nearly 1B activated parameters and 5B total parameters (noted as MoE-5B). The model adopts classical Transformer structure with MLA (Liu et al. 2024) used in the attention module, incorporating element-wise gated attention (Qiu et al. 2026b). It has 64 experts and 4 activated experts, armed with the Muon optimizer (Jordan et al. 2024) and trained on 500B tokens. Besides, we also adopt another backbone of Qwen3- 0.6B (Yang et al. 2025), which is a dense model with GQA (Ainslie et al. 2023). It is trained with around 200B tokens via AdamW (Loshchilov and Hutter 2017). We implement gated attention and our HyGA on it for further comparisons on diferent LLM structures."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                454,
+                482,
+                651
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.2 Main Results (RQ1)"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                83,
+                661,
+                282,
+                678
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The experimental results of MoE-5B are shown in Table 1, with the training loss trends of MoE-5B variants given in Figure 3. The results of Qwen3-0.6B are illustrated in Table 2. From these results, we can observe that:"
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                679,
+                480,
+                736
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "(a) As evidenced by the evaluation results and loss curves of MoE-5B, our HyGA achieves consistently improvements over Gated attention across most metrics and training steps, and the overall improvement is significant. Note that we do not apply low-rank compression for efectiveness in the main experiments. For the loss trend in Fig. 3, HyGA consistently maintains a lower loss throughout training, with the gap gradually widening (the loss advantage is approximately 0.012 at 60k step). These indicate the efectiveness of HyGA on MoE or MLA structures."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                736,
+                482,
+                875
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "(b) For Qwen3-0.6B, its relatively small model size and trained token size make the results on some of the aforementioned fourteen benchmarks less reliable. We therefore select six relatively reliable benchmarks and report the performance gaps. We can also find that HyGA achieves the overall better performance compared to gated attention based on GQA and dense model. Besides, after training on 200B tokens, HyGA attains a training loss approximately 0.008 lower than that of Gated GQA. Taken together, these results show that HyGA remains efective when applied to diferent backbones and model settings, implying the generalization ability of HyGA."
+                    }
+                ]
+            },
+            "bbox": [
+                98,
+                875,
+                480,
+                890
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                514,
+                232,
+                915,
+                373
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.3 Ablation Study (RQ2)"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                516,
+                382,
+                732,
+                398
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "To demonstrate that each module in HyGA makes a distinct contribution and is not fully functionally redundant with others modules, we conduct ablation studies on essential components with the same settings in the main experiment (i.e., MoE-5B, MLA, 500B trained tokens). The detailed results of ablation versions on 14 benchmarks are in Figure 4."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                401,
+                915,
+                487
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Efectiveness of H-gate and Learnable Attention Sink We first conduct an ablation study on the H-based gating module: the gated attention baseline versus the gated attention with H-gate. The results show that introducing H-gate yields clear improvements in most benchmarks covering different capabilities, achieving significantly better average performance. It suggests that the proposed H-gate could provide additional information from "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "H _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "that is not captured by the original Gated attention, which merely contains the original raw input X. As discussed in Section 3.2, compared with "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "X"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", the post-attention output "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "H _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "contains richer contextual interaction information. Consequently, H-gate can provide a diferent view to control the element-wise gating, cooperating well with the original X-gate in gated attention. Besides, we also find that the cooperation with learnable attention sink could also bring in a slight improvement on the average score. In-depth analysis on the stability advantages of learnable sink will be discussed in Sec. 4.5."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                492,
+                916,
+                744
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Efectiveness of Cross-head Gate with Gate Fusion Next, we validate the efectiveness of C-gate with the help of gate fusion. We find that adding C-gate based on X+H gates further reduces the final training loss by 0.004. However, we discover that multiplicatively applying three gates will excessively suppress the output activations, as stated in Sec. 3.2. Therefore, we include the gate fusion strategy as the final HyGA version, achieving a more numeric-healthy gating mechanism. Comparing HyGA with HyGA (learnable sink+H-gate), we know that HyGA consistently outperforms the H-gate variant on most downstream benchmarks, and its lower final training loss further supports this result. These findings suggest that jointly applying our C-gate and the gate-fusion mechanism improves HyGA’s performance."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                750,
+                916,
+                891
+            ]
+        }
+    ],
+    [
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/874d01653b9b07ff476c531a22e1d98ba7cefd293cc817353e740f6f08da5355.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "(a)"
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                86,
+                69,
+                287,
+                189
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/840c6f35f32f8d7cdfd0689db687107a15337f6c91d858eb187f92fc921915ed.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "(b)"
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                294,
+                70,
+                495,
+                189
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/c1452b9bca9dffdca541fd03f885ac4c8f3d17cba756a16a28387ed99c3e40e1.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "(c)"
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                503,
+                70,
+                702,
+                190
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/d59c0d9678f6829ed4c01edf87820295076f7446fb1e7acfd76cf9bc435edd95.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "(d)"
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                712,
+                69,
+                908,
+                189
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/fd5ce0ca309636d77239f82e9bc877e53f36e7a8212c83d98d4445e596ccbe82.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 4: Ablation results for diferent variants of HyGA. Adding learnable sink, H-gate, C-gate and gate fusion sequentially does bring in benefits on 14 benchmarks (average performance gains: +0.24%→+1.21%→+1.53%)."
+                    },
+                    {
+                        "type": "text",
+                        "content": "Table 2: Results on 6 widely-used benchmarks of Qwen3-0.6B (GQA) trained on 200B tokens."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Model</td><td>HellaSwag</td><td>ARC</td><td>PIQA</td><td>TriviaQA</td><td>NQ</td><td>MBPP+</td><td>Average</td></tr><tr><td>original GQA</td><td>43.93</td><td>25.08</td><td>68.39</td><td>13.19</td><td>6.93</td><td>7.67</td><td>27.53</td></tr><tr><td>Gated attention + GQA</td><td>45.40</td><td>29.43</td><td>68.99</td><td>14.72</td><td>7.78</td><td>10.32</td><td>29.44</td></tr><tr><td> $\\mathrm { H y G A + G Q A }$ </td><td>45.93</td><td>32.44</td><td>68.72</td><td>15.56</td><td>8.25</td><td>12.43</td><td>30.56</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                171,
+                265,
+                826,
+                335
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                81,
+                388,
+                480,
+                448
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.4 Balancing Efectiveness and Eficiency (RQ3)"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                83,
+                459,
+                472,
+                477
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In this subsection, we discuss the balance between efectiveness and eficiency of HyGA, which could be flexibly adjusted by the low-rank matrix decomposition technique introduced in Sec. 3.2. Specifically, we implement HyGA with diferent intermediate dimension sizes "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "d _ { \\mathrm { i n t } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "of X-gate and H-gate (i.e., controlling the output dimensions of "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "W _ { i } ^ { d } , \\bar { W } _ { i } ^ { d } \\in \\breve { \\mathbb { R } } ^ { d \\times d _ { \\mathrm { i n t } } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", so as to constrain the maximum rank of the projection of both gating)."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                482,
+                480,
+                593
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Taking the H-gate "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\sigma ( \\mathrm { S i L U } ( H _ { i } W _ { i } ^ { d } ) W _ { i } ^ { u } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "of MoE-5B as an example, in the main experiments, we set "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "d _ { \\mathrm { i n t } } = d = 1 9 2"
+                    },
+                    {
+                        "type": "text",
+                        "content": "to maximize model capacity, resulting in a full-width gating structure. In this experiment, we evaluate three reduced dimensions, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "d _ { \\mathrm { i n t } } \\in \\{ \\bar { 1 6 } , 3 2 , 6 4 \\}"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", and apply the same low-rank compression scheme to the X-gate. To assess computational eficiency and identify the efectiveness–eficiency Pareto frontier, we calculate the computation costs of attention gating modules under diferent "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "{ \\dot { d } } _ { \\mathrm { i n t } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". Since the C-gate provides head-wise gating, its does not bring in many additional parameters (nearly 3%). Hence, we remove the C-gate in the following experiments to more explicitly show the impact of low-rank compression on H-gate and X-gate. We adopt the same training and evaluation settings as in the main experiments, and report the results in Fig. 5."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                594,
+                480,
+                805
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We can observe that: HyGA achieves lower losses with larger "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "d _ { \\mathrm { i n t } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "(indicating less compression rates and more computation costs). When "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "d _ { \\mathrm { i n t } } = 3 2"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", HyGA utilizes only approximately 26% of the gating parameters required by the original Gated attention baseline, while achieving slightly better performance on training loss. Moreover, we verify that HyGA with low-rank matrix factorization "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( d _ { \\mathrm { i n t } } = 3 2 )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "also achieves better overall performance on downstream tasks. It demonstrates that HyGA does extend the efectiveness-eficiency Pareto frontier of the original gated attention. We also attempt to set diferent "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "d _ { \\mathrm { i n t } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "for X-gate and H-gate, which seldom brings in further loss advantages. In practice, we could flexibly set appropriate intermediate dimensions according to the computation constraints."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                804,
+                480,
+                890
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/45323cfebcc07bb54297975dff9623c64649c26c1a6b94b8b2f55390420342e6.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 5: HyGA’s variants with diferent low-rank compressed matrices in H-gate and X-gate could extend the efectiveness-eficiency Pareto frontier of gated attention."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                552,
+                395,
+                880,
+                578
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                514,
+                661,
+                915,
+                773
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.5 Training Stability (RQ3)"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                516,
+                785,
+                751,
+                801
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Although gated attention can largely alleviate the attentionsink phenomenon, we find that its attention score assigned to the BOS token still remains relatively high compared to other tokens, indicating that attention sinks still persist. Motivated by this observation, we introduce learnable attention sinks into gated attention to further reduce sink ratios and improve training stability. As shown in Figure 6, HyGA with learnable sink substantially reduces the BOS-token’s attention score (especially in the last few layers). We also observe a marked reduction in massive activations, suggesting that the learnable attention sink further improves training stability. Therefore, we incorporate the learnable sink into all subsequent HyGA experiments. We further compare the BOStoken attention scores of gated attention + learnable attention sink and HyGA. HyGA achieves consistently low attention sink ratios in all layers, indicating that other components of HyGA further contribute to the training stability."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                804,
+                915,
+                890
+            ]
+        }
+    ],
+    [
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/5c7b59fc4733ce6e9e4bdde743b637eeeffafbe550f9a1df0670d5ddb9415d9f.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                119,
+                65,
+                444,
+                224
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/31a3f57947b6e5a80160ff3d3ee0239f47f4f5ade2fbcad9735a1e10fc4baa87.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "(a) Layer-wise average BOS token scores."
+                    },
+                    {
+                        "type": "text",
+                        "content": "(b) Layer-wise ratios of BOS token scores greater than 0.3."
+                    },
+                    {
+                        "type": "text",
+                        "content": "Figure 6: Layer-wise BOS tokens’ attention score statistics of MoE-5B models: (a) average BOS token scores and (b) ratios of BOS token scores greater than 0.3."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                117,
+                252,
+                444,
+                411
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                81,
+                523,
+                480,
+                676
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "For Qwen3, as in Figure 7, both the baseline and Gated attention exhibit obvious loss spikes in training, whereas HyGA does not under the same recommended learning rate. These observations suggest that HyGA is more robust to larger learning rates and provides more stable optimization."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                676,
+                480,
+                747
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "5 Related Works"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                200,
+                758,
+                362,
+                773
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Gating Method in Neural Networks Gating is a longstanding method for controlling information flow in neural networks. Early models such as LSTMs (Hochreiter and Schmidhuber 1997) and GRUs(Cho et al. 2014) use gates to regulate memory updates, while later works such as GLU (Dauphin et al. 2017)and SwiGLU (Shazeer 2020) further introduce gating into feed-forward activations. Gating also plays an important role in modern recurrent and state-space models, including S4, Mamba, and Mamba-2 (Gu, Goel, and Ré 2021; Gu and Dao 2023; Dao and Gu 2024), where it controls state updates and memory retention. These examples suggest that gating is not merely an auxiliary technique, but a general architectural principle for improving selectivity and expressive capacity."
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                776,
+                482,
+                890
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/2a9192e9c235f9b74c072d61a6266b9dbfc295555cc8f9e06431d553fdf8b87a.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 7: Training loss curves of the Qwen3 baseline, Gated GQA, and HyGA during the early stage oftraining. HyGA exhibits more stable optimization without apparent loss spikes."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                537,
+                69,
+                897,
+                234
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                516,
+                329,
+                915,
+                415
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Gated Attention and Its Variants Gated attention (Qiu et al. 2026b) introduces a head-specific sigmoid gate after the scaled dot-product attention output, showing that this simple modification improves performance and training stability. This work provides the foundation for studying gating as a structural enhancement to attention rather than as a peripheral fusion module. Since Gated attention, some related studies have explored several directions related to gated attention. Some works place gates at diferent locations in the attention computation, such as applying a forget gate to unnormalized attention scores (Lin et al. 2025) or computing gates from value states to mitigate extreme-token phenomena (Bu et al. 2025). Another significant direction is low-rank gate, such as gated norm (Qiu et al. 2026a). While these studies demonstrate the usefulness and generality of gating, they typically investigate individual design dimensions, such as gate placement or low-rank parameterization. In contrast, our work focuses on the architecture of the gate itself by jointly considering its conditioning pathways, coupling mechanism, parameterization, and cross-head interaction, aiming to improve the model performance and training stability."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                421,
+                915,
+                715
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "6 Conclusion and Future Work"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                575,
+                728,
+                856,
+                744
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In this work, we introduced HyGA with three gates depend on diferent inputs and granularities: X-gate, H-gate, and C-gate. Besides, we also adopt low-rank matrix decomposition and learnable sink for eficiency and training stability. Through more comprehensive information interaction capability, HyGA achieves improved performance."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                748,
+                915,
+                833
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In the future, we plan to scale HyGA to larger models and evaluate its efectiveness at greater scales. We will also investigate its generalizability across diferent attention backbones, such as linear/sparse attention architectures."
+                    }
+                ]
+            },
+            "bbox": [
+                514,
+                833,
+                915,
+                890
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "References"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                232,
+                66,
+                331,
+                83
+            ]
+        },
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Agarwal, S.; Ahmad, L.; Ai, J.; Altman, S.; Applebaum,A.; Arbus, E.; Arora, R. K.; Bai, Y.; Baker, B.; Bao, H.;et al. 2025. gpt-oss-120b & gpt-oss-20b model card. arXivpreprint arXiv:2508.10925."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Ainslie, J.; Lee-Thorp, J.; De Jong, M.; Zemlyanskiy, Y.; Lebrón, F.; and Sanghai, S. 2023. Gqa: Training generalized multi-query transformer models from multi-head checkpoints. In Proceedings of EMNLP."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Austin, J.; Odena, A.; Nye, M.; Bosma, M.; Michalewski, H.; Dohan, D.; Jiang, E.; Cai, C.; Terry, M.; Le, Q.; et al. 2021. Program synthesis with large language models. arXiv preprint arXiv:2108.07732."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Barbero, F.; Arroyo, A.; Gu, X.; Perivolaropoulos, C.; Bronstein, M.; Veličković, P.; and Pascanu, R. 2025. Why do LLMs attend to the first token? arXiv preprint arXiv:2504.02732."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Bisk, Y.; Zellers, R.; Gao, J.; Choi, Y.; et al. 2020. Piqa: Reasoning about physical commonsense in natural language. In Proceedings ofAAAI."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Bu, R.; Zhong, H.; Chen, W.; and Li, Y. 2025. Value-State Gated Attention for Mitigating Extreme-Token Phenomena in Transformers. arXiv preprint arXiv:2510.09017."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Cho, K.; Van Merriënboer, B.; Gulçehre, Ç.; Bahdanau, D.; Bougares, F.; Schwenk, H.; and Bengio, Y. 2014. Learning phrase representations using RNN encoder–decoder for statistical machine translation. In Proceedings ofEMNLP."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Clark, P.; Cowhey, I.; Etzioni, O.; Khot, T.; Sabharwal, A.; Schoenick, C.; and Tafjord, O. 2018. Think you have solved question answering? try arc, the ai2 reasoning challenge. arXiv preprint arXiv:1803.05457."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Cobbe, K.; Kosaraju, V.; Bavarian, M.; Chen, M.; Jun, H.; Kaiser, L.; Plappert, M.; Tworek, J.; Hilton, J.; Nakano, R.; et al. 2021. Training verifiers to solve math word problems. arXiv preprint arXiv:2110.14168."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Dao, T.; and Gu, A. 2024. Transformers are ssms: Generalized models and eficient algorithms through structured state space duality. arXiv preprint arXiv:2405.21060."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Dauphin, Y. N.; Fan, A.; Auli, M.; and Grangier, D. 2017. Language modeling with gated convolutional networks. In ICML."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Elfwing, S.; Uchibe, E.; and Doya, K. 2018. Sigmoidweighted linear units for neural network function approximation in reinforcement learning. Neural networks."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Gu, A.; and Dao, T. 2023. Mamba: Linear-time sequence modeling with selective state spaces. arXiv preprint arXiv:2312.00752."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Gu, A.; Goel, K.; and Ré, C. 2021. Eficiently modeling long sequences with structured state spaces. arXiv preprint arXiv:2111.00396."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Gu, X.; Pang, T.; Du, C.; Liu, Q.; Zhang, F.; Du, C.; Wang, Y.; and Lin, M. 2025. When attention sink emerges in language models: An empirical view. In ICLR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Hendrycks, D.; Burns, C.; Basart, S.; Zou, A.; Mazeika, M.; Song, D.; and Steinhardt, J. 2020. Measuring massive multitask language understanding. arXiv preprint arXiv:2009.03300."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Hendrycks, D.; Burns, C.; Kadavath, S.; Arora, A.; Basart, S.; Tang, E.; Song, D.; and Steinhardt, J. 2021. Measuring mathematical problem solving with the math dataset. arXiv preprint arXiv:2103.03874."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Hochreiter, S.; and Schmidhuber, J. 1997. Long short-term memory. Neural computation."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Huang, Y.; Bai, Y.; Zhu, Z.; Zhang, J.; Zhang, J.; Su, T.; Liu, J.; Lv, C.; Zhang, Y.; Fu, Y.; et al. 2023. C-eval: A multilevel multi-discipline chinese evaluation suite for foundation models. Advances in NIPS."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jiang, A. Q.; Sablayrolles, A.; Roux, A.; Mensch, A.; Savary, B.; Bamford, C.; Chaplot, D. S.; Casas, D. d. l.; Hanna, E. B.; Bressand, F.; et al. 2024. Mixtral of experts. arXiv preprint arXiv:2401.04088."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jordan, K.; Jin, Y.; Boza, V.; You, J.; Cesista, F.; Newhouse, L.; and Bernstein, J. 2024. Muon: An Optimizer for Hidden Layers in Neural Networks."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Joshi, M.; Choi, E.; Weld, D. S.; and Zettlemoyer, L. 2017. Triviaqa: A large scale distantly supervised challenge dataset for reading comprehension. In Proceedings ofACL."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Kwiatkowski, T.; Palomaki, J.; Redfield, O.; Collins, M.; Parikh, A.; Alberti, C.; Epstein, D.; Polosukhin, I.; Devlin, J.; Lee, K.; et al. 2019. Natural questions: a benchmark for question answering research. Transactions ofthe ACL."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Li, H.; Zhang, Y.; Koto, F.; Yang, Y.; Zhao, H.; Gong, Y.; Duan, N.; and Baldwin, T. 2024. Cmmlu: Measuring massive multitask language understanding in chinese. In Findings of ACL."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Lin, Z.; Nikishin, E.; He, X.; and Courville, A. 2025. Forgetting transformer: Softmax attention with a forget gate. In ICLR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Liu, A.; Feng, B.; Wang, B.; Wang, B.; Liu, B.; Zhao, C.; Dengr, C.; Ruan, C.; Dai, D.; Guo, D.; et al. 2024. Deepseekv2: A strong, economical, and eficient mixture-of-experts language model. arXiv preprint arXiv:2405.04434."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Liu, A.; Mei, A.; Lin, B.; Xue, B.; Wang, B.; Xu, B.; Wu, B.; Zhang, B.; Lin, C.; Dong, C.; et al. 2025. Deepseek-v3. 2: Pushing the frontier of open large language models. arXiv preprint arXiv:2512.02556."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Liu, J.; Xia, C. S.; Wang, Y.; and Zhang, L. 2023. Is your code generated by chatgpt really correct? rigorous evaluation of large language models for code generation. Advances in NIPS."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Loshchilov, I.; and Hutter, F. 2017. Decoupled weight decay regularization. arXiv preprint arXiv:1711.05101."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Qiu, Z.; Huang, Z.; Wen, K.; Jin, P.; Zheng, B.; Zhou, Y.; Huang, H.; Wang, Z.; Li, X.; Zhang, H.; et al. 2026a. A Unified View of Attention and Residual Sinks: Outlier-Driven Rescaling is Essential for Transformer Training. arXiv preprint arXiv:2601.22966."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Qiu, Z.; Wang, Z.; Zheng, B.; Huang, Z.; Wen, K.; Yang, S.;Men, R.; Yu, L.; Huang, F.; Huang, S.; et al. 2026b. Gated"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                81,
+                88,
+                480,
+                145
+            ]
+        }
+    ],
+    [
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "attention for large language models: Non-linearity, sparsity, and attention-sink-free. Advances in NIPS."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Rein, D.; Hou, B. L.; Stickland, A. C.; Petty, J.; Pang, R. Y.; Dirani, J.; Michael, J.; and Bowman, S. R. 2023. Gpqa: A graduate-level google-proof q&a benchmark. arXiv preprint arXiv:2311.12022."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Sap, M.; Rashkin, H.; Chen, D.; Le Bras, R.; and Choi, Y. 2019. Social IQa: Commonsense reasoning about social interactions. In Proceedings ofEMNLP-IJCNLP."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Shazeer, N. 2020. Glu variants improve transformer. arXiv preprint arXiv:2002.05202."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Su, Z.; Zhang, H.; Wu, W.; Zhang, Y.; Liu, Y.; Xiao, H.; Yang, Q.; Sun, Y.; Yang, R.; Zhang, C.; et al. 2026. Attention sink in transformers: A survey on utilization, interpretation, and mitigation. arXiv preprint arXiv:2604.10098."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Sun, S.; Canziani, A.; LeCun, Y.; and Zhu, J. 2026. The spike, the sparse and the sink: Anatomy of massive activations and attention sinks. arXiv preprint arXiv:2603.05498."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Vaswani, A.; Shazeer, N.; Parmar, N.; Uszkoreit, J.; Jones, L.; Gomez, A. N.; Kaiser, Ł.; and Polosukhin, I. 2017. Attention is all you need. Advances in NIPS."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Xiao, G.; Tian, Y.; Chen, B.; Han, S.; and Lewis, M. 2024. Eficient streaming language models with attention sinks. In Proceedings ofICLR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Xu, A.; Lin, B.; Xue, B.; Wang, B.; Xu, B.; Wu, B.; Zhang, B.; Lin, C.; Dong, C.; Ling, C.; et al. 2026. Deepseek-v4: Towards highly eficient million-token context intelligence. arXiv preprint arXiv:2606.19348."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yang, A.; Li, A.; Yang, B.; Zhang, B.; Hui, B.; Zheng, B.; Yu, B.; Gao, C.; Huang, C.; Lv, C.; et al. 2025. Qwen3 technical report. arXiv preprint arXiv:2505.09388."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yang, S.; Kautz, J.; and Hatamizadeh, A. 2025. Gated delta networks: Improving mamba2 with delta rule. In ICLR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yang, S.; Wang, B.; Shen, Y.; Panda, R.; and Kim, Y. 2023. Gated linear attention transformers with hardware-eficient training. arXiv preprint arXiv:2312.06635."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yuan, J.; Gao, H.; Dai, D.; Luo, J.; Zhao, L.; Zhang, Z.; Xie, Z.; Wei, Y.; Wang, L.; Xiao, Z.; et al. 2025. Native sparse attention: Hardware-aligned and natively trainable sparse attention. In Proceedings of ACL."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Zellers, R.; Holtzman, A.; Bisk, Y.; Farhadi, A.; and Choi, Y. 2019. Hellaswag: Can a machine really finish your sentence? In Proceedings ofACL."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Zhong, W.; Cui, R.; Guo, Y.; Liang, Y.; Lu, S.; Wang, Y.; Saied, A.; Chen, W.; and Duan, N. 2024. Agieval: A humancentric benchmark for evaluating foundation models. In Findings ofNAACL."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                83,
+                69,
+                478,
+                98
+            ]
+        }
+    ]
+]
