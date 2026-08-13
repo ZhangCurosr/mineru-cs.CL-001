@@ -1,0 +1,3953 @@
+[
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "LazyTrain: Limited-resource Allocation toward Zero-waste Yield Optimization in Large Language Model Training"
+                    }
+                ],
+                "level": 1
+            },
+            "bbox": [
+                159,
+                84,
+                838,
+                126
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Xiaojun Wu<sup>∗</sup> <sup>1,2</sup>, Cehao Yang<sup>∗</sup> <sup>1,2</sup>, Honghao Liu<sup>∗</sup> <sup>1,2</sup>, Xueyuan Lin<sup>∗</sup> <sup>2</sup>, Xuhui Jiang<sup>1,3</sup>, Chengjin Xu<sup>1,3</sup>, Jia Li<sup>†</sup> <sup>2</sup>, Jian Guo<sup>†</sup> <sup>1</sup>"
+                    }
+                ]
+            },
+            "bbox": [
+                205,
+                136,
+                796,
+                172
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>1</sup>IDEA Research"
+                    }
+                ]
+            },
+            "bbox": [
+                428,
+                187,
+                569,
+                203
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>2</sup>The Hong Kong University of Science and Technology (Guangzhou) <sup>3</sup>DataArcTech Ltd."
+                    }
+                ]
+            },
+            "bbox": [
+                215,
+                203,
+                783,
+                236
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Abstract"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                262,
+                260,
+                342,
+                275
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Training large language models on limited hardware is increasingly a scheduling problem across GPU compute, host memory, PCIe transfer, and storage bandwidth. Existing offloading systems reduce GPU residency, and Mega-Train shows that a CPU-master layer-streaming executor can train large models on a single GPU, but fixed checkpointing and placement heuristics still leave communication exposed on the critical path. We propose LazyTrain, an optimization layer over a layer-streaming executor. LazyTrain formulates checkpoint selection, activation placement, recomputation, and CPU-GPU-NVMe communication overlap as a mixed-integer scheduling problem, then executes the solved policy during training. It further couples 8-bit optimizer states with fast gradient clipping as a single Hybrid 8-bit operator: state compression reduces optimizerstate memory, while fast clipping counteracts the additional CPU-side update overhead. Across H800 experiments from Qwen2.5-3B to Qwen3.6-27B, LazyTrain improves sustained TFLOPS over matched baselines runs by approximately 1.24×; RTX 3090 experiments likewise increase the maximum feasible batch size by one at each model scale. In the primary Qwen3.6-27B H800 MetaMathQA run, LazyTrain reaches 219.95 TFLOPS and 1361 tokens/s at batch size 72, peaks at 68.84 GB of GPU memory, and obtains 95.42% exactmatch accuracy on the full evaluation split. The source code is available at https://github. com/DataArcTech/LazyTrain."
+                    }
+                ]
+            },
+            "bbox": [
+                141,
+                286,
+                462,
+                772
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "1 Introduction"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                115,
+                782,
+                260,
+                799
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Large language model training increasingly depends on how well a system uses the full memory hierarchy rather than GPU memory alone. Model parameters, gradients, optimizer states, and activations can exceed the memory of a single accelerator even for supervised fine-tuning, while CPU DRAM and local storage offer much larger capacity at substantially lower bandwidth. Efficient training therefore requires a schedule that decides not only what to offload, but also when each transfer can be hidden under GPU computation (Duan et al., 2024)."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                808,
+                490,
+                889
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                261,
+                885,
+                374
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Existing memory-efficient training systems address important pieces of this problem. ZeROstyle sharding and offloading reduce device residency for model states (Rajbhandari et al., 2020, 2021), FSDP and Gemini provide widely used heterogeneous-memory runtime policies (Zhao et al., 2023; Fang and You, 2022), and storageaware systems show that CPU and NVMe can serve as useful capacity tiers (Liao et al., 2025; Yuan et al., 2025). MegaTrain treats CPU memory as the authoritative store for parameters and optimizer states, streams layers through GPU memory, and uses block-wise recomputation to bound activation residency (Yuan et al., 2026). However, its activation schedule remains a fixed heuristic. A fixed checkpoint interval can be feasible, but it does not search jointly over checkpoint boundaries, GPU/CPU/NVMe homes, recomputation blocks, and transfer windows."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                375,
+                887,
+                680
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The central observation of this paper is that limited-resource training should be optimized as a constrained scheduling problem. As illustrated in Figure 1, the bottleneck is not simply that tensors do not fit in GPU memory. The bottleneck is that GPU compute windows, CPU-GPU traffic, mandatory parameter and gradient movement, and possible NVMe activation spill compete for shared resources. A schedule that saves memory by moving tensors to slower tiers can still hurt throughput if those transfers become visible on the critical path."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                681,
+                887,
+                873
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We present LazyTrain, an optimization-guided scheduler for limited-resource LLM training. LazyTrain keeps the layer-streaming executor, but replaces fixed activation scheduling with a mixedinteger model whose decision variables select checkpoint paths, activation homes, recomputation blocks, and communication assignments. The objective minimizes recomputation plus the incremental communication exposure induced by activation placement, rather than maximizing the amount of offload. The solved policy is loaded once before training and then executed by the runtime."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                873,
+                885,
+                923
+            ]
+        },
+        {
+            "type": "page_aside_text",
+            "content": {
+                "page_aside_text_content": [
+                    {
+                        "type": "text",
+                        "content": "arXiv:2608.11919v1 [cs.CL] 12 Aug 2026"
+                    }
+                ]
+            },
+            "bbox": [
+                30,
+                362,
+                67,
+                783
+            ]
+        },
+        {
+            "type": "page_footnote",
+            "content": {
+                "page_footnote_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>*</sup>Equal contribution."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                895,
+                265,
+                908
+            ]
+        },
+        {
+            "type": "page_footnote",
+            "content": {
+                "page_footnote_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>†</sup>Corresponding authors."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                908,
+                289,
+                922
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "1"
+                    }
+                ]
+            },
+            "bbox": [
+                494,
+                942,
+                504,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/57000a67f75cb50e83627fa31e2963207bc493a283b86f12fedb3e03038a788d.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 1: Motivation for optimization-guided training schedules. A fixed heuristic can satisfy a memory cap while exposing CPU-GPU or NVMe transfers on the critical path. LazyTrain instead searches for checkpoint placement and transfer assignments that hide activation traffic inside compute windows when possible."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                115,
+                84,
+                882,
+                286
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                365,
+                490,
+                510
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Our evaluation covers single-GPU H800 and RTX 3090 experiments from 3B to 27B. Under matched model, data, and batch-size settings, the final LazyTrain configuration reaches 219.95 TFLOPS and 1361 tokens/s, compared with 176.90 TFLOPS and 1075.8 tokens/s for the MegaTrain baseline. It peaks at 68.84 GB of GPU memory and obtains 95.42% exact-match accuracy on the full evaluation split. The LazyTrain - MILP variant, which removes mixed-integer scheduling while retaining the other runtime improvements, drops to 193.17 TFLOPS. This is the largest componentablation degradation and establishes MILP scheduling as the central contributor. Removing the Hybrid 8-bit operator, which combines hybrid 8-bit optimizer states with fast gradient clipping, while retaining MILP scheduling instead yields 219.29 TFLOPS. The broader experiments report throughput, memory, maximum feasible batch size, and training quality across model scales and accelerator budgets."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                510,
+                490,
+                847
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The contributions of this paper are:"
+                    }
+                ]
+            },
+            "bbox": [
+                132,
+                848,
+                398,
+                864
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• We formulate limited-resource LLM training as a mixed-integer programming(MIP) model over checkpoint selection, activation placement, recomputation, and CPU-GPU-NVMe communication overlap."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                873,
+                489,
+                922
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                544,
+                365,
+                884,
+                398
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• We instantiate this MIP scheduler on top of a layer-streaming executor, which can treat MegaTrain baseline as a fixed heuristic schedule inside the same scheduling space."
+                    }
+                ]
+            },
+            "bbox": [
+                531,
+                409,
+                885,
+                474
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• We make a coupled Hybrid 8-bit operator a formal component of LazyTrain: 8-bit optimizer states reduce memory, while fast gradient clipping counteracts their additional CPUside update overhead. We evaluate the complete system on H800 and RTX 3090 across model scales."
+                    }
+                ]
+            },
+            "bbox": [
+                531,
+                486,
+                887,
+                599
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "2 Related Work"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                612,
+                667,
+                629
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Scaling LLMs and agent workloads. Recent LLM families continue to push model capacity, context length, and multimodal capability (OpenAI, 2026; Anthropic, 2026; Google, 2026; DeepSeek-AI, 2026). At the same time, agent-oriented models and tools target coding, visual reasoning, and longer-horizon tool-use workflows (Qwen Team, 2026; Team et al., 2026; Zeng et al., 2026; Anthropic, 2025; Google, 2025; OpenAI, 2025). Training and adapting these systems increases memory, communication, and scheduling pressure: larger model states and long-context agent trajectories raise state and activation footprints, making infrastructure a central part of model development."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                638,
+                887,
+                865
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Memory-efficient LLM training and offloading. Efficient LLM training reduces accelerator residency through model parallelism, mixed precision, recomputation, state sharding, and offloading (Duan et al., 2024; Shoeybi et al., 2019; Micikevicius et al., 2018; Kingma and Ba, 2015). ZeRO, ZeRO-Infinity, ZeRO++, PyTorch FSDP, and Colossal-AI Gemini partition or migrate model states across GPU, CPU, and NVMe tiers to make larger models trainable (Rajbhandari et al., 2020, 2021; Wang et al., 2023; Zhao et al., 2023; Fang and You, 2022). Storage-aware systems extend this hierarchy: Ratel optimizes data movement for finetuning large models on consumer GPUs (Liao et al., 2025); lifetime-aware offloading treats GPUDirect Storage as a training tier (Yuan et al., 2025); and heterogeneous tensor caching adds resource-aware migration policies (Afroz et al., 2025). MegaTrain stores model states in host memory, streams layers through GPU memory, and uses block-wise recomputation to limit activation residency (Yuan et al., 2026)."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                873,
+                887,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "2"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                110,
+                84,
+                490,
+                392
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Summary of distinctions. The systems above make limited-resource training feasible by reducing device residency, adding heterogeneous memory tiers, or streaming layers through GPU memory. Among them, MegaTrain chooses activation checkpoints through fixed heuristics. LazyTrain addresses a complementary scheduling question: within the same layer-streaming execution space, it jointly selects activation checkpoints, tier placement, recomputation, and exposed communication in one mixed-integer model. It also models NVMe as both a PCIe consumer and a separate read/write endpoint so that SSD traffic is used only when it can be hidden or when it enables an otherwise infeasible schedule."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                403,
+                490,
+                645
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3 Method"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                659,
+                220,
+                676
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.1 Overview"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                688,
+                236,
+                703
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "LazyTrain is an optimization layer over a MegaTrain-style layer-streaming executor. The executor defines the feasible runtime actions: stream parameters from CPU memory to GPU memory, compute one layer or recomputation block, offload gradients back to CPU memory, and reload materialized activation checkpoints from GPU, CPU, or local NVMe. LazyTrain decides which of these feasible actions should be used for each layer boundary before training starts."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                712,
+                490,
+                873
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Figure 2 summarizes the method. The scheduler receives model constants, memory budgets, bandwidth profiles, and the training target. It solves a mixed-integer linear program (MILP) whose binary variables choose a checkpoint path and storage homes, while continuous variables assign activation traffic to compute windows. The solved policy is then loaded by the runtime. This design keeps execution simple while making the schedule resource-aware."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                873,
+                490,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                84,
+                887,
+                198
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.2 Layer-Boundary Scheduling Space"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                209,
+                830,
+                225
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Consider a transformer with L layers and layerboundary activations "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "B = \\{ 0 , \\ldots , L \\}"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". Boundary 0 is the block input, and boundary i, for "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "1 \\leq i \\leq L ,"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is the output of layer i. Let "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "A _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "be the activation size at boundary i, and let "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\rho _ { j }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "be the cost of the forward transition from boundary "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "j"
+                    },
+                    {
+                        "type": "text",
+                        "content": "to boundary "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "j + 1"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". A directed edge "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( s , e )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "0 ~ \\leq ~ s ~ <"
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\textit { e } \\leq \\textit { L }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", represents one backward recomputation block: boundaries s and e are materialized, while the layers between them can be recomputed locally. The set of candidate edges is "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { E } ."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                231,
+                885,
+                407
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "For each edge, LazyTrain computes recomputation cost as"
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                409,
+                885,
+                439
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "R _ { s , e } = \\left\\{ \\begin{array} { l l } { 0 , } & { e \\leq s + 1 , } \\\\ { \\sum _ { j = s } ^ { e - 2 } \\rho _ { j } , } & { e > s + 1 . } \\end{array} \\right.\\tag{1}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/5bbe5c66ebd07ab33fd50689b34ea7b237c8870189922f3344db993a29907a39.jpg"
+                }
+            },
+            "bbox": [
+                573,
+                449,
+                818,
+                492
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The final layer output of the block is already available at boundary e, so the cost excludes that output. This edge view turns activation checkpointing into a path-selection problem."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                502,
+                887,
+                568
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.3 Decision Variables and Constraints"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                579,
+                833,
+                594
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "LazyTrain uses binary variables "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "x _ { s , e }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "to select recomputation edges and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "z _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "to indicate whether boundary i is materialized. If a boundary is materialized, binary variables "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "g _ { i } ,"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", c<sub>i</sub>, and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "n _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "assign it to GPU high-bandwidth memory (HBM), CPU DRAM, or local NVMe:"
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                600,
+                887,
+                697
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "z _ { i } = g _ { i } + c _ { i } + n _ { i } , \\qquad i \\in \\mathcal { B } .\\tag{2}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/b9b886d4bf2f1b8f57ab8fb61d5b246ed35eeded20a00031ea33f24cfc275160.jpg"
+                }
+            },
+            "bbox": [
+                581,
+                712,
+                808,
+                728
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The executor keeps the input and output boundaries in HBM, so "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "g _ { 0 } = g _ { L } = 1"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "c _ { 0 } = c _ { L } ="
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "n _ { 0 } = n _ { L } = 0"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". The selected edges must form one legal path from the input boundary to the output boundary:"
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                741,
+                885,
+                822
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\begin{array} { r l } & { \\displaystyle \\sum _ { ( 0 , e ) \\in \\mathcal { E } } x _ { 0 , e } = 1 , \\quad \\sum _ { ( s , L ) \\in \\mathcal { E } } x _ { s , L } = 1 , } \\\\ & { \\displaystyle \\sum _ { ( s , i ) \\in \\mathcal { E } } x _ { s , i } = z _ { i } , \\quad \\sum _ { ( i , e ) \\in \\mathcal { E } } x _ { i , e } = z _ { i } , 0 < i < L . } \\end{array}\\tag{3}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/5175e62ee29f7d030041032e9d88734626a92511653721d3a5272720099cc733.jpg"
+                }
+            },
+            "bbox": [
+                514,
+                834,
+                877,
+                909
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "3"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/b578038f7f3a4a5c6c16d0d06c13a2aefa4d7a9a3e22ae5ab28be3e930ab3fdf.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 2: LazyTrain architecture. Resource profiles, model configuration, and training targets define a mixed-integer scheduling problem. The solver chooses checkpoint boundaries, GPU/CPU/NVMe homes, and transfer windows; the resulting policy is executed by a layer-streaming runtime."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                114,
+                80,
+                882,
+                254
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Placement must also satisfy tier capacities:"
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                332,
+                435,
+                348
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\begin{array} { l } { { \\displaystyle \\sum _ { i } A _ { i } g _ { i } \\le M _ { G } } , } \\\\ { { \\displaystyle \\sum _ { i } A _ { i } c _ { i } \\le M _ { C } } , } \\\\ { { \\displaystyle \\sum _ { i } A _ { i } n _ { i } \\le M _ { N } , } } \\end{array}\\tag{4}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/519a6d388f9b6b66a87d5da4cb65af844579996ceb5c1846b1add15e8a1da39c.jpg"
+                }
+            },
+            "bbox": [
+                233,
+                356,
+                366,
+                460
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "M _ { G } , M _ { C } ,"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "M _ { N }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "are activation budgets for GPU, CPU, and NVMe. In the H800 27B run, the GPU activation budget is derived from a 70 GB peak-memory cap."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                468,
+                489,
+                535
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.4 Communication Resource Model"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                543,
+                420,
+                558
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Activation offload and reload share the same PCIe fabric as mandatory parameter prefetch and gradient offload. LazyTrain therefore assigns activation transfer to compute windows w "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\in \\{ 0 , \\ldots , L - 1 \\}"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and penalizes only the traffic that cannot be hidden. Let "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "d _ { i , w }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "h _ { i , w }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "be activation device-to-host (D2H) and host-to-device (H2D) traffic for boundary i assigned to window w. Let "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "G _ { w }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "P _ { w }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "be mandatory gradient D2H and parameter H2D traffic, and let "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "C _ { w } ^ { D }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "C _ { w } ^ { H }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "be the D2H and H2D capacity hidden by compute in window w. The PCIe constraints are"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                563,
+                490,
+                757
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\begin{array} { r } { \\displaystyle \\sum _ { w = i } ^ { L - 1 } d _ { i , w } = A _ { i } ( c _ { i } + n _ { i } ) , } \\\\ { \\displaystyle \\sum _ { w = i } ^ { L - 1 } h _ { i , w } = A _ { i } ( c _ { i } + n _ { i } ) , } \\\\ { \\displaystyle \\sum _ { i \\leq w } d _ { i , w } + G _ { w } \\leq C _ { w } ^ { D } + \\epsilon _ { w } ^ { D } , } \\\\ { \\displaystyle \\sum _ { i < w } h _ { i , w } + P _ { w } \\leq C _ { w } ^ { H } + \\epsilon _ { w } ^ { H } . } \\end{array}\\tag{5}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/153c91060fdb0fd53165b6628e8c857151aba791c9aa3497bacbf937ca4f10e6.jpg"
+                }
+            },
+            "bbox": [
+                184,
+                762,
+                416,
+                926
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Mandatory traffic can exceed a window’s overlap capacity even without activation offloading. Define constant baseline slacks "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\bar { \\epsilon } _ { w } ^ { D } = \\operatorname* { m a x } \\{ 0 , G _ { w } - C _ { w } ^ { D } \\}"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\bar { \\epsilon } _ { w } ^ { H } \\ ="
+                    },
+                    {
+                        "type": "text",
+                        "content": "max "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\{ 0 , P _ { w } - C _ { w } ^ { H } \\}"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", and let "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\Delta _ { w } ^ { D }"
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\epsilon _ { w } ^ { D } - \\bar { \\epsilon } _ { w } ^ { D }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\Delta _ { w } ^ { H } = \\epsilon _ { w } ^ { H } - \\bar { \\epsilon } _ { w } ^ { H }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "denote the additional exposure caused by activation placement. NVMe placements additionally consume SSD endpoint bandwidth. With NVMe write traffic "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "q _ { i , w } ,"
+                    },
+                    {
+                        "type": "text",
+                        "content": "read traffic "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "r _ { i , w }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", and endpoint capacities "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "C _ { w } ^ { W } , \\bar { C } _ { w } ^ { R } ,"
+                    },
+                    {
+                        "type": "text",
+                        "content": "LazyTrain enforces"
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                332,
+                885,
+                493
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\begin{array} { l } { \\displaystyle \\sum _ { w = + } ^ { L - 1 } q _ { i , w } = A _ { i } n _ { i } , } \\\\ { \\displaystyle \\sum _ { n = + } ^ { L - 1 } r _ { i , w } = A _ { i } n _ { i } , } \\\\ { \\displaystyle \\sum _ { i \\leq w } \\displaystyle \\sum _ { i } q _ { i , w } \\leq C _ { w } ^ { W } + \\epsilon _ { w } ^ { W } , } \\\\ { \\displaystyle \\sum _ { i < w } r _ { i , w } \\leq C _ { w } ^ { R } + \\epsilon _ { w } ^ { R } . } \\end{array}\\tag{6}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/7056e7b61bd32d10da9d27747f8c64ed2375aeb1a50497edc76f5ee82df08ba4.jpg"
+                }
+            },
+            "bbox": [
+                608,
+                499,
+                779,
+                661
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "This separates the PCIe fabric from the NVMe endpoint. A GPUDirect Storage (GDS)-style NVMe reload is useful only if both resources can accommodate it without exposing slow I/O."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                667,
+                887,
+                732
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.5 Objective and Execution"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                740,
+                749,
+                756
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The scheduler minimizes recomputation plus incremental exposed communication:"
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                762,
+                885,
+                794
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\begin{array} { c l } { \\operatorname* { m i n } } & { \\displaystyle \\sum _ { ( s , e ) \\in \\mathcal { E } } R _ { s , e } x _ { s , e } + \\lambda _ { z } \\sum _ { i } z _ { i } + \\lambda _ { n } \\sum _ { i } n _ { i } } \\\\ & { + \\displaystyle \\sum _ { w } \\left( \\frac { \\Delta _ { w } ^ { D } } { B _ { D } } + \\frac { \\Delta _ { w } ^ { H } } { B _ { H } } + \\frac { \\epsilon _ { w } ^ { W } } { B _ { W } } + \\frac { \\epsilon _ { w } ^ { R } } { B _ { R } } \\right) , } \\end{array}\\tag{7}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/a613b22402718bfd9635673bd4a4d8b35e58ab3fe159a0dcb6f9aedb036c6795.jpg"
+                }
+            },
+            "bbox": [
+                521,
+                799,
+                868,
+                877
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "B _ { D } , B _ { H } , B _ { W } , B _ { R }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "convert bytes into timelike costs. The PCIe baseline subtraction charges only activation-induced exposure; "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\Delta _ { w } ^ { D / H }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is nonnegative by Eq. (5). No baseline is needed for the NVMe terms because Eq. (6) contains only activation traffic. The small nonnegative "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\lambda _ { z }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\lambda _ { n }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "are tie-breakers that avoid unnecessary materialized and NVMe checkpoints. Thus, the objective minimizes activation-induced stalls while accounting for recomputation, rather than maximizing offload volume. Algorithm 1 summarizes the complete construction from model parsing and variable creation to SCIP solving and schedule generation."
+                    }
+                ]
+            },
+            "bbox": [
+                509,
+                890,
+                885,
+                922
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "4"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                110,
+                83,
+                490,
+                265
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/992ed9af3ba29a98b6363a4b0cbf5225305c38c8a4aee31085191e249b7f4f6e.jpg"
+                },
+                "table_caption": [],
+                "table_footnote": [],
+                "html": "<table><tr><td>Algorithm 1 LazyTrain MILP Construction</td></tr><tr><td>Input: Model configuration, batch size B, se- quence length S, budgets  $M _ { G } , M _ { C } , M _ { N }$  , band- width windows, recomputation costs ρ Output: Solved schedule or infeasibility status 1: Parse the model configuration to obtain  $L ,$  hid-</td></tr><tr><td>den size, bytes per element, and layer parame- ter counts. 2: Compute activation sizes  $A _ { i }$  and static mem- ory terms for parameters, gradients, optimizer</td></tr><tr><td>states, and runtime reserve. 3: Build candidate boundary set B and segment set E subject to the maximum recomputation length.</td></tr><tr><td>4: Create binary variables  $x _ { s , e } , z _ { i } , g _ { i } , c _ { i }$  , and  $n _ { i }$  for all legal segments, boundaries, and tiers. 5: Create continuous traffic variables for CPU</td></tr><tr><td>D2H/H2D and NVMe write/read assignments, plus exposed-communication slack variables. 6: Add path-flow constraints so selected segments form one backward path from boundary 0 to</td></tr><tr><td>boundary L. 7: Add unique-placement constraints  $z _ { i } = g _ { i } +$   $c _ { i } + n _ { i }$  for every boundary ¿.</td></tr><tr><td>8: Add HBM, CPU DRAM, and NVMe capacity constraints. 9: Add PCIe and NVMe endpoint bandwidth-</td></tr><tr><td>window constraints, including mandatory pa-</td></tr><tr><td>rameter H2D and gradient D2H traffic. 10: Minimize recomputation cost plus activation- induced communication exposure, with small tie-breaking penalties for otherwise equivalent</td></tr><tr><td>schedules. 11: Call SCIP through PySCIPOpt and retain the incumbent schedule if the solver status is fea-</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                115,
+                279,
+                490,
+                868
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "After solving the mixed-integer problem once before training, the runtime follows the selected policy during forward and backward execution. It keeps parameters and optimizer states in CPU memory, uses GPU memory as a transient compute cache, reloads selected activation checkpoints from their assigned tiers, and recomputes omit ted blocks as specified by the path. The Hybrid 8-bit operator is the complete optimizer-side com ponent: it stores a small subset of optimizer states in CPU 8-bit AdamW format and performs fast gradient clipping. The two mechanisms are deliberately coupled. On our single-GPU CPU-offload path, 8-bit optimizer states primarily reduce CPUresident optimizer memory; they do not by themselves guarantee faster steps because quantization and dequantization, block-wise scale handling, and 8-bit state updates add CPU work. Fast gradient clipping reduces clipping overhead to counteract this added optimizer-side cost. We therefore de fine and ablate the two mechanisms as one formal LazyTrain component rather than as independent external optimizations. In the measured full-system configuration, DeepSpeed CPUAdam handles most parameters, while a 2% parameter slice uses blockwise 8-bit AdamW states with block size 4096. The clipping path computes per-tensor norms with CPU foreach kernels, aggregates the global norm in FP32, and applies the scale with a foreach multiplication; unsupported or non-finite cases fall back to per-tensor FP32 accumulation. Table 1 reports the final schedule used by the measured Qwen3.6- 27B training run. For this configuration, the solver fixes the recomputation edges and GPU-checkpoint set from the LazyTrain - Hybrid 8-bit variant, then optimizes the remaining CPU/NVMe homes and transfer-window assignments. The reported solver status therefore certifies optimality within this restricted subproblem, not over the full MILP space defined above."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                890,
+                489,
+                922
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                505,
+                85,
+                889,
+                697
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/0552f3e49be199f133e303638fc5225ec717977ce8bb1690b7b3d1a0c858c9cb.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 1: Final restricted NVMe-aware schedule for Qwen3.6-27B supervised fine-tuning with batch size 72 and sequence length 1024. Values are the schedule constants used by the reported training run."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Item</td><td>Value</td><td>Meaning</td></tr><tr><td colspan=\"3\">Model and resource budget</td></tr><tr><td>Layers</td><td>64</td><td>Transformer blocks</td></tr><tr><td>Activation / boundary</td><td>0.703 GiB</td><td>One hidden-state checkpoint</td></tr><tr><td>GPU activation budget</td><td>21.55 GB</td><td>From 70 GB peak cap</td></tr><tr><td>CPU / NVMe budget</td><td>15 / 32 GB</td><td>Host and SSD activation caps</td></tr><tr><td colspan=\"3\">Schedule solution</td></tr><tr><td>Checkpoints</td><td>52</td><td>Materialized boundaries</td></tr><tr><td>GPU / CPU / NVMe</td><td>30 /21 /1</td><td>Tier placement counts</td></tr><tr><td>Solve scope</td><td>Restricted</td><td>Recomputation edges and GPU set fixed</td></tr><tr><td>NVMe boundary</td><td>21</td><td>Checkpoint placed on SSD</td></tr><tr><td colspan=\"3\">Transfer rates and exposure</td></tr><tr><td>PCIe H2D/D2H rate</td><td>12 / 12 GB/s</td><td>Measured rate used by scheduler</td></tr><tr><td>NVMe read/write rate</td><td>2.83 / 3.35 GB/s</td><td>Measured endpoint rate</td></tr><tr><td>Exposed PCIe/NVMe comm.</td><td>0.0 / 0.0 ms</td><td>Incremental exposed traffic</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                512,
+                774,
+                882,
+                903
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "5"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4 Experiments"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                84,
+                260,
+                101
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.1 Experimental Setup"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                109,
+                319,
+                126
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We evaluate LazyTrain through single-GPU supervised fine-tuning experiments on H800 80GB and RTX 3090 24GB accelerators. The primary matched comparison uses Qwen3.6-27B, a checkpoint with a Qwen3.5-style text architecture (Qwen Team, 2026), and MetaMathQA with a 70/30 training/evaluation split, sequence length 1024, one training epoch, batch size 72, and 3841 optimizer steps. The compared 27B variants share the same hardware, model, data split, sequence length, and batch size. The broader H800 and RTX 3090 results are also obtained from experiments under their corresponding model and hardware settings. Unless stated otherwise, each row reports one run."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                130,
+                490,
+                357
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/fc5caeb61c25d8f163c9dcfb27acff147e2b1c9685584a967b32df43441b34fa.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 2: H800 node and transfer rates used in the LazyTrain experiments."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Tier / component</td><td>Capacity / topology</td><td>Rate / scope</td></tr><tr><td>GPU HBM</td><td>80 GB</td><td>Single-GPU runs</td></tr><tr><td>Host DRAM</td><td>2.0 TiB</td><td>128 logical CPUs</td></tr><tr><td>CPU-GPU link</td><td>PCIe Gen5 x16</td><td>12 GB/s per direction</td></tr><tr><td>Local NVMe SSDs</td><td>2×7.0TB</td><td>2.83 / 3.35 GB/s read/write</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                119,
+                407,
+                485,
+                470
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Table 2 summarizes the node capacity and topology together with the transfer rates used by the scheduler. We report maximum feasible batch size, sustained TFLOPS, GPU memory, CPU memory, and tokens per second. Accuracy is reported separately because throughput and exact-match accuracy answer different questions. For the H800 runs, sustained TFLOPS follows the MegaTrain accounting convention and is computed from completebatch training steps. Tokens/s is reported as a runlevel throughput value."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                487,
+                492,
+                665
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.2 Training Throughput"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                675,
+                331,
+                692
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Panels (a) and (b) of Figure 3, together with Table 3, report the H800 experiments from 3B to 27B. In the primary matched 27B pair, LazyTrain improves sustained throughput from 176.90 to 219.95 TFLOPS, a 1.24× increase, while using the same model, data split, sequence length, and batch size. The 3B–14B experiments show the same direction of improvement over MegaTrain, with LazyTrain reaching 176.42–212.34 TFLOPS across these model scales."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                696,
+                490,
+                858
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Panels (c) and (d) report the constrained RTX 3090 experiments. At every model scale, LazyTrain increases the maximum feasible batch size by one over MegaTrain and yields higher token throughput. ZeRO-3 Offload runs out of memory at batch size 1 for the 14B and 27B models. These results provide empirical evidence that the scheduling benefit persists under a substantially smaller GPU memory budget."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                858,
+                489,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                84,
+                885,
+                166
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/6238c2e123050e7c568e41bc56e9e0baea0b7a0b36e3b5305e42264ac283f981.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 3: Experimental training performance on H800 and RTX 3090. Models 3B–14B are Qwen2.5; 27B is Qwen3.6. Z3 and Mega abbreviate ZeRO-3 Offload and MegaTrain. The H800 27B Mega/LazyTrain pair comprises matched runs. OOM denotes an observed out-of-memory result at batch size 1. GPU and CPU memory are reported in GB."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Model System</td><td></td><td>Batch TFLOPS</td><td></td><td>GPU</td><td>CPU</td><td>tok/s</td></tr><tr><td colspan=\"7\">H800</td></tr><tr><td>3B</td><td>Z3</td><td>32</td><td>68.65</td><td>74.12</td><td>61.8</td><td>3814</td></tr><tr><td>3B</td><td>Mega</td><td>192</td><td>142.80</td><td>35.72</td><td>49.31</td><td>7933</td></tr><tr><td>3B</td><td>LazyTrain</td><td>192</td><td>176.42</td><td>67.95</td><td>52.68</td><td>9801</td></tr><tr><td>7B</td><td>Z3</td><td>16</td><td>79.88</td><td>76.43</td><td>124.6</td><td>1902</td></tr><tr><td>7B</td><td>Mega</td><td>144</td><td>161.35</td><td>43.26</td><td>95.74</td><td>3842</td></tr><tr><td>7B</td><td>LazyTrain</td><td>144</td><td>199.84</td><td>68.21</td><td>99.58</td><td>4758</td></tr><tr><td>14B</td><td>Z3</td><td>8</td><td>93.43</td><td>77.21</td><td>257.9</td><td>1112</td></tr><tr><td>14B</td><td>Mega</td><td>96</td><td>171.92</td><td>52.83</td><td>179.64</td><td>2047</td></tr><tr><td>14B</td><td>LazyTrain</td><td>96</td><td>212.34</td><td>68.57185.12</td><td></td><td>2528</td></tr><tr><td>27B</td><td>Z3</td><td>2</td><td>86.55</td><td>78.34518.6</td><td></td><td>534</td></tr><tr><td>27B</td><td>Mega</td><td>72</td><td>176.90</td><td></td><td>60.40339.99</td><td>1075.8</td></tr><tr><td>27B</td><td>LazyTrain</td><td>72</td><td>219.95</td><td></td><td>68.84 361.58</td><td>1361</td></tr><tr><td colspan=\"7\">RTX 3090</td></tr><tr><td>3B</td><td>Z3</td><td>1</td><td>23.91</td><td>20.32</td><td></td><td></td></tr><tr><td>3B</td><td>Mega</td><td>7</td><td>33.18</td><td>22.83</td><td>25.0</td><td>1792</td></tr><tr><td>3B</td><td>LazyTrain</td><td>8</td><td>40.76</td><td>23.16</td><td>27.8</td><td>2210</td></tr><tr><td>7B</td><td>Z3</td><td>1</td><td>27.49</td><td>20.83</td><td></td><td></td></tr><tr><td>7B</td><td>Mega</td><td>5</td><td>35.09</td><td>22.63</td><td>56.7</td><td>768</td></tr><tr><td>7B</td><td>LazyTrain</td><td>6</td><td>43.42</td><td>23.06</td><td>61.5</td><td>951</td></tr><tr><td>14B</td><td>Z3</td><td>1</td><td>00M</td><td></td><td></td><td></td></tr><tr><td>14B</td><td>Mega</td><td>3</td><td>30.19</td><td>21.10</td><td>103.7</td><td>341</td></tr><tr><td>14B</td><td>LazyTrain</td><td>4</td><td>37.36</td><td>22.92</td><td>111.8</td><td>422</td></tr><tr><td>27B</td><td>Z3</td><td>1</td><td>OOM</td><td></td><td></td><td></td></tr><tr><td>27B</td><td>Mega</td><td>1</td><td>22.74</td><td>22.48</td><td>197.3</td><td>140</td></tr><tr><td>27B</td><td>LazyTrain</td><td>2</td><td>28.11</td><td>23.08</td><td>214.6</td><td>174</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                510,
+                292,
+                882,
+                670
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/f2b954001ee2d568fd70c28a5d9f12e77c3f8e0135723d367bdc82d8604f5df8.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 4: Experimental exact-match accuracy comparison. Every cell is an evaluation result from the corresponding model and system experiment; the 27B LazyTrain cell uses the full evaluation split. Higher is better."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Metric</td><td>ZeRO-3 Offload ZeRO-Infinity MegaTrain LazyTrain</td><td></td><td></td><td></td></tr><tr><td>7B Acc. (%)</td><td>88.93</td><td>88.97</td><td>88.99</td><td>88.95</td></tr><tr><td>14B Acc. (%)</td><td>92.41</td><td>92.36</td><td>92.52</td><td>92.47</td></tr><tr><td>27B Acc. (%)</td><td>95.27</td><td>95.31</td><td>95.33</td><td>95.42</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                510,
+                785,
+                880,
+                835
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.3 Schedule Case Study"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                868,
+                721,
+                883
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Figure 4 shows a separate Qwen3.6-27B schedule found with an 8 GB CPU activation budget and a"
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                890,
+                885,
+                922
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "6"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/94d850a39bcd040008d1b5074513122a7b20d0f0ea97db37e1048178695ba64c.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                141,
+                167,
+                500,
+                316
+            ]
+        },
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/9972aac2b3984da7b4ad054c8a51f05364f614eae25b335faf9dece4dbb6e997.jpg"
+                },
+                "image_caption": [],
+                "image_footnote": []
+            },
+            "bbox": [
+                144,
+                129,
+                855,
+                494
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/9b7271ef7107f2ccee029963a921d2dd5b881dcb0cd600ca3c8a764717780549.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                519,
+                170,
+                855,
+                313
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/100564287b7f7d434d740bccc33df90c0defc2b4edc809df627b3b63f514d88e.jpg"
+                },
+                "content": "",
+                "chart_caption": [],
+                "chart_footnote": []
+            },
+            "bbox": [
+                146,
+                340,
+                504,
+                494
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/6a917c6ce2ffcf47e8fd5f85327981092cfcc35b8d7c5db4e7490a77e10b8ef4.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 3: Experimental training performance on H800 and RTX 3090 across model scales.The H800 27B MegaTrain/LazyTrain pair is the primary matched comparison. OOM denotes an observed out-of-memory result at batch size 1."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                515,
+                343,
+                857,
+                494
+            ]
+        },
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/8dd27029728d92d90ba0c1250a60da753f1215b40f5e43aeefbcfe3c371cf6ca.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 4: Boundary-wise JSON schedule map for Qwen3.6-27B on MetaMathQA at batch size 72. This time-limit incumbent is a separate schedule experiment using 8/32 GB CPU/NVMe activation budgets rather than the final schedule in Table 1. Blue tiles remain in GPU HBM, amber tiles move to CPU DRAM, red tiles move to NVMe, and gray tiles are recomputed."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                114,
+                633,
+                880,
+                810
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "7"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "32 GB NVMe budget. SCIP returned this valid incumbent at the time limit: 30 checkpoints remain in HBM, 11 move to CPU DRAM, 11 move to NVMe, and 13 boundaries are recomputed. This schedule experiment is separate from the final schedule in Table 1, which uses a 15 GB CPU activation budget and places only boundary 21 on NVMe. The case illustrates how the experimental placement changes under a tighter CPU budget. Additional solver cases are provided in Appendix G."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                84,
+                490,
+                247
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.4 Component Ablation"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                259,
+                327,
+                275
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/7228466a47e1a0b7b108de545ef9f1b266f2614a6ef5b7b9c9a5863e13db670e.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 5: Qwen3.6-27B component ablation on H800. Markers show runs at batch size 72, and percentages are throughput gains over the dashed MegaTrain baseline. A minus sign denotes removal of the named LazyTrain component."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                149,
+                312,
+                458,
+                492
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Figure 5 and Table 5 isolate the main 27B variants, where a minus sign denotes removal of the named component. The complete LazyTrain configuration reaches 219.95 TFLOPS and 1361 tokens/s. Removing MILP-based scheduling while retaining the other runtime improvements drops performance to 193.17 TFLOPS and 1195 tokens/s, reductions of 12.2% in both metrics. This is the largest component-ablation degradation, showing that joint checkpoint, placement, recomputation, and communication scheduling is the primary source of the gain. Removing the complete Hybrid 8-bit operator—both the hybrid 8-bit optimizer states and fast gradient clipping—while retaining MILP scheduling yields 219.29 TFLOPS and 1357 tokens/s, 0.3% below the complete system. We remove these mechanisms together because they form one operator: 8-bit states save optimizer memory but add CPU update work, whereas fast gradient clipping counteracts the associated step overhead. Thus, Hybrid 8-bit is a formal part of LazyTrain, while the MILP scheduler remains its primary method innovation and most important component in this configuration. The LazyTrain - MILP run reports throughput and memory."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                600,
+                492,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                85,
+                885,
+                166
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/959739d2d262e40b7475d9eafd26fbcd8e98798b5856ae4636de4d9a9cb69f09.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 5: Qwen3.6-27B component ablation on H800. Rows are reported runs under the same model, data split, sequence length, and batch size. A minus sign denotes removal of the named component from the complete LazyTrain system."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Method</td><td>Max BS</td><td>TFLOPS</td><td>GPU Mem</td><td>CPU Mem</td><td>tok/s</td></tr><tr><td>MegaTrain baseline</td><td>72</td><td>176.90</td><td>60.40 GB</td><td>339.99 GB</td><td>1075.8</td></tr><tr><td>LazyTrain</td><td>72</td><td>219.95</td><td>68.84 GB</td><td>361.58 GB</td><td>1361</td></tr><tr><td>LazyTrain - MILP</td><td>72</td><td>193.17</td><td>68.84 GB</td><td>362.01 GB</td><td>1195</td></tr><tr><td>LazyTrain - Hybrid 8-bit</td><td>72</td><td>219.29</td><td>68.84 GB</td><td>360.23 GB</td><td>1357</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                510,
+                258,
+                882,
+                311
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.5 Training Quality"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                335,
+                689,
+                351
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/3da457de110055c17b55bf74fc86b6527f08ddc3f499165dc9db95fe4b742339.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 6: Experimental exact-match accuracy deltas relative to MegaTrain across 7B, 14B, and 27B models. All plotted values are evaluation results; the 27B LazyTrain value is measured on the full evaluation split. The dashed line denotes the MegaTrain reference."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                537,
+                381,
+                855,
+                556
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Figure 6 and Table 4 report experimental exactmatch results for all compared systems. The 27B LazyTrain score, 95.42%, uses the full Meta-MathQA evaluation split."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                667,
+                887,
+                732
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.6 Discussion"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                740,
+                642,
+                756
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Across H800 and RTX 3090, solver-selected activation scheduling improves throughput over the fixed MegaTrain baseline. In the 27B ablation, the largest degradation occurs when MILP scheduling is removed: throughput falls by 12.2% from 219.95 to 193.17 TFLOPS. Removing the Hybrid 8-bit operator produces a smaller 0.3% drop. The final NVMe-aware schedule expands the feasible placement space with zero solver-reported incremental communication exposure."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                760,
+                887,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "8"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "5 Conclusion"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                84,
+                247,
+                99
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "LazyTrain centers on a mixed-integer scheduler, its primary method innovation, that jointly optimizes activation checkpointing, tier placement, recomputation, and CPU-GPU-NVMe communication overlap under limited hardware resources. It improves sustained TFLOPS over MegaTrain by approximately 1.24× across H800 models; on RTX 3090, it achieves higher throughput and a one-unit larger feasible batch size. The primary matched 27B H800 run reaches 219.95 TFLOPS under a 70 GB peak cap. The component ablation further identifies MILP scheduling as the dominant component: removing it reduces throughput by 12.2%, from 219.95 to 193.17 TFLOPS. The complete framework also includes the Hybrid 8-bit operator, which couples memory-saving 8-bit optimizer states with fast gradient clipping to counteract their added CPU-side update overhead; removing the operator reduces throughput to 219.29 TFLOPS."
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                110,
+                490,
+                417
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "9"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                504,
+                954
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Limitations"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                84,
+                220,
+                99
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The experiments are limited to single-GPU H800 and RTX 3090 settings. Individual The 30% evaluation split is also used for periodic loss monitoring, so the final exact-match value is not evaluated on an untouched held-out test set. Exposedcommunication values are recorded solver outputs under the experimental resource and bandwidth settings; the runtime evaluation does not separately instrument per-step stall time. The scheduler is offline and does not adapt to runtime bandwidth variation. Multi-GPU, multi-node, and online scheduling remain future work."
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                109,
+                490,
+                304
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Ethical Considerations"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                315,
+                317,
+                330
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "This work studies systems mechanisms for training large language models under limited hardware resources. The experiments use a mathematicalreasoning benchmark and system measurements; we collect no new human-subject data. Improving training efficiency can broaden access to largemodel research and reduce wasted computation, but lowering the hardware barrier can also make it easier to train models for harmful uses. LazyTrain makes its placement and recomputation decisions explicit through solver schedules, but it does not mitigate risks inherited from the base model, training data, or downstream application. Deployments should therefore retain task-appropriate data governance, access control, logging, safety evaluation, and human oversight."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                340,
+                492,
+                599
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Information About Use of AI Assistants"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                609,
+                460,
+                625
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In preparing this manuscript, the authors used AIassisted technology, specifically large language models such as GPT-5 and DeepSeek-V4, exclusively for text refinement. The tools assisted with proofreading, grammatical correction, and polishing linguistic expressions to improve the clarity and readability of the manuscript. The authors are responsible for the final content, claims, and verification."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                634,
+                490,
+                780
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "10"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                510,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "References"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                84,
+                215,
+                99
+            ]
+        },
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Sabiha Afroz, Redwan Ibne Seraj Khan, Hadeel Albahar, Jingoo Han, and Ali R. Butt. 2025. 10cache: Heterogeneous resource-aware tensor caching and migration for llm training. In Proceedings of the 2025 ACM Symposium on Cloud Computing, pages 320–333, New York, NY, USA. Association for Computing Machinery."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Anthropic. 2025. Claude code: An agentic coding tool. GitHub repository."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Anthropic. 2026. Claude opus 4.7. Anthropic News."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "DeepSeek-AI. 2026. Deepseek-v4: Towards highly efficient million-token context intelligence."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jiangfei Duan, Shuo Zhang, Zerui Wang, Lijuan Jiang, Wenwen Qu, Qinghao Hu, Guoteng Wang, Qizhen Weng, Hang Yan, Xingcheng Zhang, and 1 others. 2024. Efficient training of large language models on distributed infrastructures: A survey. arXiv preprint arXiv:2407.20018. https://arxiv.org/ abs/2407.20018."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jiarui Fang and Yang You. 2022. Meet gemini: The heterogeneous memory manager of colossal-ai. Colossal-AI documentation. https://colossalai. org/docs/advanced_tutorials/meet_gemini."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Google. 2025. Gemini cli: An open-source ai agent that brings the power of gemini directly into your terminal. GitHub repository."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Google. 2026. Gemini 3.1 pro. Google Blog."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Diederik P. Kingma and Jimmy Ba. 2015. Adam: A method for stochastic optimization. International Conference on Learning Representations. https: //arxiv.org/abs/1412.6980."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Changyue Liao, Mo Sun, Zihan Yang, Jun Xie, Kaiqi Chen, Binhang Yuan, Fei Wu, and Zeke Wang. 2025. Ratel: Optimizing holistic data movement to finetune 100b model on a consumer gpu. In 2025 IEEE 41st International Conference on Data Engineering (ICDE), pages 292–306, Los Alamitos, CA, USA. IEEE Press."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Paulius Micikevicius, Sharan Narang, Jonah Alben, Gregory F. Diamos, Erich Elsen, David Garcia, Boris Ginsburg, Michael Houston, Oleksii Kuchaiev, Ganesh Venkatesh, and Hao Wu. 2018. Mixed precision training. International Conference on Learning Representations. https://openreview.net/ forum?id=r1gs9JgRZ."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "OpenAI. 2025. Codex cli: Lightweight coding agent that runs in your terminal. GitHub repository."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "OpenAI. 2026. Introducing gpt-5.5. OpenAI Blog."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Qwen Team. 2026. Qwen3.5: Accelerating productivity with native multimodal agents."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Samyam Rajbhandari, Jeff Rasley, Olatunji Ruwase, and Yuxiong He. 2020. Zero: Memory optimizations toward training trillion parameter models. In SC20: International Conference for High Performance Computing, Networking, Storage and Analysis, pages 1– 16, Los Alamitos, CA, USA. IEEE, IEEE Press."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Samyam Rajbhandari, Olatunji Ruwase, Jeff Rasley, Shaden Smith, and Yuxiong He. 2021. Zero-infinity: Breaking the gpu memory wall for extreme scale deep learning. In Proceedings of the International Conferencefor High Performance Computing, Networking, Storage and Analysis, pages 1–14, New York, NY, USA. Association for Computing Machinery."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Mohammad Shoeybi, Mostofa Patwary, Raul Puri, Patrick LeGresley, Jared Casper, and Bryan Catanzaro. 2019. Megatron-lm: Training multi-billion parameter language models using model parallelism. arXiv preprint arXiv:1909.08053. https://arxiv. org/abs/1909.08053."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Kimi Team, Tongtong Bai, Yifan Bai, Yiping Bao, SH Cai, Yuan Cao, Y Charles, HS Che, Cheng Chen, Guanduo Chen, and 1 others. 2026. Kimi k2.5: Visual agentic intelligence. arXiv preprint arXiv:2602.02276."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Guanhua Wang, Heyang Qin, Sam Ade Jacobs, Connor Holmes, Samyam Rajbhandari, Olatunji Ruwase, Feng Yan, Lei Yang, and Yuxiong He. 2023. Zero++: Extremely efficient collective communication for giant model training. arXiv preprint arXiv:2306.10209. https://arxiv.org/abs/2306.10209."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Zhengqing Yuan, Hanchi Sun, Lichao Sun, and Yanfang Ye. 2026. Megatrain: Full precision training of 100b+ parameter large language models on a single gpu. arXiv preprint arXiv:2604.05091."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Ziqi Yuan, Haoyang Zhang, Yirui Eric Zhou, Apoorve Mohan, I Chung, Seetharami Seelam, Jian Huang, and 1 others. 2025. Cost-efficient llm training with lifetime-aware tensor offloading via gpudirect storage. arXiv preprint arXiv:2506.06472. https: //arxiv.org/abs/2506.06472."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Aohan Zeng, Xin Lv, Zhenyu Hou, Zhengxiao Du, Qinkai Zheng, Bin Chen, Da Yin, Chendi Ge, Chenghua Huang, Chengxing Xie, and 1 others. 2026. Glm-5: From vibe coding to agentic engineering. arXiv preprint arXiv:2602.15763."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yanli Zhao, Andrew Gu, Rohan Varma, Liang Luo, Chien-Chin Huang, Min Xu, Less Wright, Hamid Shojanazeri, Myle Ott, Sam Shleifer, and 1 others. 2023. Pytorch fsdp: Experiences on scaling fully sharded data parallel. arXiv preprint arXiv:2304.11277. https://arxiv.org/ abs/2304.11277."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                115,
+                108,
+                489,
+                200
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "11"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                509,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Appendix Overview"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                84,
+                292,
+                101
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "This appendix provides supporting details for the method, experiments, and solver analyses in the main paper. It is organized as follows."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                109,
+                489,
+                159
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Appendix A reports representative solver outputs and placement decisions."
+                    }
+                ]
+            },
+            "bbox": [
+                134,
+                170,
+                489,
+                202
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Appendix B describes the canonical MILP and its branch-and-cut solution procedure."
+                    }
+                ]
+            },
+            "bbox": [
+                134,
+                212,
+                487,
+                244
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Appendix C specifies the resource model, training protocol, and scheduler variants."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                256,
+                489,
+                288
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Appendix D records the server hardware and software environment."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                299,
+                489,
+                331
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Appendix E collects the training protocol, hardware checks, and reproducibility package."
+                    }
+                ]
+            },
+            "bbox": [
+                134,
+                342,
+                489,
+                391
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Appendix F discusses broader impact and compute resources."
+                    }
+                ]
+            },
+            "bbox": [
+                134,
+                401,
+                487,
+                434
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Appendix G presents visual Qwen3.6-27B and GPT-OSS-120B case studies that make placement choices, feasibility limits, and communication bottlenecks concrete."
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                444,
+                490,
+                510
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "A Solver Outputs and Placement Details"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                520,
+                482,
+                537
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "This appendix gives a concrete view of what the LazyTrain solver returns before training starts. The Qwen3.6-27B row is the final NVMe-aware schedule used for the H800 MetaMathQA experiment. This final run fixes the LazyTrain - Hybrid 8-bit recomputation edges and GPU-checkpoint set, then solves the remaining CPU/NVMe homes and transfer assignments. The GPT-OSS-120B mixtureof-experts (MoE) rows are admission-control and placement experiments instantiated from the Hugging Face model configuration. They report the observed SCIP outcomes under the specified CPUmemory and optimizer-state settings."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                546,
+                490,
+                757
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "A.1 Qwen3.6-27B Placement View"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                766,
+                401,
+                782
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The final 27B schedule can be read as a boundarylevel placement map:"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                788,
+                490,
+                821
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• GPU checkpoints: 0, 10, 15, 16, 20, 22–24, 28–29, 32, 36, 39–44, 48, 50–52, 56–60, 62– 64."
+                    }
+                ]
+            },
+            "bbox": [
+                134,
+                831,
+                490,
+                878
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• CPU-offloaded checkpoints: 1–5, 7–9, 11–14, 26–27, 30–31, 33–35, 38, 49."
+                    }
+                ]
+            },
+            "bbox": [
+                134,
+                890,
+                489,
+                922
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• NVMe-offloaded checkpoint: 21."
+                    }
+                ]
+            },
+            "bbox": [
+                531,
+                85,
+                796,
+                101
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Recomputed boundaries: 6, 17–19, 25, 37, 45–47, 53–55, 61."
+                    }
+                ]
+            },
+            "bbox": [
+                531,
+                115,
+                885,
+                147
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In the unrestricted MILP, each interior layer boundary has four candidate actions: retain the activation in HBM, offload it to CPU DRAM, offload it to NVMe, or omit the checkpoint and recompute it during the backward pass. The final 27B run uses a restricted instance: fixed reference edges require z<sub>21</sub> = 1, and the fixed reference GPU set requires g<sub>21</sub> = 0. Thus, boundary 21 is optimized only between CPU and NVMe placement. Algorithm 2 summarizes the general search procedure."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                161,
+                887,
+                324
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "A.2 MoE Note for GPT-OSS-120B"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                336,
+                796,
+                351
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "GPT-OSS-120B is a mixture-of-experts model: only a subset of experts is active for each token during the forward pass. This reduces active forward compute relative to a dense model with the same total parameter count. However, full fine-tuning still needs storage and optimizer states for all trainable expert parameters. The current LazyTrain scheduler is layer-level: it treats the MoE block as one layer-level object for placement and streaming. Expert-level placement, expert-aware optimizerstate tiering, and expert-aware communication overlap are natural follow-up work."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                359,
+                887,
+                552
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The main text visualizes a separate Qwen3.6- 27B time-limit incumbent with an 8 GB CPU activation budget in Figure 4; it is not the final 15 GBbudget schedule summarized above. Additional solver case studies appear in Section G, with a direct GPT-OSS-120B JSON case in Section G.1."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                554,
+                887,
+                651
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "B MILP Solution Procedure"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                664,
+                773,
+                681
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "LazyTrain instantiates the activation-placement and recomputation planner as a mixed-integer linear program (MILP). PySCIPOpt is used as the modeling interface and SCIP is used as the underlying solver. For the linear mixed-integer model in this work, SCIP’s exact search is appropriately described as branch-and-cut: a branch-and-bound tree over integer scheduling decisions, strengthened by presolve, LP relaxations, cutting planes, primal heuristics, and domain propagation."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                693,
+                887,
+                856
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "B.1 Canonical MILP Form"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                868,
+                742,
+                883
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Let "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "B = \\{ 0 , \\ldots , L \\}"
+                    },
+                    {
+                        "type": "text",
+                        "content": "denote activation boundaries and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { E } \\subseteq \\{ ( s , e ) : 0 \\leq s < e \\leq L \\}"
+                    },
+                    {
+                        "type": "text",
+                        "content": "denote legal"
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                890,
+                884,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "12"
+                    }
+                ]
+            },
+            "bbox": [
+                487,
+                942,
+                510,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/1396f2360d32815587dda00e4fa95f8cef6f3c63a26f9d5b6f2810d0414abd82.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 6: Representative solver-experiment outcomes. “Mandatory exposed” is the solver-reported parameter/gradient traffic that cannot be hidden by the configured compute windows. It is reported for diagnosis but subtracted as a constant baseline from the placement objective."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Model / setting</td><td>Status</td><td>Budget</td><td>Solver result</td><td>Interpretation</td></tr><tr><td colspan=\"5\">Qwen3.6-27B schedule Qwen3.6-27B dense; H800</td></tr><tr><td>MetaMathQA; batch 72</td><td>Optimal within restricted solve</td><td>vation 15GB; NVMe activa- tion 32GB</td><td>Peak ≤ 70GB; CPU acti- 23.68B trainable parameters; activation With recomputation edges and GPU posed communication: activation/NVMe/- side compute windows.</td><td>0.703GiB per checkpoint; 52 checkpoints: checkpoints fixed, the final 27B sched- 30 GPU, 21 CPU, 1 NVMe, 13 recom- ule fits the 70GB HBM cap; the solver pute boundaries; objective 182.0015; ex- reports all activation movement hidden in-</td></tr><tr><td colspan=\"5\">GPT-OSS-120B admission and placement</td></tr><tr><td>GPT-OSS-120B 360GB CPU budget; hybrid 2% 8-bit Adam; batch 32 requested</td><td>MoE; Infeasible</td><td>Peak ≤ 70GB; CPU total 360GB</td><td>116.54B trainable parameters; CPU base 1321.38GiB; shortfall 961.38GiB</td><td>With normal Adam-style CPU states, host memory is the first blocker. Reducing batch size cannot fix optimizer-state mem- ory.</td></tr><tr><td>GPT-OSS-120B MoE; 360GB CPU budget; full 8-bit Adam states; batch 32 requested</td><td>Infeasible</td><td>Peak ≤ 70GB; CPU total 360GB</td><td>CPU base 683.41GiB; shortfall 323.41GiB; no schedule admitted</td><td>Full 8-bit optimizer state helps substan- tially, but 360GB host memory is still not enough for this 120B configuration.</td></tr><tr><td>GPT-OSS-120B MoE; 2TiB CPU, 4GB runtime reserve, hybrid 2% 8-bit Adam; batch 32</td><td>Optimal solve</td><td>Peak &lt; 70GB; CPU total 2048GB</td><td>Static GPU 41.98GiB; activation budget 28.02GiB; CPU base 1321.38GiB; 37 checkpoints: all GPU activation; objective 0.00037; activation exposed 0ms; manda- tory exposed 31259.54ms</td><td>Once CPU memory is relaxed, activation placement is easy; the bottleneck moves to unavoidable parameter/gradient stream- ing.</td></tr><tr><td>GPT-OSS-120B MoE; 2TiB CPU, 4GB runtime reserve, full 8-bit Adam states; batch 32</td><td>Optimal solve</td><td>Peak ≤ 70GB; CPU total 2048GB</td><td>Static GPU 41.98GiB; activation bud- get 28.02GiB; CPU base 683.41GiB; 37 checkpoints: all GPU activation; objective 0.00037; activation exposed 0ms; manda- tory exposed 31259.54ms</td><td>8-bit states mainly reduce CPU memory; they do not remove the large parameter/- gradient traffic that must be overlapped.</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                114,
+                135,
+                884,
+                434
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "recomputation segments. We collect the decision variables from Eq. (7) into"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                461,
+                487,
+                493
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "y = ( x , z , g , c , n , d , h , q , r , \\epsilon ) ,",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/9ba8b0c599e0d2c359d280bd8b572485792163130f802d9134cceb8648837421.jpg"
+                }
+            },
+            "bbox": [
+                186,
+                507,
+                413,
+                524
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "x _ { s , e }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "selects recomputation segment "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( s , e )"
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "z _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "indicates whether boundary i is materialized, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "g _ { i } , c _ { i } , n _ { i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "place boundary i on GPU HBM, CPU DRAM, or NVMe, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "d / h"
+                    },
+                    {
+                        "type": "text",
+                        "content": "assign CPU offload traffic to D2H/H2D windows, "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "q / r"
+                    },
+                    {
+                        "type": "text",
+                        "content": "assign NVMe write/read traffic, and ϵ records communication not hidden by compute windows. The resulting optimization problem has the standard MILP form:"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                536,
+                489,
+                667
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\begin{array} { r l } { \\underset { y } { \\operatorname* { m i n } } } & { a ^ { \\top } y } \\\\ { \\mathrm { s . t . } } & { A y \\leq b , \\qquad E y = e , } \\\\ & { \\ell \\leq y \\leq u , } \\\\ & { x _ { s , e } , z _ { i } , g _ { i } , c _ { i } , n _ { i } \\in \\{ 0 , 1 \\} , } \\\\ & { d , h , q , r , \\epsilon \\geq 0 . } \\end{array}\\tag{8}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/786835bae16d1f62825327af2c7757c74389479216a8149e8bed36ea0af76b2d.jpg"
+                }
+            },
+            "bbox": [
+                174,
+                676,
+                425,
+                782
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Here the equality matrix E contains the checkpointpath flow constraints and the unique-placement constraints. The inequality matrix A contains GPU/CPU/NVMe capacity constraints and perwindow PCIe/NVMe bandwidth constraints. The linear objective "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "a ^ { \\top } y"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is the weighted sum of recomputation cost, activation-induced communication exposure, and small tie-breaking terms. As in"
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                793,
+                490,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Eq. (7), mandatory PCIe exposure that exists without activation offloading is subtracted as a constant baseline."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                460,
+                885,
+                508
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Relation to the runtime. The MILP is solved before training starts. Its output is a serialized schedule that the layer-streaming runtime consumes directly. Thus the solver is not on the critical path of every training step; it is an offline planning phase whose result fixes checkpoint boundaries, storage tiers, and communication windows."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                519,
+                887,
+                632
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "B.2 Branch-and-Cut Search"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                643,
+                749,
+                658
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "At each node v of the search tree, SCIP solves the LP relaxation of Eq. (8), replacing binary restrictions by interval bounds "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "0 \\leq x , z , g , c , n \\leq 1"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and adding any branching decisions inherited from node v. For a minimization problem, this relaxation gives a valid lower bound "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\theta ( v )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "on all integer schedules in that subtree. If "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\theta ( v )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is already worse than the best known feasible integer solution, i.e., the incumbent upper bound, the whole subtree is pruned."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                664,
+                887,
+                825
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Cutting planes tighten the LP relaxation. A cut is a valid inequality "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\alpha ^ { \\top } y \\leq \\beta"
+                    },
+                    {
+                        "type": "text",
+                        "content": "that is satisfied by every feasible integer schedule but violated by the current fractional LP solution. Adding such cuts improves the bound without removing any legal LazyTrain schedule. If the tightened LP solution is still fractional, SCIP branches on one fractional integer variable, for example a placement variable n<sub>21</sub> or an edge variable "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "x _ { 2 0 , 2 1 }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", creating child subproblems with that variable fixed to 0 or 1."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                826,
+                885,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "13"
+                    }
+                ]
+            },
+            "bbox": [
+                487,
+                942,
+                510,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/e5f52630156825dcfd0e38a9baa1517b23214ce44d7c6b82afec1bf69b344fc4.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 7: Boundary-21 decision trace for the final 27B schedule. Byte counts are decimal GB because they come directly from bandwidth windows."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Stage</td><td>Decision</td><td>Interpretation</td></tr><tr><td colspan=\"3\">Candidate placements</td></tr><tr><td>General MILP option</td><td> $g _ { 2 1 } = 1$ </td><td>Keep boundary 21 in GPU HBM. This option is excluded from the final restricted solve because the reference GPU-checkpoint set fixes  $g _ { 2 1 } = 0 .$ </td></tr><tr><td>Final-solve candidate</td><td> $c _ { 2 1 } = 1$ </td><td>Offload boundary 21 to CPU; consumes DRAM and PCIe D2H/H2D windows.</td></tr><tr><td>Final-solve candidate</td><td> $n _ { 2 1 } = 1$ </td><td>Offload boundary 21 to NVMe; consumes SSD capacity, GPU- NVMe path, and PCIe/GDS windows.</td></tr><tr><td>General MILP option</td><td> $z _ { 2 1 } = 0$ </td><td>Omit boundary 21 and recompute across it. This option is excluded from the final restricted solve because the fixed adjacent reference edges require  $z _ { 2 1 } = 1 .$ </td></tr><tr><td colspan=\"3\">Solver-selected assignments</td></tr><tr><td>Selected placement</td><td>n21 = 1; neighbors 20 and 22 stay on GPU</td><td>The solver selects NVMe for boundary 21 while preserving edges (20, 21) and (21, 22).</td></tr><tr><td>Selected read assign- ment</td><td>NVMe read: 0.0758, 0.283GB across windows inside available compute windows. 21, 22, 23, 63</td><td>0.198, 0.198, The activation is read back in pieces so the SSD endpoint is used</td></tr><tr><td>ment</td><td>0.0515, 0.2345GB across win- posed NVMe communication. dows 21, 22, 23, 41</td><td>Selected write assign- NVMe write: 0.2345, 0.2345, The activation is written out in pieces; the solver reports Oms ex-</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                112,
+                121,
+                882,
+                393
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                419,
+                489,
+                483
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Why this matters for LazyTrain. The branchand-cut procedure is not a heuristic local search over checkpoint intervals. It systematically searches over checkpoint topology, activation tier placement, recomputation decisions, and communication-window assignments under hard memory and bandwidth constraints. The fixed MegaTrain heuristic can be represented as a feasible point in this space; LazyTrain asks SCIP to find a better feasible point and, when solved to optimality, to certify that no better point exists within the encoded model and solver tolerances. Individual runs may fix selected variables to a reference schedule. In the final Qwen3.6-27B run, the optimality certificate applies only after fixing the edges and GPU-checkpoint set from the LazyTrain - Hybrid 8-bit variant."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                492,
+                490,
+                765
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Tables 8–10 report the resource settings, training protocol, and configuration differences used to instantiate the MILP and interpret the 27B experiment."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                765,
+                490,
+                831
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "C Experimental Configuration"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                840,
+                400,
+                858
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "D Experimental Server Environment"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                112,
+                865,
+                453,
+                882
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Table 11 and Table 12 report the concrete server environment used for the H800 experiments. These are reproducibility details recorded on the experiment server. They are separate from the scheduler resource model in Appendix C: that appendix reports the abstract capacities and bandwidths consumed by the MILP, while this section reports the actual operating system, devices, drivers, and Python package versions of the experiment server."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                890,
+                489,
+                922
+            ]
+        },
+        {
+            "type": "algorithm",
+            "content": {
+                "algorithm_caption": [],
+                "algorithm_content": [
+                    {
+                        "type": "text",
+                        "content": "Algorithm 2 SCIP Branch-and-Cut Search for the LazyTrain MILP Input: MILP M from Algorithm 1 Output: Best feasible schedule "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "y ^ { \\star }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and final optimality gap, or infeasibility status 1: Presolve M to tighten bounds, remove redundant variables and constraints, and detect immediate infeasibility. 2: Initialize incumbent upper bound "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "U \\gets + \\infty"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and global lower bound "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "L \\gets - \\infty ."
+                    },
+                    {
+                        "type": "text",
+                        "content": "3: Insert the root LP relaxation into the node queue. 4: while the node queue is not empty and the stop criterion is not met do 5: Select a node v and solve its LP relaxation. 6: if the LP is infeasible then 7: Prune v. 8: else if the node lower bound "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\theta ( v ) \\geq U"
+                    },
+                    {
+                        "type": "text",
+                        "content": "then 9: Prune v by bound dominance. 10: else 11: Separate valid cutting planes and reoptimize the tightened LP. 12: if the LP solution is integer feasible then 13: Update "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "y ^ { \\star }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and U if its objective improves the incumbent. 14: else 15: Select a fractional binary scheduling variable and branch, creating two child nodes with that variable fixed to 0 and 1. 16: end if 17: end if 18: Update the global lower bound L from all open nodes. 19: end while 20: return incumbent schedule "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "y ^ { \\star }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and gap |U L|/ max{1, |U|}."
+                    }
+                ],
+                "algorithm_footnote": []
+            },
+            "bbox": [
+                509,
+                463,
+                885,
+                872
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "14"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                510,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/d52ecfe8d5d7370996b4fc37651c18ce1bdf6ddb518be5b95734207ce35ee426.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 8: Hardware and scheduler resource parameters for the H800 experiments."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Item</td><td>Configuration</td></tr><tr><td>Accelerator</td><td>NVIDIA H800, 80GB HBM per single-GPU run.</td></tr><tr><td>Host</td><td>Dual Intel Xeon Gold 6448Y CPUs, 128 CPU threads, 2.0TiB DDR5 memory.</td></tr><tr><td>Local storage</td><td>Two local NVMe-backed data mounts, about 7TB each on the experiment node.</td></tr><tr><td>GPU-CPU link</td><td>PCIe Gen5 x16 node; the measured activation H2D/D2H rate used by the LazyTrain scheduler is 12GB/s per direction.</td></tr><tr><td>GPU-NVMe path</td><td>GDS/cuFile direct path in the final NVMe-aware run; measured NVMe read/write endpoint rates are 2.83/3.35GB/s.</td></tr><tr><td>HBM cap</td><td>LazyTrain schedules use a configured 70GB peak cap; the observed NVMe-aware training peak is 68.84GB.</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                114,
+                107,
+                882,
+                242
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/e7e3136f429bada105759d276e45fe40eb57ebea389ccf78a8382e28f689aa22.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 9: Common Qwen3.6-27B / MetaMathQA training configuration. The evaluation split is also used for periodic loss monitoring."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Item</td><td>Configuration</td></tr><tr><td colspan=\"2\">Model and data Model</td></tr><tr><td></td><td>Qwen3.6-27B; Qwen3.5-style text architecture (Qwen Team, 2026): 64 layers, hidden size 5120, 24 attention heads, 4 KV heads, intermediate size 17408. The scheduler computes 23.68B trainable parameters from this configuration.</td></tr><tr><td>Precision and attention Dataset</td><td>bfloat16 training with PyTorch scaled dot-product attention (SDPA). ModelScope MetaMathQA converted to a 70/30 split: 276,499 training examples and 118,501</td></tr><tr><td></td><td>evaluation examples. Qwen3.5 non-thinking template; only response tokens contribute to the training loss.</td></tr><tr><td colspan=\"2\">Prompt format Optimization and evaluation</td></tr><tr><td>Batch and length</td><td>Per-step batch size 72, sequence length 1024, gradient accumulation 1.</td></tr><tr><td>Training length</td><td>3841 optimizer steps, equal to one pass over the 276,499-example training split with batch</td></tr><tr><td>Optimizer hyperparameters</td><td>size 72. Adam-style optimizer with  $\\beta _ { 1 } = 0 . 9 , \\beta _ { 2 } = 0 . 9 9 9 , { \\epsilon } = 1 0 ^ { - 8 }$  , learning rate 10−5, weight</td></tr><tr><td>Evaluation</td><td>decay 0.01, max grad norm 1.0, seed 42. Initial evaluation on 0.1 of the evaluation split before training (≈11,850 examples), then evaluation on 10,000 sampled examples every 0.1 epoch; evaluation batch size 72, seed 42. Final exact-match evaluation uses the full evaluation split and the same non-thinking prompt</td></tr><tr><td>Safety checks</td><td>template. Non-finite gradients are skipped; training aborts after three consecutive non-finite-gradient events.</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                114,
+                296,
+                882,
+                561
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                587,
+                490,
+                701
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "E Reproducibility Notes"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                725,
+                342,
+                743
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Training protocol. The main 27B experiment fine-tunes Qwen3.6-27B on MetaMathQA with a 70/30 training/evaluation split, sequence length 1024, batch size 72, and one epoch. At this batch size, the training split contains 3841 optimizer steps. The protocol runs an initial evaluation and then evaluates every 0.1 epoch on 10,000 sampled evaluation examples; the reported final accuracy uses the full evaluation split for the final LazyTrain configuration."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                760,
+                489,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Hardware checks. The server has eight NVIDIA H800 80GB GPUs, two Intel Xeon Gold 6448Y sockets, 128 CPU threads, 2.0 TiB host memory, and two local NVMe-backed data mounts; each reported run uses one H800. GPU memory and PCIe Gen5 x16 were confirmed with nvidia-smi; CPU and storage capacities were confirmed with standard system inspection tools. The NVMe read-/write endpoint values used by the scheduler are 2.83/3.35 GB/s. Full hardware and software configurations appear in Tables 11 and 12."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                586,
+                887,
+                765
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Reproducibility package. The accompanying release contains the scheduler implementation, training configurations, evaluation scripts, and solved schedules used by the reported setup. It is available at uploaded source code."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                841,
+                887,
+                922
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "15"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                510,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/185361acdbe15bd0f32de8653530e9cf29bd16c7e201cdce262dd6967d8e4376.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 10: Configuration differences among the compared Qwen3.6-27B variants. All use the same model, data split, batch size, and sequence length; the LazyTrain - MILP row is a partial experiment without final accuracy. A minus sign denotes removal of the named component from the complete system."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Variant</td><td>Optimizer</td><td>Scheduling policy</td><td>Runtime setting</td></tr><tr><td>MegaTrain baseline</td><td>DeepSpeed CPUAdam</td><td>MegaTrain-compatible fixed checkpoint interval 4; no opti- Baseline execution setting. mized activation-placement solve.</td><td></td></tr><tr><td>LazyTrain</td><td>Hybrid 8-bit operator: DeepSpeed CPUAdam plus 2% CPU 8-bit AdamW state slice with block size 4096, together with fast gradient clipping.</td><td>Restricted GPU/CPU/NVMe solve with recomputation edges and GPU checkpoints from the LazyTrain - Hybrid 8-bit variant fixed: peak cap 70GB, CPU/NVMe activation budgets 15/32GB, and final placement counts 30/21/1.</td><td>Final NVMe-aware runtime set- ting.</td></tr><tr><td>LazyTrain - MILP</td><td>Same complete Hybrid 8-bit operator as the MILP scheduling disabled. full system.</td><td></td><td>Partial experiment without final accuracy measurement.</td></tr><tr><td>bit</td><td>AdamW state slice and fast gradient clipping peak cap and PCIe bandwidth constraints. are disabled.</td><td>LazyTrain - Hybrid 8- DeepSpeed CPUAdam; both the CPU 8-bit MILP-selected activation schedule retained with the 70GB Optimizer-side ablation setting.</td><td></td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                114,
+                136,
+                882,
+                286
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/da02e088efc85badb7d91d37fec270b6e1925ab4ab112fed8139a2d19475dc8b.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 11: Experimental server hardware and system configuration."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Item</td><td>Measured configuration</td></tr><tr><td colspan=\"2\">Host system</td></tr><tr><td>Operating system CPU</td><td>Ubuntu 22.04.5 LTS, Linux kernel 5.15.0-113-generic, x86_64. 2× Intel Xeon Gold 6448Y sockets; 32 cores per socket; 2 threads per core; 128 logical CPUs. The CPU supports AVX-512, AVX-512 BF16, AMX BF16, and AMX INT8</td></tr><tr><td>System memory</td><td>instructions. 2.0TiB host DRAM; swap disabled.</td></tr><tr><td colspan=\"2\">Accelerators and interconnect</td></tr><tr><td colspan=\"2\">GPU devices</td></tr><tr><td></td><td>8× NVIDIA H800 GPUs. Each GPU reports 81,559MiB HBM through nvidia-smi, i.e., the 80GB H800 class used for single-GPU experiments. NVIDIA driver 575.57.08; CUDA 12.9 reported by nvidia-smi.</td></tr><tr><td>GPU driver and CUDA PCIe capability</td><td>Each H800 reports PCIe Gen5 x16 as the maximum link capability. The LazyTrain scheduler</td></tr><tr><td>GPU interconnect</td><td>uses a conservative 12GB/s per-direction activation-transfer bandwidth for CPU-GPU traffic. The eight H800 GPUs are connected by NVLink. The reported experiments use one GPU</td></tr><tr><td></td><td>and do not rely on inter-GPU communication.</td></tr><tr><td colspan=\"2\">Local storage</td></tr><tr><td>Local storage</td><td>Root filesystem: 893.8GB RAID device. Two data mounts are each backed by a 7TB Samsung MZQL27T6HBLA NVMe SSD. The LazyTrain NVMe-aware offload path uses local NVMe storage.</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                114,
+                324,
+                882,
+                579
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "F Broader Impact and Compute Resources"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                602,
+                411,
+                636
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Broader Impact. The intended benefit of LazyTrain is to make large-model fine-tuning more accessible to groups with limited accelerator memory. Lowering the hardware barrier can help academic labs and smaller organizations run controlled experiments without relying exclusively on large shared clusters. The same capability can also reduce the friction of training models for harmful uses, so deployment should follow the same data governance, safety evaluation, and access control practices expected for the underlying model and dataset."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                649,
+                490,
+                844
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Compute Resources. The reported experiments use single H800 80GB and RTX 3090 24GB GPUs. The primary 27B experiment uses one H800 with CPU DRAM and local NVMe storage. The paper reports per-run throughput and memory use rather than total project compute. Reproducing the complete 27B run requires one epoch over the 70% MetaMathQA training split at batch size 72 and sequence length 1024, corresponding to 3841 optimizer steps in the reported protocol."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                858,
+                490,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                605,
+                884,
+                702
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "G Visual Solver Case Studies"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                715,
+                779,
+                732
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Table 6 and Table 7 report the detailed solver values. Figure 7 summarizes the same evidence as a visual progression: red marks the constrained state, blue the selected or strengthened configuration, and green the resulting system implication."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                744,
+                887,
+                825
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The top row makes the boundary-level solver output easier to read: the general model admits GPU, CPU, NVMe, and recomputation choices, whereas the final run fixes the recomputation path and GPUcheckpoint set from the LazyTrain - Hybrid 8-bit variant before selecting NVMe for boundary 21. In this restricted experiment, the solver reports all activation movement hidden inside compute windows. A separate JSON-derived Qwen3.6-27B time-limit incumbent with a tighter 8 GB CPU activation budget appears in Figure 4 in the main text. The bottom row shows that host memory is a distinct constraint from activation placement: the 1321.38 GiB hybridstate and 683.41 GiB full-8-bit-state requirements both exceed the 360 GB budget. A 2 TiB host budget makes the placement feasible but leaves mandatory parameter/gradient streaming as the remaining overlap problem."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                826,
+                887,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "16"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                510,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/3d6bb951d5dac222a7a98e547a0ee339bb90ede693a026769f8cbc4ef9b4e8d3.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 12: Software stack used by the LazyTrain experiments and runtime."
+                    },
+                    {
+                        "type": "text",
+                        "content": "Figure 7: Appendix solver case study. Red boxes mark the bottleneck state, blue boxes mark the solver-selected or strengthened configuration, and green boxes mark the resulting takeaway. The top row distinguishes the general action space from the restricted Qwen3.6-27B boundary-21 solve; the bottom row follows the GPT-OSS-120B host-memory sweep."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                114,
+                108,
+                880,
+                417
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                517,
+                492,
+                712
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "G.1 GPT-OSS-120B Solver-Output Case"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                722,
+                450,
+                739
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "CPU or NVMe activation offload is selected, and the solver uses only a short recomputation prefix. The objective value primarily reflects that recomputation. Mandatory parameter/gradient exposure is reported separately as a diagnostic baseline and is not charged to the placement objective."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                517,
+                885,
+                615
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Figure 8 renders a second solver-output JSON for the GPT-OSS-120B Hugging Face configuration at batch size 72. This is a separate solver experiment from the batch-32 GPT-OSS results in Table 6: the JSON reports an optimal SCIP solve, materializes 34 activation boundaries, and recomputes the first three interior boundaries."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                745,
+                489,
+                857
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "This GPT-OSS-120B case shows a different solver regime from the Qwen3.6-27B case. Under the 2 TiB host-memory experimental setting, the activation-placement decision is simple: no"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                858,
+                490,
+                922
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "17"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                510,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/31ce9135fbfd558429ba3a63ab2661aa7092a84385ed5ab2459bdf9eef11d5ce.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 8: Boundary-wise JSON schedule map for the GPT-OSS-120B solver experiment at batch size 72. Each tile is one activation boundary from 0 to 36. The solver keeps every materialized activation checkpoint in GPU HBM and selects recomputation for boundaries 1–3; the JSON reports 0 ms exposed activation and NVMe communication, while mandatory parameter/gradient traffic remains exposed."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                115,
+                365,
+                880,
+                561
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "18"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                510,
+                956
+            ]
+        }
+    ]
+]

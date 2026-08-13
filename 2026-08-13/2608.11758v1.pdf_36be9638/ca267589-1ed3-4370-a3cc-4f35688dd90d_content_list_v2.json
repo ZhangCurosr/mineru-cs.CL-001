@@ -1,0 +1,4315 @@
+[
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "AWARe: Mitigating Catastrophic Forgetting via Activation-Weighted Adaptive REtention"
+                    }
+                ],
+                "level": 1
+            },
+            "bbox": [
+                124,
+                80,
+                873,
+                121
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Juncheng Liao<sup>1,*</sup>, Jinfan Lv<sup>2,*</sup>, Guoming Wang<sup>1,†</sup>, Jupeng Zheng<sup>3</sup>, Ling Xiao<sup>4</sup>, Siliang Tang<sup>1</sup>"
+                    }
+                ]
+            },
+            "bbox": [
+                285,
+                128,
+                717,
+                164
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>1</sup>School of Software Technology, Zhejiang University, Hangzhou, China <sup>2</sup>College of Intelligent Robotics and Advanced Manufacturing, Fudan University, Shanghai, China <sup>3</sup>School of Artificial Intelligence, Sun Yat-Sen University, Guangzhou, China <sup>4</sup>Graduate School of Information Science, Hokkaido University, Sapporo, Japan"
+                    }
+                ]
+            },
+            "bbox": [
+                99,
+                178,
+                897,
+                246
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "<sup>*</sup>Equal contribution. <sup>†</sup>Correspondence: NB21013@zju.edu.cn"
+                    }
+                ]
+            },
+            "bbox": [
+                294,
+                247,
+                705,
+                260
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "Abstract"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                260,
+                261,
+                344,
+                275
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Multimodal Large Language Models (MLLMs) exhibit strong generalization and reasoning abilities due to large-scale multimodal pretraining. However, fine-tuning these models on downstream tasks often leads to catastrophic forgetting, where newly learned task-specific knowledge degrades previously acquired capabilities. This issue arises because gradient updates for new tasks overwrite parameters critical to prior knowledge, limiting the practical deployment of MLLMs. To address this challenge, we propose Activation-Weighted Adaptive REtention (AWARe), a fine-tuning method that mitigates catastrophic forgetting by dynamically controlling parameter updates based on activation patterns. AWARe assigns activation-based importance scores to parameters, selectively freezing those essential for preserving prior capabilities while allowing less important parameters to adapt to new tasks. Importantly, AWARe operates without modifying model architectures, ensuring compatibility with existing inference engines. Extensive experiments demonstrate that AWARe effectively preserves upstream capabilities while achieving superior downstream performance compared to existing methods. Code is available at https://github.com/kaln27/AWARe."
+                    }
+                ]
+            },
+            "bbox": [
+                141,
+                281,
+                462,
+                682
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "1 Introduction"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                115,
+                688,
+                260,
+                703
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Multimodal Large Language Models (MLLMs) have emerged as powerful versatile agents, capable of solving complex tasks that require understanding and reasoning across both inputs of vision and language (Zhu et al., 2023; Dai et al., 2023; Bai et al., 2023; Liu et al., 2023; Lin et al., 2023; Chen et al., 2024b; Wang et al., 2024; Zhu et al., 2025a; Wang et al., 2025; Bai et al., 2025b,a). Typical MLLMs are composed of a pre-trained visual encoder, a large language model (LLM), and a connector module (Li et al., 2022; Dai et al., 2023; Liu et al., 2023). These models facilitate strong generalization abilities acquired from large-scale pre-training. Despite their impressive zero-shot capabilities, fine-tuning MLLMs on downstream tasks remains a standard practice to tailor models for specific domains or improve instruction-following performance (Dai et al., 2023; Bai et al., 2023; Liu et al., 2023). However, this adaptation process often comes at a cost: catastrophic forgetting (CF), where the model’s proficiency in previously learned upstream tasks degrades significantly as it optimizes for new objectives (McCloskey and Cohen, 1989; McClelland et al., 1995; Kirkpatrick et al., 2017; Li et al., 2024b). Nonetheless, this form of forgetting remains particularly severe in MLLMs due to the complex interplay between modalities and the high dimensionality of the parameter space (Sung et al., 2023; Luo et al., 2025, 2023; Zhai et al., 2024a; Shen et al., 2024; Jiang et al., 2024; Zhai et al., 2024b)."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                713,
+                490,
+                923
+            ]
+        },
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/7e5b21e974bace67c6f3c91fc19cdbb971294d200d00cb043d361c085b8340ea.jpg"
+                },
+                "image_caption": [],
+                "image_footnote": []
+            },
+            "bbox": [
+                515,
+                261,
+                877,
+                385
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/dbd2d85bdbb500fedea92b32ad681f253b760eb1318609830a2770b4b7e40f30.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 1: Overall Performance of AWARe. Top: radar plots showing comparison between our approach and various baselines under Single-Task Downstream Adaptation. Bottom: results on the MLLM-DCL continuous learning benchmark."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                517,
+                392,
+                853,
+                494
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                598,
+                887,
+                889
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Existing approaches to mitigate catastrophic forgetting, such as experience replay (Riemer et al.,"
+                    }
+                ]
+            },
+            "bbox": [
+                509,
+                890,
+                887,
+                923
+            ]
+        },
+        {
+            "type": "page_aside_text",
+            "content": {
+                "page_aside_text_content": [
+                    {
+                        "type": "text",
+                        "content": "arXiv:2608.11758v1 [cs.CL] 12 Aug 2026"
+                    }
+                ]
+            },
+            "bbox": [
+                30,
+                362,
+                67,
+                783
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "1"
+                    }
+                ]
+            },
+            "bbox": [
+                494,
+                944,
+                504,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/b8af3ee5b1095f8d9de4c13a7e9629805c098115993df3901531e451e6f953d6.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 2: Overview of AWARe. Given a multimodal base model, AWARe identifies important neurons or weight groups using activation-based saliency on calibration samples, then freezes high-saliency weights and updates only low-saliency weights during fine-tuning."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                166,
+                83,
+                833,
+                313
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "2018; Chaudhry et al., 2019) or regularizationbased methods (Kirkpatrick et al., 2017), often incur high computational overhead or struggle to scale to the billions of parameters in MLLMs. Parameter-Efficient Fine-Tuning (PEFT) methods like LoRA (Hu et al., 2022) reduce the trainable parameter count but do not inherently prevent the erosion of pre-trained knowledge, as recent studies show they can still disrupt reliable upstream features (Biderman et al., 2024; Zhu et al., 2024). Consequently, a critical challenge arises: How can we enable MLLMs to adapt effectively to downstream tasks while robustly preserving their pre-trained capabilities without prohibitive costs?"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                380,
+                490,
+                607
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Our work is primarily inspired by the principle of activation-aware parameter saliency, most notably demonstrated by Activation-aware Weight Quantization (AWQ) (Lin et al., 2024). AWQ shows that a small fraction of weights associated with large activation magnitudes are disproportionately important for preserving model behavior under quantization. Wanda reaches a complementary conclusion in pruning: static weight magnitude alone is insufficient for LLMs, while combining weights with input activation statistics gives a simple and effective estimate of functional importance (Sun et al., 2024). Recent model merging studies further suggest that activation-guided consensus can reduce parameter interference when combining specialized models (Nobari et al., 2025; Yao et al., 2025). Together, these findings indicate that activations provide a dynamic, data-dependent view of which internal pathways support stable behavior, beyond what weight-centric criteria such as magnitude pruning can capture (Han et al., 2015; Frankle and Carbin, 2019). We therefore repurpose activation saliency from compression and merging to forgetting mitigation."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                617,
+                490,
+                925
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                380,
+                885,
+                461
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Building on this motivation, we introduce AWARe, short for Activation-Weighted Adaptive REtention, a novel framework designed to surgically mitigate catastrophic forgetting. AWARe has two phases: Knowledge Profiling, which estimates neuron saliency from a small calibration set, and Constrained Fine-tuning, which freezes the most salient parameters during downstream training. When upstream data are unavailable, we can use a general-purpose calibration set such as MMMU (Yue et al., 2024); as shown by the AWARe (MMMU) results in Table 1, this remains highly effective while adding only a negligible profiling cost."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                462,
+                887,
+                687
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We validate our approach through comprehensive experiments on IconQA (Lu et al., 2021), COCO-Caption (Lin et al., 2014), and MLLM-DCL (Zhao et al., 2025) (Continuous learning) benchmarks. AWARe achieves strong stabilityplasticity trade-offs, and freezing the top 30% of self-attention parameters is often sufficient to preserve upstream knowledge while keeping downstream performance competitive."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                688,
+                887,
+                833
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Our main contributions are summarized as follows:"
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                834,
+                887,
+                865
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "❶ AWARe Framework. We introduce Activation-Weighted Adaptive REtention (AWARe), a simple activation-based method for preserving critical upstream knowledge during downstream adaptation in MLLMs."
+                    }
+                ]
+            },
+            "bbox": [
+                502,
+                873,
+                887,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "2"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                127,
+                85,
+                487,
+                117
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "❷ Efficiency and Simplicity. Our approach requires no architectural changes and updates only a small subset of parameters "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( \\mathrm { e . g . , \\sim ~ } 1 7 . 5 \\%"
+                    },
+                    {
+                        "type": "text",
+                        "content": "see Section C), avoiding replay buffers and extra modules."
+                    }
+                ]
+            },
+            "bbox": [
+                105,
+                118,
+                489,
+                199
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "❸ Comprehensive Validation. We show through ablations and benchmarks that activation-based saliency is effective and that AWARe preserves generalization across diverse settings."
+                    }
+                ]
+            },
+            "bbox": [
+                105,
+                202,
+                489,
+                267
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "2 Related Work"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                291,
+                270,
+                307
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "2.1 Catastrophic Forgetting and Continual Learning"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                317,
+                467,
+                350
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Fine-tuning serves as a pivotal mechanism for adapting Multimodal Large Language Models (MLLMs) to downstream tasks. However, deep learning models often suffer from catastrophic forgetting (McCloskey and Cohen, 1989; McClelland et al., 1995), where previously learned knowledge is lost when acquiring new skills. Various continual learning algorithms have been proposed to address this issue, generally encompassing rehearsal-based, regularization-based (Kirkpatrick et al., 2017; Lopez-Paz and Ranzato, 2017), and architecture-based approaches (Houlsby et al., 2019; Lester et al., 2021). While established, many traditional methods rely on full-model fine-tuning or second-order statistics, making them computationally prohibitive for large-scale models."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                356,
+                490,
+                615
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "2.2 Parameter-Efficient Fine-Tuning for Mitigation"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                626,
+                445,
+                658
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In the era of large foundation models, the challenge shifts towards maintaining the model’s strong generalization and \"Open-World Stabilization\" after downstream adaptation (Ni et al., 2023; Zhai et al., 2024a). Recent efforts have explored parameterefficient solutions to mitigate forgetting. Reparameterization methods such as DoRA (Liu et al., 2024) and LoRA-based extensions like LoRAMoE (Dou et al., 2024) aim to enhance learning capacity while addressing generalization loss, whereas LoRASculpt (Liang et al., 2025) prunes redundant parameters via sparse updates. Regularization techniques have also been adapted; for instance, Orth-Reg (Hu et al., 2024) encourages fine-tuned features to remain orthogonal to pre-trained representations. CorDA (Yang et al., 2024) builds task-aware adapters through context-guided weight decomposition to preserve world knowledge. Selective tuning approaches, such as SPIDER (Huang et al., 2025) and Model Tailor (Zhu et al., 2024), leverage gradient or saliency analysis to construct sparse updates, aiming to protect critical pre-trained features. However, these criteria often rely on static information or gradient magnitudes, overlooking the dynamic nature of neuronal activations during forward propagation."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                664,
+                490,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                85,
+                885,
+                246
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Recognizing these limitations, we propose AWARe. Unlike additive methods that introduce extra parameters or selective tuning that relies on static priors, AWARe utilizes task-induced activation distributions to measure parameter importance. By adaptively constraining high-activation neurons based on upstream statistics, AWARe effectively balances the preservation of core capabilities with the flexibility needed for downstream task adaptation."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                247,
+                885,
+                407
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3 Methodology"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                422,
+                658,
+                438
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.1 Problem Formulation"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                449,
+                727,
+                463
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "A Multimodal Large Language Model (MLLM) M<sub>θ</sub> generally comprises three core components: a vision encoder V (e.g., CLIP (Radford et al., 2021) or SigLIP (Zhai et al., 2023)), a large language model "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { L }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "(e.g., LLaMA (Touvron et al., 2023b,a) or Vicuna (Chiang et al., 2023)), and a connector module "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\rho"
+                    },
+                    {
+                        "type": "text",
+                        "content": "that bridges the visual and textual modalities. The standard paradigm involves aligning the pre-trained vision encoder representations with the LLM’s embedding space via the connector, enabling the model to process multimodal inputs effectively."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                470,
+                885,
+                663
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Consider a Multimodal Large Language Model (MLLM) "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { M } _ { \\theta }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "parameterized by θ. We assume the model has been initially trained on a foundational set of upstream tasks "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { T } _ { b a s e }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". In a continual instruction tuning setting, the model is sequentially exposed to a stream of downstream tasks, denoted as "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { T } _ { s e q } = \\{ \\mathcal { T } _ { 1 } , \\mathcal { T } _ { 2 } , \\ldots , \\mathcal { T } _ { N } \\}"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". Our objective is to incrementally learn each new task "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { T } _ { t }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "at step t by updating "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\theta ,"
+                    },
+                    {
+                        "type": "text",
+                        "content": "while mitigating the catastrophic forgetting (McCloskey and Cohen, 1989; McClelland et al., 1995) of both the foundational capabilities from "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { T } _ { b a s e }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and the previously acquired knowledge from tasks "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\{ \\mathcal { T } _ { 1 } , \\ldots , \\mathcal { T } _ { t - 1 } \\}"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". As illustrated in Figure 3, we achieve this by partitioning the parameters into a fixed set "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\theta _ { f i x e d }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", which captures and preserves core established features, and a plastic set "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\theta _ { a c t i v e }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "used for acquiring new task-specific knowledge."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                664,
+                885,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "3"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                114,
+                85,
+                435,
+                102
+            ]
+        },
+        {
+            "type": "image",
+            "content": {
+                "image_source": {
+                    "path": "images/6dacbe2484677af47a7c145c723b37a5d485a9a47333eaee2af6a1cdec3e7351.jpg"
+                },
+                "image_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 3: Overview of AWARe. For each target linear layer, we profile the activation matrix produced by calibration samples, normalize the activation statistics across sequence and feature dimensions, and obtain a saliency score for each output channel. High-saliency channels are selected and frozen to preserve pretrained knowledge, while the remaining channels stay trainable for downstream adaptation."
+                    }
+                ],
+                "image_footnote": []
+            },
+            "bbox": [
+                127,
+                120,
+                473,
+                263
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.2 Activation-Based Saliency Estimation"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                412,
+                457,
+                428
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "To identify important parameters for retention, we utilize a calibration set "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "{ \\boldsymbol { S } } _ { c a l }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "composed of representative samples from each upstream task’s train datasets "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( \\mathcal { T } _ { u p } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". Specifically, we randomly sample several instances from each upstream task. In scenarios where access to upstream data is restricted, we demonstrate that utilizing a comprehensive general benchmark, such as MMMU (Yue et al., 2024), as a proxy for "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "{ \\boldsymbol { S } } _ { c a l }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is equally effective. We empirically demonstrate the robustness of model performance to the calibration set size in our ablation studies at Section 4.6. Crucially, the profiling incurs negligible overhead, requiring only a single forward pass on a small sample set. For a target linear layer with weight matrix "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathbf { W } \\in \\mathbb { R } ^ { d _ { o u t } \\times d _ { i n } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "we analyze its activation tensor "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathbf { A } \\in \\mathbb { R } ^ { B \\times L \\times d _ { o u t } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "i \\in \\{ 1 , \\ldots , B \\} , \\ j \\in \\{ 1 , \\ldots , L \\}"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "k \\in \\{ 1 , \\ldots , d _ { o u t } \\}"
+                    },
+                    {
+                        "type": "text",
+                        "content": "index the batch size, context length and hidden dimension, respectively."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                435,
+                490,
+                741
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The saliency estimation follows a three-step aggregation and normalization process. First, we compute the "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "L _ { \\mathrm { { 2 } } } \\mathrm { { - n o r m } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "of activations along the sequence length dimension for each sample "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "j"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and neuron k:"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                741,
+                490,
+                822
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\begin{array} { r } { a _ { i , k } ^ { \\prime } = \\sqrt { \\sum _ { j = 1 } ^ { L } a _ { i , j , k } ^ { 2 } } } \\end{array}\\tag{1}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/38d60768763aba84ab19e7f6b4d63a2b3859ec6dd7d498aa9de60b60f7afc76b.jpg"
+                }
+            },
+            "bbox": [
+                220,
+                834,
+                381,
+                862
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Second, to ensure comparability across samples and prevent those with outlier-scale activations from biasing the estimations, we apply per-sample"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                875,
+                489,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "L -normalization across the hidden dimension:"
+                    }
+                ]
+            },
+            "bbox": [
+                510,
+                85,
+                862,
+                99
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "a _ { i , k } ^ { \\prime \\prime } = \\frac { a _ { i , k } ^ { \\prime } } { \\Vert \\mathbf { a } _ { i } ^ { \\prime } \\Vert _ { 2 } } = \\frac { a _ { i , k } ^ { \\prime } } { \\sqrt { \\sum _ { k ^ { \\prime } = 1 } ^ { d _ { o u t } } { a _ { i , k ^ { \\prime } } ^ { \\prime } } ^ { 2 } } }\\tag{2}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/09549e914665a8279793e7cc2a083a5c61326475185db607ec35c0730310e3d2.jpg"
+                }
+            },
+            "bbox": [
+                573,
+                108,
+                818,
+                154
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathbf { a } _ { i } ^ { \\prime } = [ a _ { i , 1 } ^ { \\prime } , \\ldots , a _ { i , d _ { o u t } } ^ { \\prime } ] ^ { \\top }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is the vector of sequence-aggregated activations for sample i. This normalization ensures that the saliency is determined by the relative importance of neurons within each context rather than absolute activation scale, which is crucial for identifying neurons that consistently capture structural features across diverse upstream tasks. This refinement distinguishes our approach from simple magnitude-based methods and explains the superior performance observed in Table 3. Finally, the saliency score for each neuron k is obtained by averaging across the batch:"
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                164,
+                887,
+                360
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "s _ { k } = \\frac { 1 } { B } \\sum _ { i = 1 } ^ { B } a _ { i , k } ^ { \\prime \\prime }\\tag{3}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/43d7378b92f64c0473839d551c8e96c90adfa5e43a70873dee2360934adf6be1.jpg"
+                }
+            },
+            "bbox": [
+                623,
+                367,
+                768,
+                398
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The resulting saliency vector "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathbf { s } ~ \\in ~ \\mathbb { R } ^ { d _ { o u t } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "reflects the relative importance of each output neuron in preserving upstream task capabilities."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                406,
+                884,
+                456
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.3 Adaptive Parameter Retention"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                466,
+                798,
+                481
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Guided by the saliency scores, we introduce a retention ratio "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\rho \\in ( 0 , 1 )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "as a hyperparameter to control the fraction of parameters to be frozen. We rank output neurons across all target linear layers by their saliency scores and identify the global index set I containing the top-ρ fraction of neurons (e.g., top 30% or 10%)."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                487,
+                885,
+                599
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Since these salient neurons characterize the core upstream knowledge, we freeze their corresponding parameters in the weight matrix. Specifically, we construct a binary gradient mask "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathbf { M } _ { g r a d } \\in"
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\{ 0 , 1 \\} ^ { d _ { o u t } \\times d _ { i n } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "such that:"
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                599,
+                885,
+                680
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\begin{array} { r l } & { ( M _ { g r a d } ) _ { k , : } = \\mathbf { 0 } \\quad \\mathrm { i f ~ } k \\in \\mathbb { Z } , } \\\\ & { ( M _ { g r a d } ) _ { k , : } = \\mathbf { 1 } \\quad \\mathrm { o t h e r w i s e } } \\\\ & { \\qquad M _ { r e t } = \\mathbf { 1 } - M _ { g r a d } } \\end{array}\\tag{4}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/3e30a38b526e7752d0d1a12f2465dd96de116ee89560b7410104c4ecdcec7fbb.jpg"
+                }
+            },
+            "bbox": [
+                591,
+                689,
+                801,
+                746
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where 0 and 1 are row vectors of size "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "d _ { i n }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". During downstream optimization, the parameters associated with salient regions are held constant via masked gradient updates:"
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                756,
+                887,
+                820
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\mathbf { W } ^ { ( t + 1 ) } = \\mathbf { W } ^ { ( t ) } - \\eta \\cdot ( \\nabla _ { \\mathbf { W } } \\mathcal { L } _ { d o w n } \\odot \\mathbf { M } _ { g r a d } )\\tag{5}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/47bca1a51dd6f72d3afcc8d3ec9e9db73ee42a9929581bb1488e405051028da6.jpg"
+                }
+            },
+            "bbox": [
+                517,
+                828,
+                853,
+                847
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where η is the learning rate and ⊙ denotes the Hadamard product. In practice, the PyTorch implementation achieves this by utilizing a trainingtime wrapper, AwareLinear, which decomposes the linear layer into active and frozen components to efficiently manage gradient updates without altering the underlying operator’s logic. This wrapper is removed post-training, leaving the original model configuration intact. This row-wise freezing mechanism ensures that the most influential output features of the pre-trained LLaVA model remain intact while allowing less critical regions to adapt to new tasks. As shown in Figure 4, the distribution of these salient neurons varies across transformer layers and projection types."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                858,
+                885,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "4"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                110,
+                84,
+                490,
+                263
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "3.4 Selection of Target Linear"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                271,
+                368,
+                287
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We specifically apply AWARe to the linear projection layers within the self-attention mechanism (i.e., q_proj, k_proj, v_proj) and the linear layers within the multimodal projector (mm_projector). This selection is informed by recent research (Zhu et al., 2025b) which demonstrates that updating self-attention projections tends to cause significantly less catastrophic forgetting of pre-existing knowledge compared to the multilayer perceptron (MLP) blocks. By focusing our retention strategy on those linear, we balance the preservation of core cross-modal reasoning capabilities with the flexibility needed for downstream task adaptation. An ablation analysis is provided in Section 4.5. Consistent with this finding, all other components of the LLM, including MLP blocks and the output projection "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( \\mathbf { W } _ { o } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", are kept entirely frozen during adaptation. This configuration not only maximizes parameter efficiency but also minimizes the risk of distorting the pre-trained feature space in regions less critical for downstream alignment. The complete procedure for AWARe is summarized in Algorithm 1."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                292,
+                490,
+                664
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4 Experiments"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                674,
+                262,
+                690
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In this section, we evaluate the effectiveness of our proposed method by comparing it with several state-of-the-art baselines on multimodal downstream tasks. We also conduct extensive ablation studies to analyze the impact of key components and hyperparameters."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                697,
+                490,
+                796
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.1 Experimental Setup"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                112,
+                804,
+                319,
+                821
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Datasets and Tasks. We use LLaVA-v1.5-7b (Liu et al., 2023) as the base model for training. The model has been pre-trained on several upstream tasks, including OKVQA (Marino et al., 2019), OCRVQA (Mishra et al., 2019), GQA (Hudson and Manning, 2019), and TextVQA (Singh et al.,"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                825,
+                489,
+                923
+            ]
+        },
+        {
+            "type": "code",
+            "content": {
+                "code_caption": [],
+                "code_content": [
+                    {
+                        "type": "text",
+                        "content": "Algorithm 1 AWARe Require: Pre-trained model "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { M } _ { \\theta } ."
+                    },
+                    {
+                        "type": "text",
+                        "content": ", Upstream task "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { T } _ { u p } ,"
+                    },
+                    {
+                        "type": "text",
+                        "content": "Downstream task "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { T } _ { d o w n } ,"
+                    },
+                    {
+                        "type": "text",
+                        "content": "Retention ratio "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\rho"
+                    },
+                    {
+                        "type": "text",
+                        "content": "Ensure: Fine-tuned model "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { M } _ { \\theta }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "1: Phase 1: Knowledge Profiling 2: Sample calibration set "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "S _ { c a l } \\sim \\mathcal { T } _ { u p }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "3: for each target layer l in "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { M } _ { \\theta }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "do 4: Perform forward pass on "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "{ \\boldsymbol { S } } _ { c a l }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "to obtain activations "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathbf { H } ^ { ( l ) }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "5: Calculate neuron saliency "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathbf { s } ^ { ( l ) }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "using Equations (1) to (3) 6: end for 7: "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { T }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "GlobalTopIndices "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( \\{ \\mathbf { s } ^ { ( l ) } \\} _ { l , \\rho } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "8: for each target layer l in "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { M } _ { \\theta }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "do 9: Extract layer-specific retained indices "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\boldsymbol { \\mathcal { T } ^ { ( l ) } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "from I 10: Generate row-wise gradient mask "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathbf { M } _ { g r a d } ^ { ( l ) }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "via Equation (4) 11: end for 12: Phase 2: Constrained Fine-tuning 13: while not converged on "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { T } _ { d o w n }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "do 14: "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathcal { L } \\gets \\mathrm { C o m p u t e L o s s } ( \\mathcal { M } _ { \\theta } , \\mathcal { T } _ { d o w n } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "15: Update parameters: "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\theta  \\theta - \\eta \\cdot ( \\nabla _ { \\theta } \\mathcal { L } \\odot"
+                    },
+                    {
+                        "type": "text",
+                        "content": "C "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathbf { M } _ { g r a d } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "16: end while"
+                    }
+                ],
+                "code_footnote": [],
+                "code_language": "latex"
+            },
+            "bbox": [
+                509,
+                82,
+                885,
+                511
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "2019). For downstream evaluation, we use IconQA (Lu et al., 2021) for VQA and COCO-Caption (Lin et al., 2014) for image captioning, where captioning performance is measured by CIDEr. For continual instruction tuning, we evaluate LLaVA-v1.5-7b on MLLM-DCL (Zhao et al., 2025), a five-task sequence covering remote sensing (RS), medical VQA (Med), autonomous driving (AD), science reasoning (Sci), and financial understanding (Fin). We provide additional experiments on Qwen2.5- VL-7B (Bai et al., 2025b) in Section B."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                532,
+                885,
+                709
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Implementation Details. During training, we freeze the vision tower to preserve the pre-trained visual representations. The complete training configuration and hyperparameter settings are provided in Section D."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                712,
+                887,
+                791
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.2 Baselines"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                803,
+                631,
+                820
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We evaluate AWARe under two complementary settings. First, in single-task downstream adaptation, the model learns one new downstream task and is evaluated for both target-task learning and forgetting on upstream tasks. In this setting, we compare against established parameter-efficient fine-tuning and anti-forgetting baselines, including Full-FT, LoRA (Hu et al., 2022), DoRA (Liu et al., 2024), DARE (Yu et al., 2024), Orth-Reg (Hu et al., 2024), Model Tailor (Zhu et al., 2024), LoRASculpt (Liang et al., 2025), and SPIDER (Huang et al., 2025). Second, in continual instruction tuning, the model learns a sequence of subtasks and is evaluated after each training stage. For this setting, we compare against continual learning baselines including ModalPrompt (Zeng et al., 2025), SEFE (Chen et al., 2025), HiDe-LLaVA (Guo et al., 2025a), CL-MoE (Huai et al., 2025), O-LoRA (Wang et al., 2023), MoELoRA (Chen et al., 2024a), and DISCO (Guo et al., 2025b). Detailed descriptions for all baselines are provided in Section E."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                825,
+                887,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "5"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/750702692a60436e305629f8ce08e355d475f7b9504633a8b5770e015e6801e8.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Layer Index"
+                    },
+                    {
+                        "type": "text",
+                        "content": "(a) q_proj"
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                117,
+                82,
+                363,
+                179
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/551aa5e1ddf11b42000a3236f1625dc2746e2bdad69be39a2c45b57dbfec802a.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "(b) k_proj"
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                376,
+                82,
+                621,
+                183
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/ff09ed44ded7032e04f5b29943730a11c92855de3580397336041c26612878fe.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Layer Index"
+                    },
+                    {
+                        "type": "text",
+                        "content": "(c) v_proj"
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                636,
+                82,
+                878,
+                174
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/814c4de4aa97da02a2ead8ec85edb6393b47648c1a145807e2bf3ec3fa71690b.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 4: Layer-wise distribution of high-activation neurons across different projection types. The heatmaps visualize indices identified for freezing (top 30% global activation). Notably, q_proj and k_proj show high concentration in early layers, whereas v_proj exhibits a more uniform distribution, suggesting value information is distributed more evenly across the depth of the network."
+                    },
+                    {
+                        "type": "text",
+                        "content": "Table 1: Comparison with State-of-the-Art Fine-Tuning Solutions on LLaVA-v1.5-7B for IconQA and COCO-Caption. The optimal and sub-optimal results are denoted by boldface and underlining. <sub>↑</sub> means improved accuracy compared with the sub-optimal results. †Specifically, the near-zero performance of Full-FT on upstream tasks reflects extreme catastrophic forgetting due to overfitting to the target task. More details about the metrics are provided in Section 4.3. Training setting are detailed in Section D."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td rowspan=\"2\">Methods</td><td colspan=\"8\">IconQA</td><td rowspan=\"2\"></td><td colspan=\"8\">COCO-Caption</td></tr><tr><td>OKVQA</td><td>OCRVQA</td><td>GQA</td><td>TextVQA</td><td>Target</td><td>R</td><td>ε</td><td>H</td><td>OKVQA</td><td>OCRVQA</td><td>GQA</td><td>TextVQA</td><td>Target</td><td>R ε</td><td></td><td>H</td></tr><tr><td>Zero-shot</td><td>57.99</td><td>66.20</td><td>61.93</td><td>58.23</td><td>23.18</td><td>100.0</td><td>28.9</td><td>44.9</td><td>57.99</td><td>66.20</td><td>61.93</td><td>58.23</td><td></td><td>40.40 100.0</td><td>42.3</td><td></td><td>59.4</td></tr><tr><td>Full-FT †</td><td>0.04</td><td>0.00</td><td>0.00</td><td>0.46</td><td>80.15</td><td>0.2</td><td>100.0</td><td></td><td>0.4</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.04</td><td>95.59</td><td>0.0</td><td>100.0</td><td>0.0</td></tr><tr><td>LoRA</td><td>45.06</td><td>48.40</td><td>49.22</td><td>36.47</td><td>63.65</td><td>73.3</td><td>79.4</td><td>76.2</td><td></td><td>44.92</td><td>59.90</td><td>54.88</td><td>39.75</td><td>110.27</td><td>81.6</td><td>115.4</td><td>95.6</td></tr><tr><td>DoRA</td><td>49.94</td><td>54.40</td><td>55.39</td><td>47.26</td><td>84.48</td><td>84.7</td><td>105.4</td><td>93.9</td><td></td><td>45.38</td><td>59.75</td><td>55.40</td><td>41.38</td><td>112.60</td><td>82.6</td><td>117.8</td><td>97.1</td></tr><tr><td>Orth-Reg</td><td>53.12</td><td>56.10</td><td>57.43</td><td>51.00</td><td>84.52</td><td>89.1</td><td>105.5</td><td>96.6</td><td></td><td>48.11</td><td>59.85</td><td>56.83</td><td>46.69</td><td>111.87</td><td>86.5</td><td>117.0</td><td>99.5</td></tr><tr><td>DARE</td><td>44.39</td><td>46.85</td><td>48.75</td><td>34.84</td><td>82.28</td><td>71.5</td><td>102.7</td><td>84.3</td><td></td><td>42.98</td><td>58.65</td><td>53.92</td><td>38.61</td><td>108.57</td><td>79.5</td><td>113.6</td><td>93.5</td></tr><tr><td>Model Tailor</td><td>50.07</td><td>53.85</td><td>53.04</td><td>46.92</td><td>81.76</td><td>83.4</td><td>102.0</td><td>91.8</td><td></td><td>50.99</td><td>60.60</td><td>58.54</td><td>49.65</td><td>117.64</td><td>89.9</td><td>123.1</td><td>103.9</td></tr><tr><td>LoRASculpt</td><td>53.52</td><td>59.50</td><td>57.63</td><td>53.76</td><td>85.26</td><td>91.8</td><td>106.4</td><td>98.6</td><td></td><td>49.99</td><td>58.65</td><td>57.63</td><td>50.73</td><td>120.35</td><td>88.8</td><td>125.9</td><td>104.2</td></tr><tr><td>SPIDER</td><td>50.41</td><td>61.49</td><td>56.54</td><td>51.54</td><td>85.29</td><td>90.0</td><td>106.4</td><td>97.5</td><td>49.50</td><td></td><td>65.00 58.14</td><td>45.33</td><td></td><td>114.74</td><td>89.2 120.0</td><td></td><td>102.3</td></tr><tr><td>AWARe</td><td>56.95</td><td>65.10</td><td>60.83</td><td>57.66</td><td>86.92</td><td>98.4</td><td>108.4</td><td>103.2↑4.6</td><td></td><td>53.01</td><td>63.45</td><td>60.32</td><td>53.46</td><td>120.94</td><td>94.2</td><td>126.5</td><td>108.0↑3.8</td></tr><tr><td>AWARe (MMMU)</td><td>56.86</td><td>63.35</td><td>60.93</td><td>56.77</td><td>85.23</td><td>97.4</td><td>106.3</td><td>101.7↑3.1</td><td>53.25</td><td></td><td>63.12 60.38</td><td>52.74</td><td></td><td>121.22 93.9</td><td>126.8</td><td></td><td>107.9↑3.7</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                122,
+                284,
+                880,
+                412
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                110,
+                495,
+                492,
+                753
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.3 Single-Task Downstream Adaptation"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                763,
+                450,
+                778
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We evaluate the performance of all methods by decomposing continual learning capabilities into two core components: Knowledge Retention (R) and Learning Efficiency (E). To provide a balanced assessment, we report their Harmonic Mean (H):"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                783,
+                489,
+                864
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\mathcal { H } = \\frac { 2 \\cdot \\mathcal { R } \\cdot \\mathcal { E } } { \\mathcal { R } + \\mathcal { E } }\\tag{6}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/bcc453ec7e25a13d6d134e7b06134ab429bfa0cdf2d6c1c769a62693778bbc7c.jpg"
+                }
+            },
+            "bbox": [
+                243,
+                868,
+                356,
+                901
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "The components are defined as follows:"
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                904,
+                411,
+                920
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• R: A stability metric measuring the preservation of performance on upstream tasks after finetuning. It is calculated as the average ratio of the fine-tuned accuracy to the base (zero-shot) accuracy:"
+                    }
+                ]
+            },
+            "bbox": [
+                509,
+                495,
+                887,
+                576
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\mathcal { R } = \\frac { 1 } { \\vert { \\mathcal { T } } _ { u p } \\vert } \\sum _ { i \\in { \\mathcal { T } } _ { u p } } \\frac { A c c _ { i , \\mathrm { f n a l } } } { A c c _ { i , \\mathrm { b a s e } } }\\tag{7}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/1dc55352fa2dde3bb86b911d3b92e8bb66ff7c3a5aa44895857c1e8b7148bd5e.jpg"
+                }
+            },
+            "bbox": [
+                605,
+                585,
+                801,
+                625
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "A c c _ { i , \\mathrm { b a s e } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "is the model’s initial performance before fine-tuning. A sharp drop in R indicates catastrophic forgetting."
+                    }
+                ]
+            },
+            "bbox": [
+                522,
+                634,
+                884,
+                682
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• E: A plasticity metric measuring the model’s adaptation to the new downstream task. To normalize against model capacity, it is defined relative to the Full Fine-Tuning (Full-FT) baseline:"
+                    }
+                ]
+            },
+            "bbox": [
+                509,
+                684,
+                885,
+                750
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\mathcal { E } = \\frac { A c c _ { d o w n , \\mathrm { M e t h o d } } } { A c c _ { d o w n , \\mathrm { F u l l - F T } } }\\tag{8}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/8ba23b13028ca394ffe2eaeca5884de4b24f7b91a95677b33ef2ced43a3b7647.jpg"
+                }
+            },
+            "bbox": [
+                625,
+                758,
+                781,
+                793
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "where "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "A c c _ { d o w n , \\mathrm { F u l l - F T } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "represents the performance upper bound achievable by Full-FT."
+                    }
+                ]
+            },
+            "bbox": [
+                522,
+                802,
+                885,
+                834
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "As shown in Table 1, our method achieves a superior harmonic balance H between plasticity and stability. Compared to other methods, our approach maintains high retention rates R while achieving efficiency E. Notably, when upstream task data is restricted, we used the MMMU general dataset as a calibration dataset and still achieved relatively good results, outperforming both LoRASculpt and SPIDER. We further verify that AWARe is not limited to the LLaVA-v1.5 backbone by conducting an additional Qwen2.5-VL base-model experiment; these results are reported in Section B."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                843,
+                887,
+                922
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "6"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                944,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/a83e5102eca91816b22eb30412ac75b5d1ae7713237fd676a6a50a3f8f9d7c11.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 2: Detailed continuous instruction tuning performance on the MLLM-DCL benchmark (Zhao et al., 2025). Avg reports the average score for each subtask across all later evaluation points after that subtask is learned, while Last reports the final score on each subtask after training on the last subtask."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td rowspan=\"2\">Method</td><td colspan=\"4\">Avg</td><td colspan=\"5\">Last</td></tr><tr><td>RS↑ Med ↑</td><td>AD↑ Sci↑</td><td>Fin ↑</td><td>Average ↑</td><td>RS ↑ Med ↑</td><td>AD↑</td><td>Sci↑</td><td>Fin ↑</td><td>Average ↑</td></tr><tr><td>ModalPrompt</td><td>53.19 45.73</td><td>40.78 41.82</td><td>87.82</td><td>53.87</td><td>53.63 45.68</td><td>40.77</td><td>41.81</td><td>87.82</td><td>53.94</td></tr><tr><td>HiDe</td><td>75.41 48.71</td><td>37.06 42.49</td><td>81.55</td><td>57.04</td><td>74.31 48.95</td><td>33.21</td><td>38.54</td><td>81.55</td><td>55.31</td></tr><tr><td>LoRA-FT</td><td>73.34 47.97</td><td>38.68 45.16</td><td>87.45</td><td>58.52</td><td>69.65 41.59</td><td>25.43</td><td>40.88</td><td>87.45</td><td>53.00</td></tr><tr><td>MoELoRA</td><td>77.19 47.02</td><td>37.30 44.40</td><td>86.75</td><td>58.53</td><td>77.54 41.85</td><td>27.62</td><td>40.13</td><td>86.75</td><td>54.78</td></tr><tr><td>CL-MoE</td><td>73.51 49.97</td><td>38.55 45.73</td><td>88.74</td><td>59.30</td><td>71.34 46.84</td><td>26.33</td><td>41.17</td><td>88.74</td><td>54.88</td></tr><tr><td>O-LoRA</td><td>76.12 47.38</td><td>40.97 46.02</td><td>87.15</td><td>59.53</td><td>74.64 44.42</td><td>30.02</td><td>41.47</td><td>87.15</td><td>55.54</td></tr><tr><td>SEFE</td><td>77.38 51.41</td><td>44.24 44.95</td><td>86.82</td><td>60.96</td><td>77.26 50.37</td><td>37.21</td><td>40.87</td><td>86.82</td><td>58.51</td></tr><tr><td>DISCO</td><td>77.41 48.04</td><td>48.70 48.65</td><td>89.22</td><td>62.40</td><td>76.49 44.48</td><td>44.84</td><td>46.61</td><td>89.22</td><td>60.33</td></tr><tr><td>AWARe</td><td>79.88 55.42</td><td>51.38 49.79</td><td>91.45</td><td> ${ \\bf 6 5 . 5 8 } _ { \\mathrm { \\textrm { \\tiny ~  } } }$ </td><td>78.96</td><td>47.01 46.94</td><td>46.13</td><td>91.45</td><td> $\\mathbf { 6 2 . 1 0 } _ { \\uparrow 1 . 7 7 }$ </td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                126,
+                80,
+                880,
+                237
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                299,
+                490,
+                412
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.4 Continual Instruction Tuning on MLLM-DCL"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                425,
+                418,
+                457
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "To further demonstrate the effectiveness of our proposed method in sequential learning scenarios, we evaluate AWARe on the MLLM-DCL benchmark (Zhao et al., 2025). This benchmark is specifically designed to assess continual instruction tuning for multimodal large language models. As shown in Table 2, AWARe achieves the highest average per-task performance (Avg) and the best final performance after the last task (Last), improving the overall averages by 3.18 and 1.77 points over the strongest baseline, respectively. The detailed CL results are provided in Section A. Overall, AWARe effectively balances plasticity and stability, confirming its superiority in continual instruction tuning settings."
+                    }
+                ]
+            },
+            "bbox": [
+                110,
+                466,
+                490,
+                693
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.5 Ablation Studies"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                705,
+                292,
+                720
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We conduct ablation studies to investigate the contribution of different components and hyperparameter choices in our framework."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                727,
+                490,
+                776
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Effectiveness of Activation-based Selection. We compare our activation-based parameter selection strategy against weight norm-based selection, a hybrid strategy (0.3×Weight+0.7×Activation), and a baseline using random parameter selection at the same ratio (30%). As shown in Table 3, random selection significantly fails to protect the upstream knowledge, with the average performance on upstream tasks (Source Avg) dropping to 49.94 on the IconQA task. In contrast, our activation-based selection consistently achieves the best balance, outperforming both random and weight-based selection in both Source Avg and Target scores."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                777,
+                490,
+                923
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                299,
+                885,
+                365
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/91fdc2ba5ba41968f2df03771a916761c067904760f22d4eafa92ddf5de0e463.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 3: Ablation Study on Parameter Selection Strategy. We compare different methods for selecting parameters to retain: random selection (Random Selection), weight magnitude (Weight Norm), activation magnitude (Activation), and a hybrid approach (0.3W + 0.7A)."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td rowspan=\"2\">Strategy</td><td colspan=\"2\">IconQA</td><td colspan=\"2\">COCO-Caption</td></tr><tr><td>Source Avg Target</td><td></td><td>Source Avg</td><td>Target</td></tr><tr><td>Random Selection</td><td>49.94</td><td>86.32</td><td>49.46</td><td>116.31</td></tr><tr><td>Weight Norm</td><td>58.51</td><td>85.51</td><td>53.52</td><td>115.19</td></tr><tr><td> $0 . 3 W + 0 . 7 A$ </td><td>58.69</td><td>84.66</td><td>53.90</td><td>115.24</td></tr><tr><td>Activation</td><td>60.13</td><td>86.92</td><td>57.56</td><td>120.94</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                521,
+                374,
+                882,
+                454
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Impact of Selection Ratio and Strategy. We explore the effect of varying the selection ratio (from 1% to 90%) and comparing Layer-Balanced versus Global-Highest selection strategies. As shown in Table 4, the Global-Highest selection strategy at a 30% ratio achieves the optimal balance between stability and plasticity, yielding the highest harmonic mean (H = 103.2) and superior knowledge retention (R = 98.4)."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                527,
+                887,
+                674
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/9046056ae63dd6e271e53697e059f86ea84320bfd6dd491ed16f762a4b08e87f.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 4: Ablation Study on Selection Ratio. We evaluate the performance of our method with different ratios of parameters selected for retention on the IconQA task."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Ratio</td><td>OKVQA</td><td>OCRVQA</td><td>GQA</td><td>TextVQA</td><td>Target</td><td>R</td><td>ε</td><td>H</td></tr><tr><td colspan=\"9\">Layer balanced selection</td></tr><tr><td>1%</td><td>55.33</td><td>64.00</td><td>60.17</td><td>54.39</td><td>82.44</td><td>95.7</td><td>102.9</td><td>99.2</td></tr><tr><td>10%</td><td>55.33</td><td>65.20</td><td>59.64</td><td>55.16</td><td>86.84</td><td>96.3</td><td>108.3</td><td>102.0</td></tr><tr><td>30%</td><td>56.28</td><td>62.75</td><td>60.62</td><td>56.13</td><td>85.29</td><td>96.5</td><td>106.4</td><td>101.2</td></tr><tr><td>40%</td><td>56.47</td><td>63.85</td><td>60.46</td><td>56.94</td><td>86.13</td><td>97.3</td><td>107.5</td><td>102.1</td></tr><tr><td>50%</td><td>57.33</td><td>63.95</td><td>60.80</td><td>57.19</td><td>86.21</td><td>97.9</td><td>107.6</td><td>102.5</td></tr><tr><td>70%</td><td>57.69</td><td>64.20</td><td>61.77</td><td>57.54</td><td>85.67</td><td>98.7</td><td>106.9</td><td>102.6</td></tr><tr><td>90%</td><td>57.65</td><td>63.70</td><td>62.01</td><td>57.92</td><td>84.07</td><td>98.7</td><td>104.9</td><td>101.7</td></tr><tr><td colspan=\"9\">Global highest selection</td></tr><tr><td>1%</td><td>55.26</td><td>63.40</td><td>59.89</td><td>54.96</td><td>82.65</td><td>95.6</td><td>103.1</td><td>99.2</td></tr><tr><td>10%</td><td>55.88</td><td>63.25</td><td>59.59</td><td>55.39</td><td>86.13</td><td>95.8</td><td>107.5</td><td>101.3</td></tr><tr><td>30%</td><td>56.95</td><td>65.10</td><td>60.83</td><td>57.66</td><td>86.92</td><td>98.4</td><td>108.4</td><td>103.2</td></tr><tr><td>40%</td><td>57.66</td><td>64.35</td><td>61.47</td><td>57.77</td><td>86.64</td><td>98.7</td><td>108.1</td><td>103.2</td></tr><tr><td>50%</td><td>57.71</td><td>64.75</td><td>61.87</td><td>57.86</td><td>85.97</td><td>99.1</td><td>107.3</td><td>103.0</td></tr><tr><td>70%</td><td>57.78</td><td>64.35</td><td>62.03</td><td>57.84</td><td>80.64</td><td>99.0</td><td>100.6</td><td>99.8</td></tr><tr><td>90%</td><td>58.13</td><td>65.55</td><td>61.89</td><td>58.33</td><td>54.62</td><td>99.8</td><td>68.1</td><td>81.0</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                517,
+                683,
+                882,
+                854
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Calibration Dataset Composition. We examine how the composition of the calibration dataset influences the model’s resistance to catastrophic forgetting on the IconQA task. As shown in Table 5, using any individual upstream task (e.g., OKVQA, OCRVQA, GQA, or TextVQA) as the calibration source consistently preserves knowledge, with relatively small performance variations across different configurations. However, our comprehensive calibration approach (ALL), which integrates samples from all upstream sources, yields the most balanced and superior overall performance (H = 103.2). This demonstrates that while AWARe is robust to the specific choice of calibration task, a diverse mixture of upstream data ensures the most effective protection across the model’s entire functional landscape."
+                    }
+                ]
+            },
+            "bbox": [
+                527,
+                907,
+                885,
+                921
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "7"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                112,
+                85,
+                490,
+                343
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/01f5063463b97269b9f0ca9764f5a875c8846f9174fe972ca612f919ac07a02b.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 5: Ablation Study on Calibration Dataset Composition. We investigate how using different subsets of upstream data for activation statistics calculation affects performance on the IconQA task."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Calibration Task</td><td>OKVQA</td><td>OCRVQA</td><td>GQA</td><td>TextVQA</td><td>Target</td><td>R</td><td>ε</td><td>H</td></tr><tr><td>OKVQA</td><td>55.17</td><td>63.96</td><td>58.56</td><td>54.72</td><td>86.97</td><td>95.1</td><td>108.5</td><td>101.4</td></tr><tr><td>OCRVQA</td><td>54.76</td><td>65.16</td><td>58.28</td><td>54.45</td><td>85.85</td><td>95.2</td><td>107.1</td><td>100.8</td></tr><tr><td>GQA</td><td>55.92</td><td>64.22</td><td>60.12</td><td>54.97</td><td>86.21</td><td>96.3</td><td>107.6</td><td>101.6</td></tr><tr><td>TextVQA</td><td>55.56</td><td>64.40</td><td>59.78</td><td>56.11</td><td>85.78</td><td>96.5</td><td>107.0</td><td>101.5</td></tr><tr><td>ALL</td><td>56.95</td><td>65.10</td><td>60.83</td><td>57.66</td><td>86.92</td><td>98.4</td><td>108.4</td><td>103.2</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                121,
+                353,
+                487,
+                411
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Training Targets. We investigate the impact of applying our method to different components within the model architecture. As illustrated in Figure 5, targeting both the self-attention projections and the multimodal (mm_projector) yields the most favorable balance between plasticity and stability. Specifically, the mm_projector is essential for learning new downstream concepts; Locking it limits adaptation and causes a roughly 10- point decline in target performance. Furthermore, we observe that fine-tuning MLP blocks results in a severe performance collapse on upstream tasks (dropping below 30-point), even with our adaptive protection. This reinforces the hypothesis that MLP weights house the bulk of the model’s fundamental general knowledge, whereas self-attention projections provide a more flexible landscape for specialized task adaptation."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                473,
+                490,
+                764
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "4.6 Sensitivity to Calibration Datasets"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                772,
+                430,
+                788
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "To assess the statistical significance and robustness of our results, we evaluate the sensitivity of AWARe to the randomness of the calibration set. We repeat the Knowledge Profiling phase over three independent runs with different random seeds for sample selection. As shown in Table 6, the performance metrics exhibit minimal standard deviation across runs, demonstrating that the identified salient neurons are consistent and statistically stable artifacts of the model structure, rather than noise from specific data samples. Moreover, increasing the calibration size from 200 to 400 samples yields negligible performance differences, confirming that 200 samples are statistically sufficient to robustly estimate parameter importance."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                794,
+                492,
+                923
+            ]
+        },
+        {
+            "type": "chart",
+            "content": {
+                "image_source": {
+                    "path": "images/e643e57f6f422c6cf1d78d7f79580f9322700cb238ef15bc5426d41ad2297f85.jpg"
+                },
+                "content": "",
+                "chart_caption": [
+                    {
+                        "type": "text",
+                        "content": "Figure 5: Ablation Study on Training Target. Performance comparison across different architecture components on the IconQA and upstream tasks. Applying AWARe to both self-attn and mm_projector achieves the best stable-plastic trade-off."
+                    }
+                ],
+                "chart_footnote": []
+            },
+            "bbox": [
+                519,
+                87,
+                870,
+                235
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                507,
+                355,
+                887,
+                469
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/e1eaa07865330beab6c8b461e84dcd10208379fe7239d2514b83a99fd99eb456.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 6: Sensitivity Analysis on Calibration Datasets. We evaluate the performance of AWARe on IconQA task across different calibration set sizes (200 and 400) and random sample 3 times."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Calibration Size</td><td>OKVQA</td><td>OCRVQA</td><td>GQA</td><td>TextVQA</td><td>Target</td><td>R</td><td>ε</td><td>H</td></tr><tr><td>200</td><td>56.95</td><td>65.10</td><td>60.83</td><td>57.66</td><td>86.92</td><td>98.4</td><td>108.4</td><td>103.2</td></tr><tr><td>200</td><td>56.88</td><td>64.45</td><td>61.20</td><td>58.04</td><td>86.57</td><td>98.5</td><td>108.0</td><td>103.0</td></tr><tr><td>200</td><td>56.49</td><td>64.50</td><td>60.49</td><td>58.15</td><td>86.58</td><td>98.1</td><td>108.0</td><td>102.8</td></tr><tr><td>400</td><td>56.37</td><td>64.38</td><td>60.58</td><td>57.77</td><td>86.20</td><td>97.9</td><td>107.5</td><td>102.5</td></tr><tr><td>400</td><td>56.74</td><td>64.40</td><td>60.38</td><td>57.17</td><td>86.69</td><td>97.7</td><td>108.2</td><td>102.7</td></tr><tr><td>400</td><td>57.04</td><td>64.62</td><td>60.47</td><td>56.77</td><td>86.35</td><td>97.8</td><td>107.7</td><td>102.5</td></tr><tr><td>Std. Dev.</td><td>0.24</td><td>0.25</td><td>0.28</td><td>0.48</td><td>0.23</td><td>0.30</td><td>0.30</td><td>0.30</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                517,
+                488,
+                882,
+                563
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "5 Conclusion"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                661,
+                642,
+                676
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In this paper, we introduce AWARe, an activationweighted framework for mitigating catastrophic forgetting in Multimodal Large Language Models. AWARe first profiles task-induced activations to identify salient neurons, then freezes these regions during downstream fine-tuning to preserve pre-trained capabilities. This design is architectureagnostic, requires no additional adapter modules, and updates only a small fraction of parameters. Across downstream adaptation and MLLM-DCL experiments, AWARe consistently improves the stability-plasticity trade-off, and remains effective even when using a general-purpose calibration set such as MMMU."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                697,
+                887,
+                922
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "8"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "6 Limitations"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                84,
+                250,
+                99
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "AWARe relies on a calibration set to estimate activation-based neuron importance. Although our experiments show that a general-purpose dataset such as MMMU can provide a practical substitute when upstream task data is unavailable, the quality and coverage of the calibration data may still affect the selected frozen regions. In addition, our evaluation focuses on representative MLLM backbones and multimodal tasks; broader validation on larger models, more diverse domains, and longer continual learning sequences would further clarify the generality of the approach. Finally, because AWARe explicitly freezes salient parameters to preserve prior capabilities, extremely large distribution shifts may still require tuning the retention ratio to balance stability and plasticity."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                109,
+                489,
+                368
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "References"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                115,
+                393,
+                215,
+                409
+            ]
+        },
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jinze Bai, Shuai Bai, Shusheng Yang, Shijie Wang, Sinan Tan, Peng Wang, Junyang Lin, Chang Zhou, and Jingren Zhou. 2023. Qwen-vl: A versatile vision-language model for understanding, localization, text reading, and beyond. arXiv preprint arXiv:2308.12966."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Shuai Bai, Yuxuan Cai, Ruizhe Chen, Keqin Chen, Xionghui Chen, Zesen Cheng, Lianghao Deng, Wei Ding, Chang Gao, Chunjiang Ge, Wenbin Ge, Zhifang Guo, Qidong Huang, Jie Huang, Fei Huang, Binyuan Hui, Shutong Jiang, Zhaohai Li, Mingsheng Li, and 45 others. 2025a. Qwen3-vl technical report. arXiv preprint arXiv:2511.21631."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, Sibo Song, Kai Dang, Peng Wang, Shijie Wang, Jun Tang, Humen Zhong, Yuanzhi Zhu, Mingkun Yang, Zhaohai Li, Jianqiang Wan, Pengfei Wang, Wei Ding, Zheren Fu, Yiheng Xu, and 8 others. 2025b. Qwen2.5-vl technical report. Preprint, arXiv:2502.13923."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Dan Biderman, Jose Gonzalez Ortiz, Jacob Portes, Mansheej Paul, Philip Greengard, Connor Jennings, Daniel King, Sam Havens, Vitaliy Chiley, Jonathan Frankle, and 1 others. 2024. Lora learns less and forgets less. arXiv preprint arXiv:2405.09673."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "James Burgess, Jeffrey J Nirschl, Laura Bravo-Sánchez, Alejandro Lozano, Sanket Rajan Gupte, Jesus G Galaz-Montoya, Yuhui Zhang, Yuchang Su, Disha Bhowmik, Zachary Coman, and 1 others. 2025. Microvqa: A multimodal reasoning benchmark for microscopy-based scientific research. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 19552–19564."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Arslan Chaudhry, Marcus Rohrbach, Mohamed Elhoseiny, Thalaiyasingam Ajanthan, Puneet K Dokania,"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Philip HS Torr, and Marc’Aurelio Ranzato. 2019. On tiny episodic memories in continual learning. arXiv preprint arXiv:1902.10486."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Cheng Chen, Junchen Zhu, Xu Luo, Hengtao Shen, Jingkuan Song, and Lianli Gao. 2024a. Coin: A benchmark of continual instruction tuning for multimodel large language models. Advances in Neural Information Processing Systems, 37:57817–57840."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jinpeng Chen, Runmin Cong, Yuzhi Zhao, Hongzheng Yang, Guangneng Hu, Horace Ip, and Sam Kwong. 2025. Sefe: Superficial and essential forgetting eliminator for multimodal continual instruction tuning. In ICML."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Zhe Chen, Jiannan Wu, Wenhai Wang, Weijie Su, Guo Chen, Sen Xing, Muyan Zhong, Qinglong Zhang, Xizhou Zhu, Lewei Lu, and 1 others. 2024b. Internvl: Scaling up vision foundation models and aligning for generic visual-linguistic tasks. In CVPR, pages 24185–24198."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Wei-Lin Chiang, Zhuohan Li, Zi Lin, Ying Sheng, Zhanghao Wu, Hao Zhang, Lianmin Zheng, Siyuan Zhuang, Yonghao Zhuang, Joseph E. Gonzalez, Ion Stoica, and Eric P. Xing. 2023. Vicuna: An opensource chatbot impressing gpt-4 with 90%* chatgpt quality."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Wenliang Dai, Junnan Li, Dongxu Li, Anthony Meng Huat Tiong, Junqi Zhao, Weisheng Wang, Boyang Li, Pascale Fung, and Steven Hoi. 2023. Instructblip: Towards general-purpose vision-language models with instruction tuning. In NeurIPS."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Shihan Dou, Enyu Zhou, Yan Liu, Songyang Gao, Wei Shen, Limao Xiong, Yuhao Zhou, Xiao Wang, Zhiheng Xi, Xiaoran Fan, and 1 others. 2024. Loramoe: Alleviating world knowledge forgetting in large language models via moe-style plugin. In ACL, pages 1932–1945."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jonathan Frankle and Michael Carbin. 2019. The lottery ticket hypothesis: Finding sparse, trainable neural networks. In ICLR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Tianrui Guan, Fuxiao Liu, Xiyang Wu, Ruiqi Xian, Zongxia Li, Xiaoyu Liu, Xijun Wang, Lichang Chen, Furong Huang, Yaser Yacoob, and 1 others. 2024. Hallusionbench: an advanced diagnostic suite for entangled language hallucination and visual illusion in large vision-language models. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition, pages 14375–14385."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Haiyang Guo, Fanhu Zeng, Ziwei Xiang, Fei Zhu, Da-Han Wang, Xu-Yao Zhang, and Cheng-Lin Liu. 2025a. Hide-llava: Hierarchical decoupling for continual instruction tuning of multimodal large language model. In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 13572– 13586."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                117,
+                416,
+                489,
+                493
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "9"
+                    }
+                ]
+            },
+            "bbox": [
+                492,
+                942,
+                505,
+                954
+            ]
+        }
+    ],
+    [
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Haiyang Guo, Fanhu Zeng, Fei Zhu, Wenzhuo Liu, Da-Han Wang, Jian Xu, Xu-Yao Zhang, and Cheng-Lin Liu. 2025b. Federated continual instruction tuning. In Proceedings ofthe IEEE/CVF International Conference on Computer Vision, pages 1325–1335."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Song Han, Huizi Mao, and William J Dally. 2015. Deep compression: Compressing deep neural networks with pruning, trained quantization and huffman coding. arXiv preprint arXiv:1510.00149."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Neil Houlsby, Andrei Giurgiu, Stanislaw Jastrzebski, Bruna Morrone, Quentin De Laroussilhe, Andrea Gesmundo, Mona Attariyan, and Sylvain Gelly. 2019. Parameter-efficient transfer learning for nlp. In ICML, pages 2790–2799. PMLR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Edward J Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, and Weizhu Chen. 2022. Lora: Low-rank adaptation of large language models. In ICLR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jiajun Hu, Jian Zhang, Lei Qi, Yinghuan Shi, and Yang Gao. 2024. Learn to preserve and diversify: Parameter-efficient group with orthogonal regularization for domain generalization. In European Conference on Computer Vision, pages 198–216. Springer."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Tianyu Huai, Jie Zhou, Xingjiao Wu, Qin Chen, Qingchun Bai, Ze Zhou, and Liang He. 2025. Clmoe: Enhancing multimodal large language model with dual momentum mixture-of-experts for continual visual question answering. In Proceedings ofthe computer vision and pattern recognition conference, pages 19608–19617."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Wenke Huang, Jian Liang, Zekun Shi, Didi Zhu, Guancheng Wan, He Li, Bo Du, Dacheng Tao, and Mang Ye. 2025. Learn from downstream and be yourself in multimodal large language models fine-tuning. In ICML."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Drew A Hudson and Christopher D Manning. 2019. Gqa: A new dataset for real-world visual reasoning and compositional question answering. In CVPR, pages 6700–6709."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yao Jiang, Xinyu Yan, Ge-Peng Ji, Keren Fu, Meijun Sun, Huan Xiong, Deng-Ping Fan, and Fahad Shahbaz Khan. 2024. Effectiveness assessment of recent large vision-language models. Visual Intelligence, 2(1):17."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Aniruddha Kembhavi, Mike Salvato, Eric Kolve, Minjoon Seo, Hannaneh Hajishirzi, and Ali Farhadi. 2016. A diagram is worth a dozen images. In European conference on computer vision, pages 235–251. Springer."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "James Kirkpatrick, Razvan Pascanu, Neil Rabinowitz, Joel Veness, Guillaume Desjardins, Andrei A Rusu, Kieran Milan, John Quan, Tiago Ramalho, Agnieszka Grabska-Barwinska, and 1 others. 2017. Overcoming catastrophic forgetting in neural networks. Proceedings of the national academy of sciences, 114(13):3521–3526."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Brian Lester, Rami Al-Rfou, and Noah Constant. 2021. The power of scale for parameter-efficient prompt tuning. arXiv preprint arXiv:2104.08691."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Bo Li, Yuanhan Zhang, Dong Guo, Renrui Zhang, Feng Li, Hao Zhang, Kaichen Zhang, Yanwei Li, Ziwei Liu, and Chunyuan Li. 2024a. Llavaonevision: Easy visual task transfer. arXiv preprint arXiv:2408.03326."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Hongyu Li, Liang Ding, Meng Fang, and Dacheng Tao. 2024b. Revisiting catastrophic forgetting in large language model tuning. arXiv preprint arXiv:2406.04836."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Junnan Li, Dongxu Li, Silvio Savarese, and Steven Hoi. 2023. Blip-2: Bootstrapping language-image pre-training with frozen image encoders and large language models. In ICML, pages 19730–19742. PMLR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Junnan Li, Dongxu Li, Caiming Xiong, and Steven Hoi. 2022. Blip: Bootstrapping language-image pre-training for unified vision-language understanding and generation. In ICML, pages 12888–12900. PMLR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jian Liang, Wenke Huang, Guancheng Wan, Qu Yang, and Mang Ye. 2025. Lorasculpt: Sculpting lora for harmonizing general and specialized knowledge in multimodal large language models. In Proceedings of the Computer Vision and Pattern Recognition Conference, pages 26170–26180."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Ji Lin, Jiaming Tang, Haotian Tang, Shang Yang, Wei-Ming Chen, Wei-Chen Wang, Guangxuan Xiao, Xingyu Dang, Chuang Gan, and Song Han. 2024. Awq: Activation-aware weight quantization for ondevice llm compression and acceleration. Proceedings ofmachine learning and systems, 6:87–100."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Ji Lin, Hongxu Yin, Wei Ping, Yao Lu, Pavlo Molchanov, Andrew Tao, Huizi Mao, Jan Kautz, Mohammad Shoeybi, and Song Han. 2023. Vila: On pre-training for visual language models. In CVPR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Tsung-Yi Lin, Michael Maire, Serge Belongie, James Hays, Pietro Perona, Deva Ramanan, Piotr Dollár, and C Lawrence Zitnick. 2014. Microsoft coco: Common objects in context. In ECCV, pages 740– 755."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Haotian Liu, Chunyuan Li, Yuheng Li, and Yong Jae Lee. 2023. Improved baselines with visual instruction tuning. In CVPR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Shih-Yang Liu, Chien-Yi Wang, Hongxu Yin, Pavlo Molchanov, Yu-Chiang Frank Wang, Kwang-Ting Cheng, and Min-Hung Chen. 2024. Dora: Weightdecomposed low-rank adaptation. In ICML."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Weiyang Liu, Rongmei Lin, Zhen Liu, Lixin Liu, Zhiding Yu, Bo Dai, and Le Song. 2018. Learning towards minimum hyperspherical energy. Advances in neural information processing systems, 31."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                115,
+                85,
+                489,
+                152
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "10"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                510,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "David Lopez-Paz and Marc’Aurelio Ranzato. 2017. Gradient episodic memory for continual learning. NeurIPS, 30."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Pan Lu, Liang Qiu, Jiaqi Chen, Tony Xia, Yizhou Zhao, Wei Zhang, Zhou Yu, Xiaodan Liang, and Song-Chun Zhu. 2021. Iconqa: A new benchmark for abstract diagram understanding and visual language reasoning. In NeurIPS."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yun Luo, Zhen Yang, Fandong Meng, Yafu Li, Jie Zhou, and Yue Zhang. 2023. An empirical study of catastrophic forgetting in large language models during continual fine-tuning. arXiv preprint arXiv:2308.08747."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yun Luo, Zhen Yang, Fandong Meng, Yafu Li, Jie Zhou, and Yue Zhang. 2025. An empirical study of catastrophic forgetting in large language models during continual fine-tuning. IEEE Transactions on Audio, Speech and Language Processing."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Kenneth Marino, Mohammad Rastegari, Ali Farhadi, and Roozbeh Mottaghi. 2019. Ok-vqa: A visual question answering benchmark requiring external knowledge. In CVPR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Minesh Mathew, Dimosthenis Karatzas, and CV Jawahar. 2021. Docvqa: A dataset for vqa on document images. In Proceedings ofthe IEEE/CVF winter conference on applications of computer vision, pages 2200–2209."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "James L McClelland, Bruce L McNaughton, and Randall C O’Reilly. 1995. Why there are complementary learning systems in the hippocampus and neocortex: insights from the successes and failures of connectionist models of learning and memory. Psychological review, 102(3):419."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Michael McCloskey and Neal J Cohen. 1989. Catastrophic interference in connectionist networks: The sequential learning problem. In Psychology oflearning and motivation, volume 24, pages 109–165. Elsevier."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Anand Mishra, Shashank Shekhar, Ajeet Kumar Singh, and Anirban Chakraborty. 2019. Ocr-vqa: Visual question answering by reading text in images. In ICDAR, pages 947–952. IEEE."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Shiwen Ni, Dingwei Chen, Chengming Li, Xiping Hu, Ruifeng Xu, and Min Yang. 2023. Forgetting before learning: Utilizing parametric arithmetic for knowledge updating in large language models. arXiv preprint arXiv:2311.08011."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Amin Heyrani Nobari, Kaveh Alimohammadi, Ali ArjomandBigdeli, Akash Srivastava, Faez Ahmed, and Navid Azizan. 2025. Activation-informed merging of large language models."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, and 1 others. 2021. Learning transferable visual models"
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "from natural language supervision. In ICML, pages 8748–8763."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Matthew Riemer, Ignacio Cases, Robert Ajemian, Miao Liu, Irina Rish, Yuhai Tu, and Gerald Tesauro. 2018. Learning to learn without forgetting by maximizing transfer and minimizing interference. arXiv preprint arXiv:1810.11910."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Ying Shen, Zhiyang Xu, Qifan Wang, Yu Cheng, Wenpeng Yin, and Lifu Huang. 2024. Multimodal instruction tuning with conditional mixture of lora. arXiv preprint arXiv:2402.15896."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Amanpreet Singh, Vivek Natarajan, Meet Shah, Yu Jiang, Xinlei Chen, Dhruv Batra, Devi Parikh, and Marcus Rohrbach. 2019. Towards vqa models that can read. In CVPR, pages 8317–8326."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Mingjie Sun, Zhuang Liu, Anna Bair, and Zico Kolter. 2024. A simple and effective pruning approach for large language models. In International Conference on Learning Representations, volume 2024, pages 4942–4964."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yi-Lin Sung, Jaehong Yoon, and Mohit Bansal. 2023. Ecoflap: Efficient coarse-to-fine layer-wise pruning for vision-language models. arXiv preprint arXiv:2310.02998."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier Martinet, Marie-Anne Lachaux, Timothée Lacroix, Baptiste Rozière, Naman Goyal, Eric Hambro, Faisal Azhar, and 1 others. 2023a. Llama: Open and efficient foundation language models. arXiv preprint arXiv:2302.13971."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Hugo Touvron, Louis Martin, Kevin Stone, Peter Albert, Amjad Almahairi, Yasmine Babaei, Nikolay Bashlykov, Soumya Batra, Prajjwal Bhargava, Shruti Bhosale, and 1 others. 2023b. Llama 2: Open foundation and fine-tuned chat models. arXiv preprint arXiv:2307.09288."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Peng Wang, Shuai Bai, Sinan Tan, Shijie Wang, Zhihao Fan, Jinze Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, and 1 others. 2024. Qwen2- vl: Enhancing vision-language model’s perception of the world at any resolution. arXiv preprint arXiv:2409.12191."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Weiyun Wang, Zhangwei Gao, Lixin Gu, Hengjun Pu, Long Cui, Xingguang Wei, Zhaoyang Liu, Linglin Jing, Shenglong Ye, Jie Shao, and 1 others. 2025. Internvl3.5: Advancing open-source multimodal models in versatility, reasoning, and efficiency. arXiv preprint arXiv:2508.18265."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Xiao Wang, Tianze Chen, Qiming Ge, Han Xia, Rong Bao, Rui Zheng, Qi Zhang, Tao Gui, and Xuan-Jing Huang. 2023. Orthogonal subspace learning for language model continual learning. In Findings of the Association for Computational Linguistics: EMNLP 2023, pages 10658–10671."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                85,
+                489,
+                126
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "11"
+                    }
+                ]
+            },
+            "bbox": [
+                487,
+                942,
+                509,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "list",
+            "content": {
+                "list_type": "reference_list",
+                "list_items": [
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Penghao Wu and Saining Xie. 2024. V*: Guided visual search as a core mechanism in multimodal llms. In Proceedings ofthe IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 13084– 13094."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yibo Yang, Xiaojie Li, Zhongzhu Zhou, Shuaiwen Leon Song, Jianlong Wu, Liqiang Nie, and Bernard Ghanem. 2024. Corda: Context-oriented decomposition adaptation of large language models. arXiv preprint arXiv:2406.05223."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yuxuan Yao, Shuqi Liu, Zehua Liu, Qintong Li, Mingyang Liu, Xiongwei Han, Zhijiang Guo, Han Wu, and Linqi Song. 2025. Activation-guided consensus merging for large language models. NeurIPS."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Le Yu, Bowen Yu, Haiyang Yu, Fei Huang, and Yongbin Li. 2024. Language models are super mario: Absorbing abilities from homologous models as a free lunch. In ICML."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Xiang Yue, Yuansheng Ni, Kai Zhang, Tianyu Zheng, Ruoqi Liu, Ge Zhang, Samuel Stevens, Dongfu Jiang, Weiming Ren, Yuxuan Sun, Cong Wei, Botao Yu, Ruibin Yuan, Renliang Sun, Ming Yin, Boyuan Zheng, Zhenzhu Yang, Yibo Liu, Wenhao Huang, and 3 others. 2024. Mmmu: A massive multi-discipline multimodal understanding and reasoning benchmark for expert agi. In Proceedings ofCVPR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Fanhu Zeng, Fei Zhu, Haiyang Guo, Xu-Yao Zhang, and Cheng-Lin Liu. 2025. Modalprompt: Towards efficient multimodal continual instruction tuning with dual-modality guided prompt. In Proceedings ofthe 2025 Conference on Empirical Methods in Natural Language Processing, pages 12137–12152."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Xiaohua Zhai, Basil Mustafa, Alexander Kolesnikov, and Lucas Beyer. 2023. Sigmoid loss for language image pre-training. In ICCV, pages 11975–11986."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yuexiang Zhai, Shengbang Tong, Xiao Li, Mu Cai, Qing Qu, Yong Jae Lee, and Yi Ma. 2024a. Investigating the catastrophic forgetting in multimodal large language model fine-tuning. pages 202–227. PMLR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Yuexiang Zhai, Shengbang Tong, Xiao Li, Mu Cai, Qing Qu, Yong Jae Lee, and Yi Ma. 2024b. Investigating the catastrophic forgetting in multimodal large language model fine-tuning. In CPAL, pages 202–227. PMLR."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Hongbo Zhao, Fei Zhu, Haiyang Guo, Meng Wang, Rundong Wang, Gaofeng Meng, and Zhaoxiang Zhang. 2025. Mllm-cl: Continual learning for multimodal large language models. arXiv preprint arXiv:2506.05453."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Deyao Zhu, Jun Chen, Xiaoqian Shen, Xiang Li, and Mohamed Elhoseiny. 2023. Minigpt-4: Enhancing vision-language understanding with advanced large language models. arXiv preprint arXiv:2304.10592."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Didi Zhu, Zhongyi Sun, Zexi Li, Tao Shen, Ke Yan, Shouhong Ding, Kun Kuang, and Chao Wu. 2024. Model tailor: Mitigating catastrophic forgetting in multi-modal large language models. In ICML."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Jinguo Zhu, Weiyun Wang, Zhe Chen, Zhaoyang Liu, Shenglong Ye, Lixin Gu, Hao Tian, Yuchen Duan, Weijie Su, Jie Shao, and 1 others. 2025a. Internvl3: Exploring advanced training and test-time recipes for open-source multimodal models. arXiv preprint arXiv:2504.10479."
+                            }
+                        ]
+                    },
+                    {
+                        "item_type": "text",
+                        "item_content": [
+                            {
+                                "type": "text",
+                                "content": "Zhen Zhu, Yiming Gong, Yao Xiao, Yaoyao Liu, and Derek Hoiem. 2025b. How to teach large multimodal models new skills."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bbox": [
+                115,
+                85,
+                489,
+                151
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "12"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                510,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "A MLLM-DCL Evaluation Details"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                84,
+                433,
+                99
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We follow the MLLM-DCL benchmark (Zhao et al., 2025) and report four standard metrics for continuous instruction tuning. Let T be the total number of sequential tasks, and let "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "A _ { t , i }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "denote the test accuracy on task i after the model has finished training on task t."
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                109,
+                490,
+                205
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Mean Fine-tune Accuracy (MFT). MFT measures plasticity, i.e., how well the model adapts to each task immediately after learning it:"
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                214,
+                489,
+                277
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\mathrm { M F T } = \\frac { 1 } { T } \\sum _ { i = 1 } ^ { T } A _ { i , i } .\\tag{9}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/e481f532df3518a12e76735be24ca97bd072c33bcfdbb6f0ed7ef8b6b69b119c.jpg"
+                }
+            },
+            "bbox": [
+                240,
+                274,
+                396,
+                317
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "A higher MFT indicates stronger immediate adaptation to the downstream distribution of each new task."
+                    }
+                ]
+            },
+            "bbox": [
+                149,
+                321,
+                489,
+                368
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Mean Final Accuracy (MFN). MFN measures the model’s average performance on all tasks after the entire training sequence:"
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                378,
+                489,
+                426
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\mathrm { M F N } = \\frac { 1 } { T } \\sum _ { i = 1 } ^ { T } A _ { T , i } .\\tag{10}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/4bcedc2c03eede52833d8f4b1237de6890121ea9e29cf24f4f3b813754f1a5bd.jpg"
+                }
+            },
+            "bbox": [
+                236,
+                434,
+                398,
+                478
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Unlike MFT, MFN accounts for later performance degradation, so a high MFN requires both learning new tasks and retaining previous ones."
+                    }
+                ]
+            },
+            "bbox": [
+                149,
+                483,
+                489,
+                548
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Mean Average Accuracy (MAA). MAA summarizes the accuracy trajectory throughout continual learning by averaging the cumulative accuracy over observed tasks at each training step:"
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                557,
+                489,
+                638
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\mathrm { M A A } = \\frac { 1 } { T } \\sum _ { t = 1 } ^ { T } \\left( \\frac { 1 } { t } \\sum _ { i = 1 } ^ { t } A _ { t , i } \\right) .\\tag{11}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/d41b53d5d33c05cb2d272a4457271e50aa89f211644b3460977ce704f098c3c2.jpg"
+                }
+            },
+            "bbox": [
+                184,
+                644,
+                420,
+                688
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "MAA rewards methods that maintain consistently high accuracy across all known tasks during the learning process."
+                    }
+                ]
+            },
+            "bbox": [
+                149,
+                695,
+                489,
+                744
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Backward Transfer (BWT). BWT quantifies the average final change in performance on previously learned tasks relative to their accuracy immediately after learning:"
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                752,
+                489,
+                818
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "\\mathrm { B W T } = \\frac { 1 } { T - 1 } \\sum _ { i = 1 } ^ { T - 1 } \\left( A _ { T , i } - A _ { i , i } \\right) .\\tag{12}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/10ed6b44bd7b8f3a5689a136dd503466011eb2b7c792164c78ce4840fbb58622.jpg"
+                }
+            },
+            "bbox": [
+                171,
+                825,
+                435,
+                868
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "A less negative or positive BWT indicates less forgetting, while a negative BWT reflects degradation on earlier tasks."
+                    }
+                ]
+            },
+            "bbox": [
+                149,
+                875,
+                487,
+                922
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/0ece8ad9e1fb1af64c3c615a941305c4f2857e0fece4088cfed1ee420f7dde9e.jpg"
+                },
+                "table_caption": [],
+                "table_footnote": [],
+                "html": "<table><tr><td>Method</td><td>MFT ↑ MFN↑</td><td>MAA↑ BWT↑</td></tr><tr><td>ModalPrompt</td><td>53.87 53.94</td><td>49.67 +0.09</td></tr><tr><td>HiDe</td><td>60.77 55.31</td><td>60.68 -6.82</td></tr><tr><td>LoRA-FT</td><td>64.98 53.00</td><td>61.13 -14.97</td></tr><tr><td>MoELoRA</td><td>64.94 54.78</td><td>61.76 -12.70</td></tr><tr><td>CL-MoE</td><td>66.06 54.88</td><td>61.79 -13.96</td></tr><tr><td>O-LoRA</td><td>65.16 55.54</td><td>62.12 -12.03</td></tr><tr><td>SEFE</td><td>65.01 58.51</td><td>63.63 -8.13</td></tr><tr><td>DISCO</td><td>64.78 60.33</td><td>63.93 -5.57</td></tr><tr><td>AWARe</td><td>67.49 62.10</td><td>67.28 -6.74</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                522,
+                83,
+                880,
+                233
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/3727eda75fb186cfcb62b91cce14c62a70319fa807c3771bc0a65f082b9da938.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 7: Detailed CL metric summary on MLLM-DCL."
+                    },
+                    {
+                        "type": "text",
+                        "content": "Table 8: Detailed AWARe accuracy results on MLLM-DCL."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Training Stage</td><td>RS</td><td>Med</td><td>AD</td><td>Sci</td><td>Fin</td></tr><tr><td>RS</td><td>78.87</td><td></td><td>一</td><td>一</td><td>一</td></tr><tr><td>Med</td><td>80.76</td><td>59.44</td><td></td><td></td><td></td></tr><tr><td>AD</td><td>80.80</td><td>59.03</td><td>54.25</td><td></td><td></td></tr><tr><td>Sci</td><td>80.02</td><td>56.20</td><td>52.94</td><td>53.45</td><td></td></tr><tr><td>Fin</td><td>78.96</td><td>47.01</td><td>46.94</td><td>46.13</td><td>91.45</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                514,
+                261,
+                878,
+                334
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "For the detailed AWARe run in Table 8, we use 200 MMMU samples as the calibration dataset when training the first RS task. For each subsequent task, the calibration dataset consists of MMMU together with 100 samples from each previous task, which are used to recompute the activation distributions. Rows indicate the latest task after which the model is fine-tuned, and columns indicate evaluation tasks."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                400,
+                887,
+                545
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "B Additional Model Qwen2.5-VL"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                557,
+                816,
+                574
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "To examine whether AWARe remains effective on a stronger recent backbone, we additionally evaluate Qwen2.5-VL (Bai et al., 2025b) on two downstream tasks from MLLM-DCL: Med and AD. We use HallusionBench (Guan et al., 2024), Micro-VQA (Burgess et al., 2025), DocVQA (Mathew et al., 2021), VStarBench (Wu and Xie, 2024), and AI2D (Kembhavi et al., 2016) as upstream evaluation tasks to measure retained general multimodal capabilities after task-specific tuning. The zeroshot row reports the original Qwen2.5-VL performance before downstream adaptation."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                583,
+                887,
+                777
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Across both downstream tasks, SFT reaches the highest target-task accuracy but causes severe degradation on upstream capabilities, especially on DocVQA, VStarBench, and AI2D. In contrast, AWARe consistently preserves the strongest upstream performance among fine-tuned methods while retaining competitive downstream adaptation, indicating that activation-weighted parameter freezing transfers to Qwen2.5-VL and provides a robust stability-plasticity trade-off."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                777,
+                887,
+                923
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "13"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                510,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/0eab0d524d0ade34f10e02ce326b587e160055ba2644d0bc67753e2ed7c8d704.jpg"
+                },
+                "table_caption": [],
+                "table_footnote": [],
+                "html": "<table><tr><td>Method</td><td>DCL-Med ↑</td><td>HallusionBench ↑ Micro-VQA ↑ DocVQA ↑</td><td></td><td></td><td>VStarBench ↑</td><td>AI2D ↑</td></tr><tr><td>Zero-shot</td><td>0.357</td><td>0.770</td><td>0.480</td><td>0.947</td><td>0.620</td><td>0.740</td></tr><tr><td>SFT</td><td>0.521</td><td>0.330</td><td>0.070</td><td>0.599</td><td>0.010</td><td>0.040</td></tr><tr><td>AWARe</td><td>0.477</td><td>0.760</td><td>0.480</td><td>0.913</td><td>0.650</td><td>0.730</td></tr><tr><td>SPIDER</td><td>0.452</td><td>0.670</td><td>0.440</td><td>0.875</td><td>0.580</td><td>0.710</td></tr><tr><td>LoRASculpt</td><td>0.465</td><td>0.720</td><td>0.460</td><td>0.863</td><td>0.560</td><td>0.690</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                121,
+                82,
+                485,
+                135
+            ]
+        },
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/ea372683c54b13ad8b7f35b74203169f84a42ba5ab91b3b33a73307bbd9c707e.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 9: Qwen2.5-VL results on the MLLM-DCL Med task. The downstream column reports DCL-Med adaptation performance, while the remaining columns report upstream task retention. Boldface marks the best downstream result and the best upstream retention among fine-tuned methods."
+                    },
+                    {
+                        "type": "text",
+                        "content": "Table 10: Qwen2.5-VL results on the MLLM-DCL AD task. The downstream column reports DCL-AD adaptation performance, while the remaining columns report upstream task retention. Boldface marks the best downstream result and the best upstream retention among fine-tuned methods."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td>Method</td><td></td><td>DCL-AD ↑ HallusionBench ↑ Micro-VQA ↑ DocVQA ↑ VStarBench ↑ AI2D ↑</td><td></td><td></td><td></td><td></td></tr><tr><td>Zero-shot</td><td>0.213</td><td>0.770</td><td>0.480</td><td>0.947</td><td>0.620</td><td>0.740</td></tr><tr><td>SFT</td><td>0.5595</td><td>0.500</td><td>0.390</td><td>0.190</td><td>0.240</td><td>0.370</td></tr><tr><td>AWARe</td><td>0.4629</td><td>0.760</td><td>0.440</td><td>0.901</td><td>0.600</td><td>0.710</td></tr><tr><td>SPIDER</td><td>0.432</td><td>0.650</td><td>0.390</td><td>0.856</td><td>0.540</td><td>0.650</td></tr><tr><td>LoRASculpt</td><td>0.445</td><td>0.690</td><td>0.420</td><td>0.847</td><td>0.520</td><td>0.690</td></tr></table>",
+                "table_type": "simple_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                121,
+                206,
+                485,
+                260
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": []
+            },
+            "bbox": [
+                114,
+                344,
+                376,
+                360
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "C Parameter Efficiency Analysis"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                114,
+                372,
+                415,
+                388
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In this section, we provide a detailed calculation of the trainable parameter ratio in our optimal setting. Consider a standard Transformer block in LLaMA architecture with hidden dimension h. The parameters can be categorized into Self-Attention and Feed-Forward Network (FFN) modules:"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                398,
+                490,
+                495
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Self-Attention: Consists of four projection matrices: "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathbf { W } _ { q } , \\mathbf { W } _ { k } , \\mathbf { W } _ { v } , \\mathbf { W } _ { o } \\in \\mathbb { R } ^ { h \\times h }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". The total parameter count is "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "4 h ^ { 2 }"
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                507,
+                489,
+                556
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• FFN (SwiGLU): Comprises three matrices: "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathbf { W } _ { u p } , \\mathbf { W } _ { g a t e } ~ \\in ~ \\mathbb { R } ^ { h _ { i n t e r } \\times h }"
+                    },
+                    {
+                        "type": "text",
+                        "content": "and "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\textbf { W } _ { d o w n } ~ \\in"
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\mathbb { R } ^ { h \\times h _ { i n t e r } }"
+                    },
+                    {
+                        "type": "text",
+                        "content": ". In LLaMA, the intermediate dimension is typically set to "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\begin{array} { l l l } { h _ { i n t e r } } & { \\approx } & { { \\frac { 8 } { 3 } } h } \\end{array}"
+                    },
+                    {
+                        "type": "text",
+                        "content": "The total parameter count is approximately "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "3 \\times \\frac { 8 } { 3 } h \\times \\bar { h } = 8 h ^ { 2 }"
+                    }
+                ]
+            },
+            "bbox": [
+                136,
+                567,
+                489,
+                665
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Thus, the total number of parameters per block is approximately "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "1 2 h ^ { 2 }"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                676,
+                487,
+                708
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "In our best experimental setting, we apply the AWARe strategy specifically to the query, key, and value projection layers "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "( \\mathbf { W } _ { q } , \\mathbf { W } _ { k } , \\mathbf { W } _ { v } )"
+                    },
+                    {
+                        "type": "text",
+                        "content": "with a retention ratio of "
+                    },
+                    {
+                        "type": "equation_inline",
+                        "content": "\\rho = 3 0 \\%"
+                    },
+                    {
+                        "type": "text",
+                        "content": ", while freezing the remaining components. The number of trainable parameters is calculated as:"
+                    }
+                ]
+            },
+            "bbox": [
+                112,
+                708,
+                490,
+                806
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "N _ { t r a i n } = 3 \\times ( 1 - \\rho ) \\times h ^ { 2 } = 3 \\times 0 . 7 \\times h ^ { 2 } = 2 . 1 h ^ { 2 }\\tag{13}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/09e102e339dcdfcd69891f9ee71313606a85c7f6b6af57f3db798a76c44a7a92.jpg"
+                }
+            },
+            "bbox": [
+                114,
+                816,
+                487,
+                834
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Consequently, the ratio of trainable parameters to the total parameter count is:"
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                851,
+                487,
+                883
+            ]
+        },
+        {
+            "type": "equation_interline",
+            "content": {
+                "math_content": "{ \\mathrm { R a t i o } } = { \\frac { 2 . 1 h ^ { 2 } } { 1 2 h ^ { 2 } } } \\approx 1 7 . 5 \\%\\tag{14}",
+                "math_type": "latex",
+                "image_source": {
+                    "path": "images/769ce983c4ac9d7e895d5e05755f68e782d37f72999351913add7a6ad66d9bbf.jpg"
+                }
+            },
+            "bbox": [
+                205,
+                894,
+                396,
+                927
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "This analysis demonstrates that our method effectively updates only a quarter of the model parameters, significantly reducing computational overhead while preserving generalization capabilities."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                85,
+                885,
+                151
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "D Experimental Configuration"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                161,
+                794,
+                178
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "We summarize the hyperparameter configuration that achieves the optimal performance reported in our main results in Table 11, specifically under the Global-Highest 30% setting. All experimental results are averaged over three random runs."
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                187,
+                884,
+                269
+            ]
+        },
+        {
+            "type": "title",
+            "content": {
+                "title_content": [
+                    {
+                        "type": "text",
+                        "content": "E Baseline Details"
+                    }
+                ],
+                "level": 2
+            },
+            "bbox": [
+                509,
+                280,
+                685,
+                297
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Single-task downstream adaptation. We calculate baselines using the following configurations:"
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                306,
+                887,
+                340
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Full-FT: Full fine-tuning of the model parameters."
+                    }
+                ]
+            },
+            "bbox": [
+                509,
+                361,
+                885,
+                392
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• LoRA[ICLR’22](Hu et al., 2022): Low-Rank Adaptation, which injects trainable rank decomposition matrices."
+                    }
+                ]
+            },
+            "bbox": [
+                509,
+                397,
+                885,
+                444
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• DoRA[ICML’24](Liu et al., 2024): Enhances LoRA’s learning capacity and training stability by decomposing weights into magnitude and direction components."
+                    }
+                ]
+            },
+            "bbox": [
+                509,
+                448,
+                885,
+                511
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• DARE[ICML’24](Yu et al., 2024): Parameters from the fine-tuned model are randomly selected and rescaled to preserve both generalization and specialization capabilities."
+                    }
+                ]
+            },
+            "bbox": [
+                509,
+                514,
+                885,
+                579
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Orth-Reg[ECCV’24](Hu et al., 2024): Encourages fine-tuned features to remain orthogonal to pretrained features, thereby preserving model generalization."
+                    }
+                ]
+            },
+            "bbox": [
+                509,
+                581,
+                885,
+                645
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• Model Tailor[ICML’24](Zhu et al., 2024): Pretrained parameters are preserved while a small fraction (e.g., 10%) of fine-tuned parameters is replaced based on salience and sensitivity analysis."
+                    }
+                ]
+            },
+            "bbox": [
+                509,
+                648,
+                887,
+                727
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• LoRASculpt[CVPR’25](Liang et al., 2025): The method prunes redundant LoRA parameters via sparse updates guided by weight importance and conflict-aware regularization."
+                    }
+                ]
+            },
+            "bbox": [
+                509,
+                730,
+                884,
+                795
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• SPIDER[ICML’25](Huang et al., 2025): Updates parameters only where specialization knowledge is more critical than generalization knowledge."
+                    }
+                ]
+            },
+            "bbox": [
+                509,
+                797,
+                884,
+                846
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "Continual instruction tuning. For the MLLM-DCL experiments, we compare against continual learning baselines that are designed for sequential task adaptation:"
+                    }
+                ]
+            },
+            "bbox": [
+                507,
+                856,
+                885,
+                921
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "14"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                510,
+                956
+            ]
+        }
+    ],
+    [
+        {
+            "type": "table",
+            "content": {
+                "image_source": {
+                    "path": "images/3e6e435415b39564fe55f5ae1a656b52c2a0bc128ffc2a42072409c3f5048596.jpg"
+                },
+                "table_caption": [
+                    {
+                        "type": "text",
+                        "content": "Table 11: Detailed Hyperparameter Settings for the Optimal AWARe Configuration."
+                    }
+                ],
+                "table_footnote": [],
+                "html": "<table><tr><td rowspan=1 colspan=2>Hyperparameter                     Value</td></tr><tr><td rowspan=1 colspan=2>Knowledge Profiling Phase</td></tr><tr><td rowspan=1 colspan=1>Calibration Dataset CompositionWhen Upstream Dataset is restricted</td><td rowspan=1 colspan=1>OKVQA, OCRVQA, GQA, TextVQA (200 samples each)MMMU (20 samples each category 600 samples in total)</td></tr><tr><td rowspan=1 colspan=1>Selection StrategyTraining Target ComponentsRetention Quota (ρ)</td><td rowspan=1 colspan=1>Global Highest Activationq_proj, k_proj, v_proj, mm_projector30% (Top 30% salient neurons frozen)</td></tr><tr><td rowspan=1 colspan=2>Downstream Fine-tuning Phase</td></tr><tr><td rowspan=1 colspan=1>EpochsGlobal Batch SizeLearning Rate (LLM Components)Learning Rate (MM Projector)LR SchedulerOptimizer</td><td rowspan=1 colspan=1>316 $2 \\times 1 0 ^ { - 5 }$  $2 \\times 1 0 ^ { - 4 }$ Cosine Annealing (Warmup ratio: 0.03)AdamW</td></tr></table>",
+                "table_type": "complex_table",
+                "table_nest_level": 1
+            },
+            "bbox": [
+                189,
+                82,
+                806,
+                286
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• LoRA-FT[ICLR’22](Hu et al., 2022): Sequential LoRA fine-tuning on each new subtask without an explicit forgetting-mitigation mechanism."
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                337,
+                489,
+                386
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• O-LoRA[EMNLP’23](Wang et al., 2023): Learns new tasks in orthogonal subspaces to reduce interference with previously acquired knowledge."
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                388,
+                489,
+                436
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• MoELoRA[NIPS’24](Chen et al., 2024a): Uses a mixture-of-LoRA-experts design for continual instruction tuning."
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                439,
+                489,
+                487
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• ModalPrompt[EMNLP’25](Zeng et al., 2025): Introduces dual-modality guided prompts to preserve multimodal knowledge during continual learning."
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                489,
+                490,
+                554
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• CL-MoE[CVPR’25](Huai et al., 2025): Uses a dual-momentum mixture-of-experts mechanism for continual multimodal visual question answering."
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                557,
+                490,
+                621
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• HiDe-LLaVA[ACL’25](Guo et al., 2025a): Decouples multimodal continual instruction tuning hierarchically to mitigate forgetting."
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                623,
+                489,
+                671
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• SEFE[ICML’25](Chen et al., 2025): Separates superficial and essential forgetting to preserve important multimodal capabilities."
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                675,
+                490,
+                722
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": {
+                "paragraph_content": [
+                    {
+                        "type": "text",
+                        "content": "• DISCO[ICCV’25](Guo et al., 2025b): Applies federated continual instruction tuning for sequential instruction adaptation."
+                    }
+                ]
+            },
+            "bbox": [
+                114,
+                725,
+                489,
+                772
+            ]
+        },
+        {
+            "type": "page_number",
+            "content": {
+                "page_number_content": [
+                    {
+                        "type": "text",
+                        "content": "15"
+                    }
+                ]
+            },
+            "bbox": [
+                489,
+                942,
+                510,
+                956
+            ]
+        }
+    ]
+]
