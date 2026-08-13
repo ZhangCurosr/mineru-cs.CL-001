@@ -1,0 +1,703 @@
+# FrontierFinance: A Challenging Benchmark for Measuring Frontier Intelligence of Finance Agents
+
+Yuhao Zhang, O. Ozan Koyluoglu, Thejas Venkatesh, Richard Diehl Martinez, Vishank Bhatia, Arash Alidoust, Ashwin Paranjape
+
+Samaya AI
+
+AI agents are increasingly deployed for professional investment research, yet no benchmark captures the complexity of the full investor workflow. Existing benchmarks mainly target financial data extraction—a narrow slice that current models have largely saturated—while reference-based metrics and generic LLM-as-a-judge scoring fall short on the open-ended, long-form answers that real analyst queries demand. We introduce FrontierFinance, a fully open benchmark of 220 expert-crafted queries and 11,543 source-attributed rubrics spanning six crucial use cases across the full investor workflow. FrontierFinance is both broader and harder than existing public finance benchmarks. Evaluating frontier models and agent systems under a common harness restricted to publicly available data, we find that the tool harness, not the model alone, strongly shapes quality and eficiency; that Samaya’s in-house system leads at 56.0%, ahead of the strongest frontier model (Claude Fable 5, 49.2%) at roughly 2.2× lower cost; and that the best open-weight model (Kimi K3, 46.4%) nearly matches the best proprietary model at 4.5× lower cost. Screening & Discovery and Sector, Industry & Macro remain the hardest use cases across all systems, where even the best systems reach only 33% and 39%. We make the dataset and grading code publicly available.
+
+Date: August 13, 2026 Correspondence: research@samaya.ai
+
+Website: https://research.samaya.ai/benchmarks/frontier-finance
+
+## 1 Introduction
+
+Large language models are becoming increasingly capable at agentic tasks: they create multi-step plans, call external tools, retrieve evidence from large corpora, and produce long-form outputs combining structured and unstructured content. Finance is among the most demanding settings for such systems. Professional investment research is open-ended and challenging: it spans idea screening and discovery, company and market research, financial data extraction, portfolio tracking, and catalyst monitoring. Answering a real-world financial query often requires retrieving and synthesizing qualitative and quantitative evidence from many sources, performing causal analysis, and drafting a comprehensive report that meets a strict standard of factual accuracy.
+
+Existing benchmarks capture only a fraction of this work (Table 1). Most public finance evaluation suites focus primarily on financial data extraction, e.g., retrieving a reported figure from a filing or computing a ratio from a table [1, 2, 3, 4]. These tasks are well-defined but narrow, and recent models have largely saturated them. Performance on these static benchmarks is further confounded by data memorization, where models rely on memorized training data rather than true reasoning. Meanwhile, benchmarks probing complex, open-ended financial research remain scarce. The field therefore lacks a shared and suficiently dificult benchmark for real-world finance agent evaluation.
+
+To fill this gap, we introduce FrontierFinance, a publicly released benchmark for evaluating finance agents on professional investment research. It consists of 220 queries and 11,543 rubrics authored through a four-stage curation and audit pipeline by finance domain experts—including former buy-side analysts, sell-side research associates, and investment banking professionals—organized into six use cases spanning the investor workflow (Section 3.1). Each rubric is a binary criterion attributed to a publicly available data source, enabling objective, reproducible scoring via a rubric qualification rate—the majority verdict of three independent LLM judges (Section 5). Compared to existing benchmarks, FrontierFinance is more diverse in use case coverage and significantly harder, and to our knowledge is the largest of its kind (Section 4.2).
+
+We benchmark frontier models and agent systems under a common harness restricted to publicly available data, measuring quality, cost, and latency (Section 6). We find that the harness system, not the underlying model alone, strongly shapes both quality and eficiency. Samaya’s in-house system leads at 56%, ahead of the strongest frontier model deployed under an open-source harness (Claude Fable 5, 49.2%) at roughly 2.2× lower cost. The best open-weight model (Kimi K3, 46.4%) nearly matches frontier performance at 4.5× lower cost. Across all tested systems, we find two use cases, both open-ended in nature, prove hardest and remain largely unsolved: Screening & Discovery and Sector, Industry & Macro, where the best systems reach only 33% and 39%.
+
+Beyond aggregate scores, we analyze agent trajectories to understand how systems difer in behavior (Section 7). Our analysis reveals that tool use follows a common three-phase structure across all systems: data gathering, mid-rollout synthesis and analysis, and answer preparation. Despite very diferent tool-call volumes, top systems tend to display more eficient tool use and converge on similar token budgets. We also uncover failure patterns that may inspire future research: models that navigate directly to known financial sources from parametric knowledge—rather than discovering them through search—incur significantly higher URL error rates, causing token waste and context pollution.
+
+To summarize, our contributions are as follows:
+
+• We release FrontierFinance, an open benchmark of 220 expert-crafted queries and 11,543 source-attributed rubrics spanning six use cases across the full investor workflow, the largest open finance agent benchmark of its kind.
+
+• We characterize the benchmark’s coverage and dificulty through detailed analysis, showing it is both broader and significantly harder than existing public finance benchmarks.
+
+• We systematically evaluate frontier models and agent systems along the quality, cost, and latency dimensions, and report findings on the role of the tool harness, the quality–cost frontier, and the competitiveness of open-weight models.
+
+• Through agent trajectory analysis, we identify common behavior patterns as well as pitfalls that point to opportunities for improving future models.
+
+## 2 Related Work
+
+Early financial QA benchmarks. Financial benchmarks have evolved from document-grounded question answering toward open-ended, agentic research tasks. Early datasets primarily evaluate numerical reasoning over bounded financial documents: FinQA represents solutions as executable programs, TAT-QA combines tabular and textual evidence, and ConvFinQA extends numerical reasoning to multi-turn conversations [2, 3, 4]. FinanceBench evaluates question answering over public-company filings, while DocFinQA and FinanceReasoning introduce longer contexts and more challenging numerical derivations [1, 5, 6]. Broader suites such as FinBen aggregate multiple financial-language tasks into a common evaluation [7]. These benchmarks provide controlled tests of component capabilities, but most supply a bounded evidence set and expect a compact answer, numerical value, or derivation. Consequently, none measures whether an agent can discover relevant evidence, scope the research, and synthesize a comprehensive response to an open-ended analyst request.
+
+Table 1. Comparison of representative finance-agent benchmarks. Rows are grouped by their primary evaluation target. The first five columns indicate whether each benchmark centrally evaluates: open-domain discovery, in which the agent must locate evidence from open search rather than receive a fixed document corpus; long-form output, in which the principal deliverable is a structured research report; workflow breadth, meaning coverage of multiple stages of the professional investor workflow rather than a single task family; expert criteria, meaning task-specific grading requirements authored by finance-domain experts; and source labels, meaning criterion-level annotation of the expected evidence category. The final column reports the number of publicly released examples.
+<table><tr><td>Benchmark</td><td>Primary emphasis</td><td>Open domain</td><td>Long- form</td><td>Workflow breadth</td><td>Expert criteria</td><td>Source labels</td><td>Public examples</td></tr><tr><td colspan="8">DOCUMENT-GROUNDED QUESTION ANSWERING</td></tr><tr><td>FinanceBench [2023]</td><td>Filing-grounded financial QA</td><td>o</td><td>0</td><td>O</td><td>o</td><td>O</td><td>150</td></tr><tr><td colspan="8">AGENTIC RETRIEVAL AND DERIVATION</td></tr><tr><td>Finance Agent Benchmark [2025]</td><td>SEC filings and web research</td><td></td><td></td><td>O</td><td></td><td>0</td><td>27</td></tr><tr><td>BigFinanceBench [2026]</td><td>Auditable financial derivations</td><td></td><td>O</td><td>O</td><td></td><td>0</td><td>50</td></tr><tr><td>Hedge-Bench [2026]</td><td>Expert steps in a fixed</td><td>0</td><td>O</td><td>0</td><td></td><td>O</td><td>102</td></tr><tr><td colspan="8">corpus OPEN-ENDED RESEARCH REPORTS</td></tr><tr><td>FinResearchBench II [2026]</td><td>Rubric-scored research reports</td><td>●</td><td>●</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>FrontierFinance</td><td>Full investor research workflow</td><td></td><td></td><td></td><td></td><td></td><td>220</td></tr></table>
+
+Agentic finance benchmarks. More recent benchmarks explicitly evaluate financial agents equipped with search and specialized tools. The Finance Agent Benchmark contains expert-authored research problems requiring agents to use recent filings and web evidence, while FinSearchComp evaluates time-sensitive retrieval, historical lookup, and complex open-domain financial investigation [8, 12]. FinAgentBench and Fin-RATE focus on agentic retrieval and longitudinal or cross-company reasoning over regulatory filings [13, 14]. Other benchmarks broaden the domain beyond filing research: FinGAIA evaluates multi-tool financial agents, FORCE-Bench targets operational and enterprisefinance workflows, Herculean covers various financial-intelligence tasks, and FinanceComplexQA evaluates complex reasoning over industrial financial documents [15, 16, 17, 18]. Together, these works extend evaluation to include retrieval systems, tools, and agent orchestration.
+
+Evaluating open-ended research answers. Evaluating open-ended, long-form research answers challenges standard methodology. Open-ended analyst requests admit multiple valid choices of evidence, organization, peer set, and analytical path, making exact match and lexical reference metrics insuficient [19]. Holistic LLM judges ofer greater flexibility and can align with human preferences, but their scores may be sensitive to the judge model, prompt, presentation order, response style, and verbosity, while revealing little about what a system actually missed [20, 21]. Fine-grained evaluation avoids these pitfalls by decomposing quality into independently assessable requirements. Such checklist-based methods improve interpretability and inter-judge reliability, and recent long-form research benchmarks increasingly employ task-specific criteria rather than a single overall rating [22, 23, 24, 25]. In earlier work, we proposed Criteria-Eval [26], a checklist-based framework in which finance experts author binary criteria and score systems by the fraction satisfied—an approach that jointly handles retrieval and generation, admits multiple valid answers, and aligns scoring with expert judgment.
+
+Open-ended financial research benchmarks. The closest precedents to our setting evaluate open-ended financial research or professional work products. BigFinanceBench decomposes financial research into point-weighted, independently checkable derivation steps, while FinResearchBench evaluates reports through an intermediate logic tree and FinResearchBench II constructs query-specific rubrics from model-generated reports [9, 27, 11]. FinDeepResearch evaluates standardized companyanalysis reports across markets and languages, Deep FinResearch Bench compares generated research with professional analyst reports, and Hedge-Bench scores verified expert reasoning steps within controlled evidence environments [28, 29, 10]. Complementary artifact-oriented benchmarks focus on constructing financial spreadsheets and models rather than research reports [30, 31].
+
+## 3 Data Collection and Statistics
+
+## 3.1 Data collection
+
+We build FrontierFinance through a four-stage curation and audit pipeline executed entirely by finance experts—including former buy-side equity analysts, sell-side research associates, and investment banking professionals. Figure 1 illustrates this pipeline. We include examples of the resulting annotations in Appendix A.
+
+![](images/c1b15593d7c7b95ce3f1170741e68ecbd1bdd6a3c957865a324f26b63b3a0fc4.jpg)  
+Figure 1. The four-stage data collection process used to construct FrontierFinance, spanning query drafting, dense rubric authoring, multi-expert auditing, and dataset rebalancing.
+
+Stage 1: Workflow mapping and query drafting. Domain experts first mapped the end-to-end investment workflow, identified six use cases (Figure 2), and simulated investment decision-making to craft open-ended queries reflecting real analyst tasks. To test agent robustness, queries deliberately preserve real-world ambiguity: using company names and ticker symbols interchangeably without explicit mapping, specifying multi-quarter or dynamic timeframes that require resolving historical date bounds against filing dates, and framing tasks requiring unbounded retrieval across market caps and peer groups rather than closed context windows.
+
+Stage 2: Rubric authoring and source attribution. For each query, experts constructed binary evaluation rubrics that decompose open-ended research deliverables into independently checkable criteria. Each rubric is annotated with source attribution, tying it to a primary public data source tier such as SEC filings, call transcripts, or market data (Section 4.1). Queries average 52.5 rubrics each, enabling thorough grading of long-form answers.
+
+![](images/db99d8af8bc263f15d18b192a6cfcbcf93e0984a1d872a28d6eac7913708d3a4.jpg)  
+Figure 2. FrontierFinance focuses on 6 use cases that span the entire investment decision-making workflow.
+
+Stage 3: Expert review and multi-stage auditing. Under the help of AI agents, a first panel of experts reviews drafted queries and rubric sets to eliminate subjective phrasing, repeated information, and language that requires a single source when multiple are possible. A secondary panel verifies that every criterion can be objectively evaluated as fulfilled (1) or unfulfilled (0) against public evidence, consolidates redundant rubrics to prevent over-weighting repeated facts, and confirms that all attributed evidence is accessible via public web or regulatory channels without proprietary paywalls. We also tag each rubric along two dimensions: essentiality (mandatory must-have vs. supplementary) and rubric category (an eight-category functional taxonomy; Section 3.2).
+
+Stage 4: Rebalancing and dataset stratification. Steps 1 through 3 yielded over 4,500 fully annotated research queries. From this pool, we assembled the 220 released queries (11,543 total rubrics) comprising FrontierFinance via stratified sampling, reserving the remaining ∼ 4,300 queries for internal development and future releases. The public set is balanced across three axes: use cases (ensuring suficient coverage across all six), capabilities (stratifying across reasoning and search modalities like temporal filtering and cross-entity triangulation), and dificulty (calibrating across Bradley–Terry dificulty terciles; Section 4.2).
+
+Timestamped annotation. One design decision runs through every stage of this pipeline: how we handle time. Time is central to finance, shaping both how a query should be interpreted (a request for the “latest quarter” resolves to diferent periods depending on when it is asked) and what constitutes a good answer (prices, filings, and consensus estimates change continuously). Handling this time-variant nature of real-world questions is a long-standing challenge, and existing benchmarks address it in one of three ways: restricting to time-invariant queries [32, 33], which sharply limits query diversity and is especially restrictive for finance tasks; freezing the data source to a point-in-time corpus [34, 35], which is much smaller and less diverse than the open web and often does not reflect how an agent is deployed in practice; or annotating timestamped queries and rubrics [8], where each query carries a date and the agent answers as if at that date.
+
+We follow this third approach: every FrontierFinance query carries a date field, and its rubrics reflect the state of the world up to that date. We further exclude predictive queries (for example, forecasting the outcome of a future event), which keeps the benchmark robust to the exact web snapshot an agent sees even when data postdating the query date is accessible.
+
+![](images/404af92aff58c52117d39908d7c25e46e59916c39284d1e0bb04aac48262e5f2.jpg)  
+Figure 3. Use-case coverage of FrontierFinance versus public finance benchmarks. Each dot is one query, colored by its use case (grey = outside the six use cases). FrontierFinance spreads its 220 queries across all six use cases, whereas existing benchmarks concentrate almost entirely in financial-data extraction.
+
+## 3.2 Use cases, capabilities, and rubric categories
+
+Examples in FrontierFinance are further tagged along three complementary axes: each query carries a single use case and one or more capabilities, and each rubric is assigned a rubric category. Together they characterize what the benchmark asks of an agent and what a correct answer must contain.
+
+Use cases. Each query is labelled with exactly one of six use cases spanning the investor workflow (Figure 2; full counts and descriptions in Appendix B, Table 6). Financial data extraction is the most common (32% of queries), but no use case dominates, and the open-ended use cases—screening and discovery, and sector, industry, and macro—are well represented. In comparison, existing finance benchmarks concentrate almost entirely on financial-data-extraction queries, leaving harder, open-ended use cases largely untested (Figure 3).
+
+Capabilities. Each query is also tagged with the reasoning and retrieval capabilities it requires. Queries average 1.9 capabilities each (410 tags over 220 queries), reflecting that realistic tasks combine skills. Qualitative synthesis and the three modes of exhaustive retrieval (temporal, cross-entity, and thematic; 147 queries combined) are the most common (see Appendix B, Table 7 for full counts and definitions).
+
+Rubric categories. Each of the 11,543 rubrics is classified by content type using an eight-category taxonomy (Table 8, in Appendix B). Factual data extraction is the plurality (74%), consistent with rubrics being written as objective, checkable criteria; the remaining quarter covers qualitative, forward-looking, analytical, and comparative content.
+
+## 4 Data Analysis
+
+We analyze the collected queries and rubrics in depth to characterize their data-source demands and dificulty relative to existing benchmarks.
+
+![](images/c6ed81db10458c93d169e85eb4443d75067a195311ed0667890a93848ea5fb08.jpg)  
+Figure 4. Rubric-level data source distribution per use case. Each bar shows how a use case’s rubrics break down across data sources (row-normalized to 100%); the bottom bar is all use cases combined. SEC filings are the plurality overall (39%) yet under 40% of rubrics, and the distribution shifts sharply by use case—from filings-driven financial data extraction to company-issued content for earnings and market/professional sources for screening. Full distribution data shown in Appendix B, Table 9.
+
+## 4.1 Data sources distribution
+
+We assign a data source to each rubric using a taxonomy of 10 top-level source categories. Attributing evidence at the rubric level, rather than the query level, lets us characterize the evidence demands of individual queries, use cases, or the benchmark as a whole. The resulting distribution (Appendix B) shows that no single document type dominates.
+
+FrontierFinance covers diverse data sources demanded by professional finance work. SEC filings are the single largest source category, yet they account for under 40% of all rubrics. The remainder spans company-issued material (earnings-call transcripts, investor presentations, earnings releases, annual reports), the analyst’s own professional knowledge (valuation work, model estimates, domain synthesis), live market data, news and media, and regulatory filings.
+
+The source mix shifts substantially across use cases (Figure 4), mirroring how an analyst’s evidence needs change across the workflow. Financial data extraction is overwhelmingly filingsdriven (59% SEC); earnings & events leans on company-issued content (68%, transcripts and releases); sector/industry & macro is carried by professional knowledge (32%) and market data (13%); and screening & discovery is the most source-diverse use case, pulling from market data (29%), professional knowledge (20%), regulatory data (10%), and news (12%) rather than any single dominant source.
+
+## 4.2 Difficulty analysis
+
+We define dificulty as the data-gathering and reasoning efort a financial analyst would need to produce a complete, defensible answer. To place every query on a single scale, we use pairwise judgments aggregated via a Bradley–Terry (BT) model—a well-established approach used by Chatbot Arena to rank models [21, 36] and underlying alignment methods such as DPO [37]. Unlike those model-ranking uses, here we rank queries by dificulty. We score each pair using a consensus of three independent LLM judges reasoning over five axes: retrieval breadth, reasoning depth, entity scope, time scope, and qualitative ambiguity. From ∼77K pairwise judgments across 4K internal queries, we fit a confidence-weighted BT model [38] (Appendix C), yielding one latent dificulty score per query.
+
+Table 2. Dificulty terciles of the FrontierFinance public set (220 queries), by consensus Bradley-Terry (BT) score (higher means more dificult). On all FrontierFinance queries, we see a mean score of 4.84 and standard deviation of 7.16. The bucket cutofs are easy/medium at $\mathrm { B T } = + 0 . 9 4 $ and medium/hard at $\mathrm { B T } = + 7 . 2 5 $ . In the last column, we also include Samaya system’s performance for queries in each dificulty bucket as a reference (using must-have qualification rate as defined in experiments).
+<table><tr><td>Bucket</td><td>Queries</td><td>Share</td><td>BT median</td><td>BT std</td><td>Agent performance</td></tr><tr><td>Hard</td><td>73</td><td>33.2%</td><td>+12.96</td><td>3.62</td><td>0.37</td></tr><tr><td>Medium</td><td>74</td><td>33.6%</td><td>+3.73</td><td>1.85</td><td>0.63</td></tr><tr><td>Easy</td><td>73</td><td>33.2%</td><td>-1.03</td><td>3.23</td><td>0.80</td></tr></table>
+
+Table 3. Example queries and rubric statistics for each dificulty bucket in FrontierFinance. Note that some queries shown have been significantly simplified to fit into the space.
+<table><tr><td>Bucket</td><td>BT</td><td>Rubrics</td><td>Query (simplified)</td><td>Main difficulty driver</td></tr><tr><td>Easy</td><td>-9.9</td><td>7</td><td>“What is the total employee count for US Steel Single fact, one entity, one filing Corporation?&quot;</td><td></td></tr><tr><td>Easy</td><td>-5.7</td><td>37</td><td>“What EPS guidance did Delta provide in its Many rubrics, but all from one earn- latest earnings call?&quot;</td><td>ings call</td></tr><tr><td>Medium</td><td>+3.7</td><td>21</td><td>“Which publicly traded US firms have exposure to robotics?&quot;</td><td>Unbounded entity scope, but shallow per entity</td></tr><tr><td>Medium</td><td>+5.4</td><td>19</td><td>&quot;What have NEE, DUK, SO, and D said about Multi-entity, multi-quarter transcript load-growth expectations in the last year?&quot;</td><td>synthesis</td></tr><tr><td>Hard</td><td>+15.9</td><td>21</td><td>&quot;Identify Nike&#x27;s newly announced FY2025 part- Multi-hop conditional reasoning, ner; then triangulate that partner&#x27;s revenue expo- cross-entity sure across Nike&#x27;s, the partner&#x27;s, and Adidas/UA</td><td></td></tr><tr><td>Hard</td><td>+22.0</td><td>300</td><td>filings.&quot; “Screen $10B+ biotechs with 2025 Phase-3 Unbounded screening + multi-source readouts, rank by analyst price-target dispersion, retrieval + computation then decompose the leader&#x27;s realized vs. implied volatility and 13F flows.&quot;</td><td></td></tr></table>
+
+We split the 220 FrontierFinance queries into easy / medium / hard terciles by BT score, with cutofs at $\mathrm { B T } = + 0 . 9 4 $ and +7.25; Table 2 shows the three buckets are well separated. Note that dificulty is not simply a function of rubric count—the two correlate only moderately (Spearman $\rho = 0 . 7 1 )$ The examples in Table 3 illustrate that the key driver is the type of work required: easy queries resolve inside a single document even when the rubric is long (37 rubrics, all from one earnings call), whereas hard queries require cross-entity resolution, unbounded search, multi-hop reasoning, or causal analysis.
+
+Correlation with agent performance and human efort. Table 2 also reports the performance of Samaya’s agent system (defined in Section 5) averaged across each dificulty bucket. The BT score inversely correlates with system performance: qualification rate declines monotonically across easy, medium, and hard $( 0 . 8 0  0 . 6 3  0 . 3 7 ;$ Spearman $\rho = - 0 . 4 7 )$ . The BT score also correlates with human efort: using expert solve times from the 27 Finance Agent Benchmark v2 queries [8], the median time rises $2 0  4 0  4 5  6 0$ minutes across BT score quartiles (Spearman $\rho = 0 . 6 7 )$ , confirming the score tracks genuine task dificulty.
+
+Comparison to existing finance benchmarks. We compare FrontierFinance against the three most similar public finance benchmarks—FinanceBench [1], BigFinanceBench [9], and Finance
+
+![](images/c3313133d22eb21369c97708bd548684cb9a12041d9c01865c6055b41ac28355.jpg)  
+Figure 5. Bradley–Terry dificulty distribution per benchmark on the shared consensus scale. The IQR box represents interquartile range. The background color bands mark FrontierFinance’s easy/medium/hard buckets (cutofs +0.94 / +7.25). FrontierFinance has the highest median and mean and by far the widest spread, reaching well into the hard band, while the three compared benchmarks sit mostly in the easy/medium range.
+
+Agent Benchmark v2 [8]—positioning all queries onto the same BT scale via anchor pairings (Appendix C). Figure 5 shows FrontierFinance is substantially harder and spans a wider range, with the highest median and widest spread; the three compared benchmarks cluster in the easy and medium ranges. Only 0–2% of Finance Agent v2 and BigFinanceBench queries fall in the hard category, and FinanceBench—designed as single-fact 10-K lookups—is entirely easy. This gap reflects task design: FrontierFinance targets multi-source synthesis tasks rather than single-document lookups. Full statistics are in Appendix C (Tables 13 and 14).
+
+## 5 Experiment Setup
+
+Frontier agentic AI systems have two essential parts: the LLM backbone, which decides what tool calls to make and what responses to generate, and the agent harness—the surrounding software (prompts, tools, execution environments, and the orchestration loop) through which the LLM perceives and acts on its environment.
+
+With FrontierFinance, we benchmark frontier models and systems using three distinct types of harnesses:
+
+• Web search harness: a minimal harness pairing each model with its built-in web search tool, providing a baseline for web-search-only performance.
+
+• Finance Agent v2 harness: an open-source harness connecting the model to six specialized tools: the SEC EDGAR API, a market price data API, web search, HTML parsing, long-HTML search, and a calculator [8]. Included as a reproducible agent harness created specifically for finance tasks.
+
+• In-house Samaya agent harness: a production-grade harness combining Samaya’s custom models, tools, data index, and retrieval engines, optimized for both quality and eficiency. Included to benchmark how a highly optimized finance harness performs.
+
+Implementation Details. For the web search harness, we evaluated Claude Opus 4.8, GPT 5.5, and Gemini 3.1 Pro paired with their built-in web search APIs, with reasoning efort at each model’s API default.
+
+For the Finance Agent v2 harness, we adapted its original implementation<sup>1</sup> and made two changes. First, we re-implemented the agent orchestration with the LangChain library for maximum compatibility with existing models and frameworks. Second, we introduced tool call limits of 200 tool calls and 300 seconds, ensuring evaluation under a realistic finite budget. These limits are included in the system prompt; when either is hit, the model is prompted to provide a final response. We applied the same limits to the in-house Samaya agent harness for fair comparison. We include the system and user prompts in Appendix E.
+
+For all model calls, we set the temperature to 1.0 wherever required. We enable thinking or reasoning mode and leave the reasoning efort at each model’s API default, as listed in Table 4. We leave all other decoding parameters, such as top � or top �, to their API defaults. We include additional API endpoint information in Appendix D.
+
+Query Date Handling. For all tested systems, we provide both the query and its associated query date as input, and prompt the system to anchor its research on that date. For Samaya’s in-house harness, we additionally apply the query date as a retrieval cut-of for any data indexed in-house.
+
+## 5.1 Evaluation Metrics
+
+We evaluate systems along three dimensions: answer quality, cost, and latency.
+
+Answer Quality. We measure answer quality using the Rubric Qualification Rate. Let � represent the total number of queries in FrontierFinance. Each query $q _ { i }$ has a set of expert-authored binary rubrics $R _ { i } = \{ r _ { i , 1 } , . . . , r _ { i , M _ { i } } \}$ , with $M _ { i } = \left| R _ { i } \right|$ . Given a system’s answer $a _ { i }$ to query $q _ { i }$ , a group of LLM judges evaluates each rubric independently and returns a binary verdict
+
+$$
+s ( r _ { i , j } , a _ { i } ) \in \{ 0 , 1 \} ,\tag{1}
+$$
+
+where 1 indicates that $a _ { i }$ satisfies $r _ { i , j }$ and 0 otherwise.
+
+We define per-query qualification rate as the fraction of that query’s rubrics satisfied by the answer:
+
+$$
+Q _ { i } = \frac { 1 } { M _ { i } } \sum _ { j = 1 } ^ { M _ { i } } s ( r _ { i , j } , a _ { i } ) \in [ 0 , 1 ] .\tag{2}
+$$
+
+At dataset level, we then calculate Macro-averaged Rubric Qualification Rate as the mean of the per-query rates over all queries and use it to represent a system’s performance:
+
+$$
+\mathbf { R } = \frac { 1 } { N } \sum _ { i = 1 } ^ { N } Q _ { i } = \frac { 1 } { N } \sum _ { i = 1 } ^ { N } \frac { 1 } { M _ { i } } \sum _ { j = 1 } ^ { M _ { i } } s ( r _ { i , j } , a _ { i } ) .\tag{3}
+$$
+
+We report two variants: $R _ { \mathrm { a l l } }$ over all rubrics and $R _ { \mathrm { m u s t - h a v e } }$ over the must-have subset. We use macro over micro averaging so that the metric rewards consistent performance across all queries, rather than excelling on a few high-rubric-count queries at the expense of others.
+
+We score each rubric by majority vote across three independent LLM judges: GPT 5.4, Gemini 3.1 Pro, and Claude Sonnet 4.6. We chose this ensemble to avoid single-provider bias and because their majority votes closely matched a larger committee of nine judges in preliminary experiments. The judge prompt includes finance-specific instructions. We include the LLM judge prompt in Appendix F and open-source our grading pipeline for reproducibility.
+
+Latency. We measure per-query latency as wall-clock time from query receipt to full answer, averaged over all queries.
+
+Table 4. System performance on FrontierFinance, grouped by harness and ranked by rubric qualification rate within each group. $R _ { \mathrm { a l l } }$ represents macro-averaged qualification rate over all rubrics and $R _ { \mathrm { m u s t - h a v e } }$ represents qualification rate over the must-have subset of rubrics. Reasoning efort is the API default for the underlying model. Overall best results are highlighted with boldface, and best results within each harness category are underlined. Average cost for Gemini 3.1 Pro under Web Search Harness is not shown because we were not able to obtain a fair estimate of the LLM cost from their search-grounded API.
+<table><tr><td>System</td><td>Reasoning effort</td><td>(%)  $R _ { \mathrm { a l l } }$ </td><td> $R _ { \mathrm { { m u s t - h a v e } } } \left( \% \right)$ </td><td>Avg. latency (s)</td><td>Avg. cost ($)</td></tr><tr><td>Web Search Harness</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Claude Opus 4.8</td><td>high</td><td>33.0</td><td>40.6</td><td>53.9</td><td>1.47</td></tr><tr><td>Gemini 3.1 Pro</td><td>high</td><td>30.7</td><td>39.4</td><td>91.1</td><td></td></tr><tr><td>GPT 5.5</td><td>medium</td><td>20.7</td><td>26.5</td><td>192.1</td><td>0.55</td></tr><tr><td>Finance Agent v2 Harness</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Claude Fable 5</td><td>high</td><td>49.2</td><td>57.6</td><td>164.5</td><td>4.06</td></tr><tr><td>GPT 5.6 Sol</td><td>medium</td><td>46.8</td><td>57.2</td><td>170.7</td><td>3.03</td></tr><tr><td>Kimi K3</td><td>max</td><td>46.4</td><td>56.4</td><td>336.0</td><td>0.90</td></tr><tr><td>Gemini 3.6 Flash</td><td>medium</td><td>46.3</td><td>54.2</td><td>163.6</td><td>2.41</td></tr><tr><td>Claude Opus 4.8</td><td>high</td><td>45.0</td><td>53.7</td><td>155.8</td><td>2.61</td></tr><tr><td>GPT 5.5</td><td>medium</td><td>43.5</td><td>53.2</td><td>233.0</td><td>2.80</td></tr><tr><td>GLM 5.2</td><td>max</td><td>42.8</td><td>50.1</td><td>296.5</td><td>0.63</td></tr><tr><td>DeepSeek V4 Pro</td><td>high</td><td>40.5</td><td>50.1</td><td>202.6</td><td>0.68</td></tr><tr><td>Gemini 3.1 Pro</td><td>high</td><td>30.5</td><td>39.7</td><td>221.9</td><td>1.72</td></tr><tr><td>Samaya In-house Harness</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Samaya (high effort)</td><td></td><td>56.0</td><td>61.7</td><td>277.8</td><td>1.81</td></tr><tr><td>Samaya</td><td>1</td><td>52.9</td><td>58.5</td><td>218.1</td><td>0.93</td></tr></table>
+
+Cost. We measure per-query cost as the API cost of the agentic LLM, excluding external APIs, storage, and data-index pricing for which precise estimates are hard to obtain. We account for cached and non-cached input tokens at their respective rates, crediting models that ofer lower cached-token pricing.
+
+## 6 Results
+
+The harness shapes performance and cost more than the underlying model. Harness type is the dominant factor in system performance (Table 4). The best system under the Samaya harness outperforms the best under the Finance Agent v2 harness, which in turn outperforms the best web search system—and this ordering holds across all six use cases and rubric categories (Figure 7). The Samaya harness also achieves its advantage at lower cost: Samaya (high efort) leads at 56% while the best FA-v2 system (Claude Fable 5) reaches 49.2%.
+
+Top proprietary models show non-linear quality–cost scaling but no latency penalty. Among proprietary models under the Finance Agent v2 harness, Claude Fable 5 leads at 49.2%, followed closely by GPT 5.6 Sol at 46.8% (Figure 6). Quality and cost do not scale linearly: Fable 5 achieves a relative 9% gain over Claude Opus 4.8 while incurring 56% more cost, and a further 5% gain over GPT 5.6 Sol at 34% more cost. Notably, this quality advantage does not come with a latency penalty—both Fable 5 and GPT 5.6 Sol are among the fastest systems under this harness, a pattern we trace to their more eficient tool use in Section 7.
+
+![](images/1ec646b0a58ecd5418e349969ecca8164cdbf9476640f945a9ce1e19c3a69692.jpg)
+
+![](images/d58178a16e9d5644b93fade7f7a05c3d823296a9b3866e47330e044cf8912992.jpg)  
+Figure 6. Model performance under the open-source Finance Agent v2 harness. Left: rubric qualification rate versus cost per query. Right: rubric qualification rate versus latency per query. In both figures, models toward the top-left ofer a better quality-cost (or quality-latency) tradeof.
+
+![](images/9f727f5e4a98b69603131dd2b1cb705ba6144a21dfb527f23acf9d2a0423cf1d.jpg)  
+Figure 7. Radar charts showing how system performance varies by use case (left) and rubric categories (right). For use case we report macro-averaged rubric qualification rate, as main results. For rubric breakdown we report micro-averaged rubric qualification rate. For readability, we only include best systems under each harness type.
+
+Open-weight models match proprietary quality at a fraction of the cost, within two months of release. Kimi K3, the best open-weight model, reaches 46.4%—just 0.4pp behind GPT 5.6 Sol (46.8%) and 2.8pp behind Claude Fable 5 (49.2%)—at \$0.90 per query versus \$3.03 and \$4.06 respectively. Two of the four models on the quality–cost Pareto frontier are open-weight: GLM 5.2 (\$0.63, 42.8%) and Kimi K3 (\$0.90, 46.4%) ofer the best quality-per-dollar among all systems, with no proprietary model matching their eficiency at comparable quality levels. Figure 8 shows the gap is closing fast: GLM 5.2 nearly matched GPT 5.5 (42.8% vs 43.5%) within 1.8 months of its release, and Kimi K3 surpassed Claude Opus 4.8 (46.4% vs 45.0%) within 1.6 months, with an average open-to-proprietary gap of just 4.8 percentage points.
+
+Model performance scales with reasoning efort, but with diminishing returns. This holds across harnesses and models. Within the Samaya harness, the high-efort variant improves qualification rate by a relative 6% over the default but at roughly 2× the cost. Among FA-v2 models, Figure 9 (left) shows the same pattern: all three selected models produce higher qualification rates as efort increases, but returns diminish beyond each model’s default level. GPT 5.6 Sol plateaus at medium efort with a slight downward trend at higher settings. Kimi K3 shows an unconventional pattern: at max efort, its qualification rate rises while its cost falls—higher reasoning induces more eficient tool use, reducing tool calls from 26.7 at high to 19.6 at max.
+
+Model Release Date  
+![](images/85d328717de3f06d857a2bbb7eb53bff45746aee6d08d741a7951a9eadcc7567.jpg)  
+Figure 8. Frontier performance on FrontierFinance from proprietary versus open-weight models against model release date. All models shown are evaluated under the Finance Agent v2 harness.
+
+![](images/e75dc9dbc26de226c204535b270eadc1f79d0511a27da48b596418b1e6ec51eb.jpg)
+
+![](images/9d40f79d1171630f6d4bcb014a33e667af477cb5221c23d34eb09265d5926872.jpg)  
+Figure 9. Further analysis of model performance under Finance Agent v2 harness. Left: performance of GPT 5.6 Sol, Opus 4.8 and Kimi K3 under varying reasoning efort settings. Right: correlation of model qualification rate for all rubrics and must-have rubrics under diferent system harnesses.
+
+Must-have and all-rubric qualification rates are near-perfectly correlated. All rubrics carry a boolean must-have label indicating whether an answer is significantly incomplete without that criterion. Figure 9 (right) plots $R _ { \mathrm { a l l } }$ against $R _ { \mathrm { m u s t - h a v e } }$ for all systems. The two correlate at $r = 0 . 9 9$ across all evaluated systems, suggesting that $R _ { \mathrm { m u s t - h a v e } }$ is a reliable proxy for overall qualification rate.
+
+## 7 Model Trajectory Analysis
+
+We analyze model trajectories in depth to understand how behavioral diferences drive eficiency and performance diferences. For consistency, we restrict this analysis to systems using the Finance Agent v2 harness. Our analysis reveals the key findings below.
+
+Models vary sharply in parallelism and tool-call volume, yet top performers converge on similar latency. Table 5 presents overall trajectory statistics for various models. Models difer most sharply in tools per turn: GPT 5.6 Sol batches most aggressively at 5.86 tools/turn, finishing in just 8.9 turns; Gemini 3.6 Flash is at the opposite extreme, issuing every call sequentially (1.00 tools/turn) across 25.9 turns—roughly 3× longer than its peers. The two best-performing models sit at opposite ends of total tool-call volume: Claude Fable 5 (49.2%) issues only 16.6 calls per query while GPT 5.6 Sol (46.8%) issues 46.3—nearly 3× more—suggesting that tool-call volume alone does not determine quality. Total output tokens vary considerably (3k–25k), but answer tokens are stable across top models at 1.6k–1.9k per query; the remainder is thinking and tool invocation tokens, with thinking tokens likely dominating since invocations are short by nature. Despite these diferences in parallelism and output volume, Fable 5 (164.5s), GPT 5.6 Sol (170.7s), and Gemini 3.6 Flash (163.6s) post nearly identical latencies—suggesting the two strategies trade of in wall-clock time. We find no clear correlation between answer token length and qualification rate.
+
+Table 5. Trajectory statistics for diferent models under the Finance Agent v2 harness, ordered by qualification rate. $R _ { \mathrm { a l l } }$ is the macro-averaged qualification rate over all rubrics. Total output, Answer tokens, Tool calls, and Turns represent per-query mean statistics over all answered queries, where total output tokens include output tokens for thinking, tool calls and final answers, and each turn could have multiple parallel tool calls. Avg. tool / turn is calculated by dividing total tool calls over total turns and then taking macro average, excluding the closing submit turn.
+<table><tr><td>System</td><td> $R _ { \mathrm { a l l } }$  (%)</td><td>Total output</td><td>Answer tokens</td><td>Tool calls</td><td>Turns</td><td>Avg. tools / turn</td></tr><tr><td>Claude Fable 5</td><td>49.2</td><td>14,119</td><td>1,753</td><td>16.6</td><td>7.5</td><td>2.55</td></tr><tr><td>GPT 5.6 Sol</td><td>46.8</td><td>12,545</td><td>1,930</td><td>46.3</td><td>8.9</td><td>5.86</td></tr><tr><td>Kimi K3</td><td>46.4</td><td>15,828</td><td>1,854</td><td>19.6</td><td>10.4</td><td>2.09</td></tr><tr><td>Gemini 3.6 Flash</td><td>46.3</td><td>24,820</td><td>1,946</td><td>24.8</td><td>25.9</td><td>1.00</td></tr><tr><td>Claude Opus 4.8</td><td>45.0</td><td>12,445</td><td>1,644</td><td>16.1</td><td>8.0</td><td>2.32</td></tr><tr><td>GPT 5.5</td><td>43.5</td><td>14,406</td><td>1,814</td><td>33.7</td><td>18.6</td><td>1.92</td></tr><tr><td>GLM 5.2</td><td>42.8</td><td>22,673</td><td>2,580</td><td>26.9</td><td>13.3</td><td>2.19</td></tr><tr><td>DeepSeek V4 Pro</td><td>40.5</td><td>11,464</td><td>2,162</td><td>41.1</td><td>21.3</td><td>2.03</td></tr><tr><td>Gemini 3.1 Pro</td><td>30.5</td><td>3,276</td><td>859</td><td>16.1</td><td>15.6</td><td>1.10</td></tr></table>
+
+Systems share a similar tool mix, with characteristic model-family diferences. Web search dominates tool usage in nearly every system, followed by page parsing and retrieval; price history is negligible throughout (Figure 10 left; full split in Appendix G). Within this common shape, model-family patterns emerge: GPT 5.6 Sol directs 44.8% of calls to web search, the highest of the four; Gemini systems and GLM 5.2 allocate the most to EDGAR full-text search; and Claude Fable 5’s most-used tool is page parsing.
+
+Tool use follows a common three-phase trajectory. Figure 10 (right) plots tool-call composition over each system’s rollout, normalized to query length. All four systems open with a data-gathering phase in which web and EDGAR search account for at least 80% of calls in the first 10% of the rollout. A research phase follows, with page parsing and corpus retrieval dominating mid-rollout activity as systems read the sources their searches surfaced. The final phase is answer preparation, marked by a sharp shift toward the calculator—for Fable 5, 80% of calls in the last 10% of the rollout. This structure holds irrespective of rollout length and call volume, suggesting the phase boundaries reflect task structure more than any one model’s policy. Systems difer mainly in how decisively they transition: Fable 5 shows the sharpest phase separation, while GPT 5.6 Sol continues issuing web searches well into the final quarter.
+
+![](images/5543e7859ac36fba84b2a5950a76d403b9784d83bf7a5e7f351cb59e63d58af5.jpg)  
+Figure 10. Tool-use behavior under the Finance Agent v2 harness, for four top-performing models. Left: share of each system’s tool calls going to each of the six tools. Right: evolution of the tool mix over the rollout, normalized to each query’s own rollout length.
+
+Some top-performing models recall sources from parametric knowledge, sidestepping discovery. We track the origin of every HTML page a model attempts to crawl and parse, classifying each link as coming from a past search (its domain appeared previously in the same trace) or from the model’s parametric knowledge (the domain appears without prior search history). The two Claude models and Kimi K3 draw on parametric knowledge at substantially higher rates than the rest: 26.7% of Fable 5’s parses target self-produced domains, roughly half that rate for Kimi K3 and Claude Opus 4.8, while every other system sits below 5% (Gemini 3.6 Flash produces zero across 1,093 parses; Figure 11 left). These models navigate directly to canonical financial sources—sec.gov, fred.stlouisfed.org, macrotrends.net—rather than discovering them through search. While this may appear as a good property of the model, we uncover a particular failure pattern that results from it: URLs from parametric knowledge incur significantly higher access error rates—due to hallucinated URLs or pages blocking crawling—than search-discovered URLs (Figure 11 right), causing token waste and context pollution.
+
+## 8 Limitations
+
+FrontierFinance anchors each query to a specific date (Section 3.1), which ensures reproducible evaluation today but introduces a temporal limitation as models advance. As future LLMs are trained on data postdating the query dates, they may answer from parametric knowledge rather than through active retrieval and tool use—the very capabilities the benchmark is designed to test. This risk mirrors the failure pattern we observe in current models (Section 7), but will grow more acute over time. Periodic re-annotation with newer query dates is one way to mitigate this issue.
+
+Use cases such as Screening & Discovery are inherently subjective: two analysts might produce diferent yet equally valid answers. A system whose answer overlaps with the rubric may outscore one with an equally correct but diferently framed response. We note, however, that this limitation is mitigated by statistical power: averaged across a large number of uncorrelated query-rubric pairs, a higher qualification rate still indicates stronger alignment with the analysis process that reflects financial best practices. The evaluation is therefore fair at scale even where individual queries are subjective. In this work we spread the annotation budget over more queries; future work could collect multiple rubrics per subjective query to score systems more precisely.
+
+![](images/cfd0bc51403bd764dd2d5fddb7c0fcf896de1948d0390692e520db546e644121.jpg)
+
+![](images/820882bdf7c81eb64e9a01357487339edfc2ab3975b6cd3be9bfd7be3d57f7e1.jpg)  
+Figure 11. Origin of the links each system attempts to crawl and parse with the parse\_html\_page tool and the distribution of URL parse errors resulting from it. Left: share of URL links coming from parametric knowledge rather than past search tool calls (total URL attempts in brackets). Right: parse error rate by link origin, for systems with more than 2.5% of parses from parametric knowledge (parametric-knowledge parse count in brackets).
+
+## 9 Conclusion
+
+We presented FrontierFinance, an open benchmark for evaluating AI agents on professional investment research. By spanning six use cases across the full investor workflow and scoring long-form answers against expert-authored, source-attributed rubrics, FrontierFinance measures capabilities that existing finance benchmarks largely overlook. Our evaluation shows that the benchmark is broad and dificult, that the tool harness shapes performance as much as the underlying model, and that substantial headroom remains, particularly on use cases requiring broad screening and macro-oriented research. We release the dataset and grading code, and we hope FrontierFinance serves as a shared standard for measuring progress on finance AI agents. As models and systems advance, we plan to expand the benchmark from our larger internal annotation pool and to report results on new systems over time.
+
+## 10 Acknowledgement
+
+We thank Christos Baziotis, Jack Hessel, Jack Santos Silva and Mingyi Yang for their contribution to early data collection process, and Suharsh Sivakumar, Kyle Chang and Bram Mulders for providing engineering and infrastructure support.
+
+## References
+
+[1] Pranab Islam, Anand Kannappan, Douwe Kiela, Rebecca Qian, Nino Scherrer, and Bertie Vidgen. FinanceBench: A new benchmark for financial question answering, 2023. URL https://arxiv.org/abs/2311.11944.
+
+[2] Zhiyu Chen, Wenhu Chen, Charese Smiley, Sameena Shah, Iana Borova, Dylan Langdon, Reema Moussa, Matt Beane, Ting-Hao Huang, Bryan Routledge, and William Yang Wang. FinQA: A
+
+dataset of numerical reasoning over financial data. In Proceedings ofthe 2021 Conference on Empirical Methods in Natural Language Processing, pages 3697–3711, Online and Punta Cana, Dominican Republic, November 2021. Association for Computational Linguistics. doi: 10. 18653/v1/2021.emnlp-main.300. URL https://aclanthology.org/2021.emnlp-main. 300/.
+
+[3] Fengbin Zhu, Wenqiang Lei, Youcheng Huang, Chao Wang, Shuo Zhang, Jiancheng Lv, Fuli Feng, and Tat-Seng Chua. TAT-QA: A question answering benchmark on a hybrid of tabular and textual content in finance. In Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers), pages 3277–3287, Online, August 2021. Association for Computational Linguistics. doi: 10.18653/v1/2021.acl-long.254. URL https://aclanthology.org/2021.acl-long.254/.
+
+[4] Zhiyu Chen, Shiyang Li, Charese Smiley, Zhiqiang Ma, Sameena Shah, and William Yang Wang. ConvFinQA: Exploring the chain of numerical reasoning in conversational finance question answering. In Proceedings ofthe 2022 Conference on Empirical Methods in Natural Language Processing, pages 6279–6292, Abu Dhabi, United Arab Emirates, December 2022. Association for Computational Linguistics. doi: 10.18653/v1/2022.emnlp-main.421. URL https://aclanthology.org/2022.emnlp-main.421/.
+
+[5] Varshini Reddy, Rik Koncel-Kedziorski, Viet Dac Lai, Michael Krumdick, Charles Lovering, and Chris Tanner. DocFinQA: A long-context financial reasoning dataset. In Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers), pages 445–458, Bangkok, Thailand, August 2024. Association for Computational Linguistics. doi: 10.18653/v1/2024.acl-short.42. URL https://aclanthology.org/2024. acl-short.42/.
+
+[6] Zichen Tang, Haihong E, Ziyan Ma, Haoyang He, Jiacheng Liu, Zhongjun Yang, Zihua Rong, Rongjin Li, Kun Ji, Qing Huang, Xinyang Hu, Yang Liu, and Qianhe Zheng. FinanceReasoning: Benchmarking financial numerical reasoning more credible, comprehensive and challenging. In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 15721–15749, Vienna, Austria, July 2025. Association for Computational Linguistics. doi: 10.18653/v1/2025.acl-long.766. URL https://aclanthology.org/2025.acl-long.766/.
+
+[7] Qianqian Xie, Weiguang Han, Zhengyu Chen, Ruoyu Xiang, Xiao Zhang, Yueru He, Mengxi Xiao, Dong Li, Yongfu Dai, Duanyu Feng, Yijing Xu, Haoqiang Kang, Ziyan Kuang, Chenhan Yuan, Kailai Yang, Zheheng Luo, Tianlin Zhang, Zhiwei Liu, Guojun Xiong, Zhiyang Deng, Yuechen Jiang, Zhiyuan Yao, Haohang Li, Yangyang Yu, Gang Hu, Jiajia Huang, Xiao-Yang Liu, Alejandro Lopez-Lira, Benyou Wang, Yanzhao Lai, Hao Wang, Min Peng, Sophia Ananiadou, and Jimin Huang. FinBen: A holistic financial benchmark for large language models. In Advances in Neural Information Processing Systems, volume 37, pages 95716–95743. Curran Associates, Inc., 2024. URL https://proceedings.neurips.cc/paper\_files/ paper/2024/hash/adb1d9fa8be4576d28703b396b82ba1b-Abstract-Datasets\_and\_ Benchmarks\_Track.html.
+
+[8] Antoine Bigeard, Langston Nashold, Rayan Krishnan, and Shirley Wu. Finance agent benchmark: Benchmarking LLMs on real-world financial research tasks, 2025. URL https://arxiv. org/abs/2508.00828.
+
+[9] Alex Wang, Georg Meinhardt, Jacob Katz, Joseph H. Kim, Pratyush K. Chaudhary, Chase Blagden, and Eric Xu. BigFinanceBench: A workflow-grounded benchmark for financialresearch agents, 2026. URL https://arxiv.org/abs/2606.03829.
+
+[10] Eric Cho, Shawn Huang, Alice Lu, and Andy Lyu. Hedge-Bench: Benchmarking agents on hard, realistic tasks pertaining to financial reasoning, 2026. URL https://arxiv.org/abs/ 2606.03918.
+
+[11] Beidi Luan, Rui Sun, Sinuo Wang, Yan Gu, Chao Li, Zhenliang Xiong, Jing Li, and Zuo Bai. FinResearchBench II: A deep research benchmark with consensus-derived gold rubrics for distinguishing financial report quality, 2026. URL https://arxiv.org/abs/2607.12252.
+
+[12] Liang Hu, Jianpeng Jiao, Jiashuo Liu, Yanle Ren, Zhoufutu Wen, Kaiyuan Zhang, Xuanliang Zhang, Xiang Gao, Tianci He, Fei Hu, Yali Liao, Zaiyuan Wang, Chenghao Yang, Qianyu Yang, Mingren Yin, Zhiyuan Zeng, Ge Zhang, Xinyi Zhang, Xiying Zhao, Zhenwei Zhu, Hongseok Namkoong, Wenhao Huang, and Yuwen Tang. FinSearchComp: Towards a realistic, expert-level evaluation of financial search and reasoning, 2025. URL https://arxiv.org/abs/2509. 13160.
+
+[13] Chanyeol Choi, Jihoon Kwon, Alejandro Lopez-Lira, Chaewoon Kim, Minjae Kim, Juneha Hwang, Jaeseon Ha, Hojun Choi, Suyeol Yun, Yongjin Kim, and Yongjae Lee. FinAgentBench: A benchmark dataset for agentic retrieval in financial question answering, 2025. URL https: //arxiv.org/abs/2508.14052.
+
+[14] Yidong Jiang, Junrong Chen, Eftychia Makri, Jialin Chen, Peiwen Li, Ali Maatouk, Leandros Tassiulas, Eliot Brenner, Bing Xiang, and Rex Ying. Fin-RATE: A real-world financial analytics and tracking evaluation benchmark for LLMs on SEC filings, 2026. URL https: //arxiv.org/abs/2602.07294.
+
+[15] Lingfeng Zeng, Fangqi Lou, Zixuan Wang, Jiajie Xu, Jinyi Niu, Mengping Li, Yifan Dong, Qi Qi, Wei Zhang, Ziwei Yang, Jun Han, Ruilun Feng, Ruiqi Hu, Lejie Zhang, Zhengbo Feng, Yicheng Ren, Xin Guo, Zhaowei Liu, Dongpo Cheng, Weige Cai, and Liwen Zhang. FinGAIA: A chinese benchmark for AI agents in real-world financial domain, 2025. URL https://arxiv.org/abs/2507.17186.
+
+[16] Wolfgang M. Pauli, Sarah Panda, Kidus Admassu, Said Bleik, Ademola Okerinde, and Jeremy Reynolds. FORCE-Bench: A benchmark, dataset, and evaluation harness for agentic AI in enterprise finance, 2026. URL https://arxiv.org/abs/2607.19409.
+
+[17] Xueqing Peng, Zhuohan Xie, Yupeng Cao, Haohang Li, Lingfei Qian, Yan Wang, Vincent Jim Zhang, Huan He, Xuguang Ai, Linhai Ma, Ruoyu Xiang, Yueru He, Yi Han, Shuyao Wang, Yuqing Guo, Mingyang Jiang, Yilun Zhao, Youzhong Dong, Xiaoyu Wang, Yankai Chen, Ye Yuan, Qiyuan Zhang, Fuyuan Lyu, Haolun Wu, Yonghan Yang, Zichen Zhao, Yuyang Dai, Fan Zhang, Rania Elbadry, Ayesha Gull, Muhammad Usman Safder, Nuo Chen, Fengbin Zhu, Tianshi Cai, Zimu Wang, Polydoros Giannouris, Yuechen Jiang, Zhiwei Liu, Mohsinul Kabir, Yuyan Wang, Yixiang Zheng, Yangyang Yu, Weijin Liu, Wenbo Cao, Anke Xu, Peng Lu, Jerry Huang, Fengran Mo, Mingquan Lin, Prayag Tiwari, Yijia Zhao, Victor Gutierrez Basulto, Xiao-Yang Liu, Kaleb E. Smith, Jiahuan Pei, Arman Cohan, Jimin Huang, Yuehua Tang, Alejandro Lopez-Lira, Xi Chen, Xue Liu, Junichi Tsujii, Jian-Yun Nie, and Sophia Ananiadou. Herculean: An agentic benchmark for financial intelligence, 2026. URL https://arxiv.org/abs/2605.14355.
+
+[18] Xianfu Cheng, Shiwei Zhang, Jiyu Zhao, Jian Yang, Xinyuan Wang, Ming Zhou, Weixiao Zhou, Xiangyuan Guan, Xiang Li, Zhenhe Wu, Ziyi Ni, Zhoujun Li, and Bingjing Xu. FinanceComplexQA: Benchmarking agentic reasoning on industrial-grade financial documents, 2026. URL https://arxiv.org/abs/2607.19238.
+
+[19] Fangyuan Xu, Yixiao Song, Mohit Iyyer, and Eunsol Choi. A critical evaluation of evaluations for long-form question answering. In Proceedings ofthe 61st Annual Meeting ofthe Association for Computational Linguistics (Volume 1: Long Papers), pages 3225–3245, Toronto, Canada, July 2023. Association for Computational Linguistics. doi: 10.18653/v1/2023.acl-long.181. URL https://aclanthology.org/2023.acl-long.181/.
+
+[20] Yang Liu, Dan Iter, Yichong Xu, Shuohang Wang, Ruochen Xu, and Chenguang Zhu. G-Eval: NLG evaluation using GPT-4 with better human alignment. In Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing, pages 2511–2522, Singapore, December 2023. Association for Computational Linguistics. doi: 10.18653/v1/2023. emnlp-main.153. URL https://aclanthology.org/2023.emnlp-main.153/.
+
+[21] Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan Zhuang, Zhanghao Wu, Yonghao Zhuang, Zi Lin, Zhuohan Li, Dacheng Li, Eric P. Xing, Hao Zhang, Joseph E. Gonzalez, and Ion Stoica. Judging LLM-as-a-judge with MT-Bench and chatbot arena. In Advances in Neural Information Processing Systems, volume 36, pages 46595–46623. Curran Associates, Inc., 2023. URL https://proceedings.neurips.cc/paper\_files/paper/2023/hash/ 91f18a1287b398d378ef22505bf41832-Abstract-Datasets\_and\_Benchmarks.html.
+
+[22] Rahul K. Arora, Jason Wei, Rebecca Soskin Hicks, Preston Bowman, Joaquin Quiñonero-Candela, Foivos Tsimpourlas, Michael Sharman, Meghan Shah, Andrea Vallone, Alex Beutel, Johannes Heidecke, and Karan Singhal. HealthBench: Evaluating large language models towards improved human health. 2025. URL https://arxiv.org/abs/2505.08775.
+
+[23] Yukyung Lee, JoongHoon Kim, Jaehee Kim, Hyowon Cho, Jaewook Kang, Pilsung Kang, and Najoung Kim. CheckEval: A reliable LLM-as-a-judge framework for evaluating text generation using checklists. In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing, pages 15771–15798, Suzhou, China, November 2025. Association for Computational Linguistics. doi: 10.18653/v1/2025.emnlp-main.796. URL https://aclanthology.org/2025.emnlp-main.796/.
+
+[24] Manasi Sharma, Chen Bo Calvin Zhang, Chaithanya Bandi, Clinton Wang, Ankit Aich, Huy Nghiem, Tahseen Rabbani, Ye Htet, Brian Jang, Sumana Basu, Aishwarya Balwani, Denis Peskof, Marcos Ayestaran, Sean M. Hendryx, Brad Kenstler, and Bing Liu. ResearchRubrics: A benchmark of prompts and rubrics for evaluating deep research agents, 2025. URL https: //arxiv.org/abs/2511.07685.
+
+[25] Jie Ruan, Inderjeet Nair, Shuyang Cao, Amy Liu, Sheza Munir, Micah Pollens-Dempsey, Tifany Chiang, Lucy Kates, Nicholas David, Sihan Chen, Ruxin Yang, Yuqian Yang, Jasmine Gump, Tessa Bialek, Vivek Sankaran, Margo Schlanger, and Lu Wang. ExpertLongBench: Benchmarking language models on expert-level long-form generation tasks with structured checklists, 2025. URL https://arxiv.org/abs/2506.01241.
+
+[26] Christos Baziotis. Criteria-Eval: Evaluating long-form answers to complex questions. Samaya AI Technical Blog, June 2025. URL https://samaya.ai/blog/criteria-eval. Contributors include Ashwin Paranjape, Jack Hessel, Jack Silva, and Mingyi Yang. Accessed 2026-07-31.
+
+[27] Rui Sun, Zuo Bai, Wentao Zhang, Yuxiang Zhang, Li Zhao, Shan Sun, and Zhengwen Qiu. FinResearchBench: A logic tree based agent-as-a-judge evaluation framework for financial research agents. In Proceedings of the 6th ACM International Conference on AI in Finance, pages 656–664. Association for Computing Machinery, 2025. doi: 10.1145/3768292.3770364. URL https://doi.org/10.1145/3768292.3770364.
+
+[28] Fengbin Zhu, Xiang Yao Ng, Ziyang Liu, Chang Liu, Xianwei Zeng, Chao Wang, Tianhui Tan, Xuan Yao, Pengyang Shao, Min Xu, Zixuan Wang, Jing Wang, Xin Lin, Junfeng Li, Jingxian Zhu, Yang Zhang, Wenjie Wang, Fuli Feng, Richang Hong, Huanbo Luan, Ke-Wei Huang, and Tat-Seng Chua. FinDeepResearch: Evaluating deep research agents in rigorous financial analysis, 2025. URL https://arxiv.org/abs/2510.13936.
+
+[29] Mirazul Haque, Antony Papadimitriou, Samuel Mensah, Zhiqiang Ma, Zhijin Guo, Joy Prakash Sain, Simerjot Kaur, Charese Smiley, and Xiaomo Liu. Deep FinResearch bench: Evaluating AI’s ability to conduct professional financial investment research, 2026. URL https://arxiv. org/abs/2604.21006.
+
+[30] Thomson Yen, Julian Poeltl, Harshith Srinivas Gear, Yilin Meng, Joshua Fan, Adam Shen, Yili Liu, Ali Bauyrzhan, Siri Du, Haoyang Liu, Daniel Guetta, and Hongseok Namkoong. MBABench: Evaluating LLM agents on end-to-end spreadsheet tasks in finance, 2026. URL https://arxiv.org/abs/2605.22664.
+
+[31] Michael Krumdick, Varshini Reddy, Shivani Chaudhary, William Day, Maarij Ahmed, Hayan Haqqi, Muhammad Ahsen Fahim, Hanzallah Amjad, Ahmad Orakzai, Aqsa Gul, and Chris Tanner. FrontierFinance: A long-horizon computer-use benchmark of real-world financial tasks, 2026. URL https://arxiv.org/abs/2604.05912.
+
+[32] Jason Wei, Zhiqing Sun, Spencer Papay, Scott McKinney, Jefrey Han, Isa Fulford, Hyung Won Chung, Alex Tachard Passos, William Fedus, and Amelia Glaese. BrowseComp: A simple yet challenging benchmark for browsing agents, 2025. URL https://arxiv.org/abs/2504. 12516.
+
+[33] Grégoire Mialon, Clémentine Fourrier, Craig Swift, Thomas Wolf, Yann LeCun, and Thomas Scialom. GAIA: a benchmark for general ai assistants, 2023. URL https://arxiv.org/ abs/2311.12983.
+
+[34] Zijian Chen, Xueguang Ma, Shengyao Zhuang, Ping Nie, Kai Zou, Andrew Liu, Joshua Green, Kshama Patel, Ruoxi Meng, Mingyi Su, Sahel Sharifymoghaddam, Yanxi Li, Haoran Hong, Xinyu Shi, Xuye Liu, Nandan Thakur, Crystina Zhang, Luyu Gao, Wenhu Chen, and Jimmy Lin. BrowseComp-Plus: A more fair and transparent evaluation benchmark of deep-research agent, 2025. URL https://arxiv.org/abs/2508.06600.
+
+[35] Mingxuan Du, Benfeng Xu, Chiwei Zhu, Xiaorui Wang, and Zhendong Mao. DeepResearch Bench: A comprehensive benchmark for deep research agents, 2025. URL https://arxiv. org/abs/2506.11763.
+
+[36] Wei-Lin Chiang, Lianmin Zheng, Ying Sheng, Anastasios Nikolas Angelopoulos, Tianle Li, Dacheng Li, Hao Zhang, Banghua Zhu, Michael I. Jordan, Joseph E. Gonzalez, and Ion Stoica. Chatbot arena: An open platform for evaluating LLMs by human preference. In Proceedings of the 41st International Conference on Machine Learning (ICML), volume 235 of Proceedings of Machine Learning Research, pages 8359–8388. PMLR, 2024.
+
+[37] Rafael Rafailov, Archit Sharma, Eric Mitchell, Stefano Ermon, Christopher D. Manning, and Chelsea Finn. Direct preference optimization: Your language model is secretly a reward model. In Advances in Neural Information Processing Systems 36 (NeurIPS 2023), 2023.
+
+[38] Ralph Allan Bradley and Milton E. Terry. Rank analysis of incomplete block designs: I. the method of paired comparisons. Biometrika, 39(3/4):324–345, 1952. doi: 10.2307/2334029.
+
+## A Sample queries and rubrics by use case
+
+The following six examples are the queries featured on the FrontierFinance benchmark page, one per use case. For each query we show the first seven rubric items as displayed on the benchmark page (must-have rubrics marked M; supplementary marked S), along with the total rubric count. The complete set of 220 queries and all 11,543 rubrics is available via the Hugging Face data viewer at https://huggingface.co/datasets/samaya-ai/FrontierFinance.
+
+## Screening & Discovery
+
+Query: Which MedTech companies stand to gain from the new US presidential regime in 2025, especially regarding tarifs and manufacturing flexibility, and which are expected to be negatively impacted? Query date: 2025-05-24
+
+S Summarizes all the information relating to the impact of the new US presidential regime in 2025 on MedTech companies as bullet points under the headers of respective company names.
+
+M Provides information about Becton Dickinson and Co (BDX) stating that the company is expected to not benefit under the Trump Administration of 2025.
+
+S Provides information about Becton Dickinson and Co (BDX) stating that the company is known for developing and manufacturing a wide range of medical devices, instrument systems, and reagents used in various healthcare settings.
+
+S Provides information about Becton Dickinson and Co (BDX) stating that the company reported total sales of USD 5.27 billion for Q1 2025.
+
+S Provides information about Becton Dickinson and Co (BDX) stating that the company cut its 2025 profit forecast.
+
+S Provides information about Becton Dickinson and Co (BDX) stating that the company expects its 2025 profit per share to be between USD 14.06 and USD 14.34.
+
+M Provides information about Becton Dickinson and Co (BDX) stating that the company cut its 2025 profit forecast due to potential tarif hit.
+
+· · · +27 more rubric items
+
+## Company Research
+
+Query: What has driven the slowdown in Intel’s revenues over the past two years? Query date: 2025-05-18
+
+M States that Intel Corporation (INTC) reported total revenue of USD 54.20 billion in 2023.
+
+M States that Intel Corporation (INTC) reported total revenue of USD 53.10 billion in 2024.
+
+S States that Intel Corporation (INTC) reported a 5.00% decline in notebook volume in 2023.
+
+S States that Intel Corporation (INTC) reported a 9.00% decline in desktop volume in 2023.
+
+M States that Intel Corporation (INTC) experienced a decline in client notebook volume due to weak consumer demand in 2023.
+
+M States that Intel Corporation (INTC) experienced a decline in client desktop volume due to soft education and small and medium-sized business (SMB) markets in 2023.
+
+M States that Intel Corporation (INTC) reported a reduction in average selling prices for notebooks in 2023.
+
+· · · +33 more rubric items
+
+## Sector, Industry & Macro
+
+Query: How do room nights booked and revenue compare across Booking Holdings, Expedia, Airbnb, and other top Online Travel Agencies (OTAs)? Query date: 2025-03-29
+
+M States that the other top Online Travel Agencies are Trip.com Group Limited (TCOM) and MakeMyTrip Limited (MMYT) based on their market capitalizations of more than USD 10 billion.
+
+S Summarizes all the information relating to revenue and the number of nights booked for Booking Holdings Inc. (BKNG), Expedia Group, Inc. (EXPE), Airbnb, Inc. (ABNB), Trip.com Group Limited (TCOM) and MakeMyTrip Limited (MMYT) in a table format.
+
+M Provides information for Booking Holdings Inc. (BKNG) stating that the total room nights for full year 2024 were 1,144 million.
+
+M Provides information for Booking Holdings Inc. (BKNG) stating that the total room nights for full year 2023 were 1,049 million.
+
+M Provides information for Booking Holdings Inc. (BKNG) stating that the total room nights for full year 2022 were 896 million.
+
+S Provides information for Booking Holdings Inc. (BKNG) stating that the total room nights for full year 2024 increased by 9% year over year.
+
+S Provides information for Booking Holdings Inc. (BKNG) stating that the total room nights for full year 2023 increased by 17% year over year.
+
+· · · +56 more rubric items
+
+## Financial Data Extraction
+
+Query: Provide a breakdown of BP’s upstream, downstream, and integrated gas and renewables segments’ operating metrics over the past 6 years. Query date: 2025-10-09
+
+S Presents BP p.l.c. (BP) operating metrics from 2019 to 2024 in a structured or tabular format.
+
+S Presents a footnote below the table for BP p.l.c. (BP) stating that for 2022, the Biogas supply volumes exclude Archaea Energy.
+
+M Provides information for BP p.l.c. (BP) stating that the Upstream Production for the year 2024 was 2.4 mmboe/d (million barrels of oil equivalent per day).
+
+M Provides information for BP p.l.c. (BP) stating that the Upstream Production for the year 2023 was 2.3 mmboe/d.
+
+M Provides information for BP p.l.c. (BP) stating that the Upstream Production for the year 2022 was 2.3 mmboe/d.
+
+M Provides information for BP p.l.c. (BP) stating that the Upstream Production for the year 2021 was 2.2 mmboe/d.
+
+M Provides information for BP p.l.c. (BP) stating that the Upstream Production for the year 2020 was 2.4 mmboe/d.
+
+· · · +69 more rubric items
+
+## Coverage & Catalyst Monitoring
+
+Query: In what ways have the AI strategies of Alphabet and Microsoft diverged across the past 8   
+quarters? Query date: 2025-06-09
+
+M States that Alphabet Inc (GOOGL) defines Artificial Intelligence (AI) as a profound platform shift central to its mission in 2024.
+
+M States that Alphabet Inc (GOOGL) launched Gemini 1 and Gemini 1.5 in 2024 as nextgeneration AI models.
+
+S States that Alphabet Inc (GOOGL) designed Gemini models to process and combine text, images, audio, video, and code in 2024.
+
+M States that Alphabet Inc (GOOGL) integrated Gemini models into Search, Ads, Chrome, Gmail, Maps, and YouTube in 2024.
+
+S States that Alphabet Inc (GOOGL) enabled Gemini models to serve billions of users across its core product suite in 2024.
+
+M States that Alphabet Inc (GOOGL) uses Vertex AI in Google Cloud to help developers build and scale generative AI applications in 2024.
+
+S States that Alphabet Inc (GOOGL) incorporates Gemini and Duet AI into Google Workspace to enhance productivity tools in 2024.
+
+· · · +46 more rubric items
+
+## Earnings & Events
+
+Query: What positive and negative aspects came out of ABBV’s last earnings call? Query date: 2025-05-01
+
+S Clearly separates the positive points and negative points from AbbVie Inc.’s (ABBV) last earnings call transcript.
+
+S States that AbbVie Inc. (ABBV)’s latest earnings call was for Q1 2025.
+
+M Provides a “Negative Point” for AbbVie Inc. (ABBV) from its Q1 2025 earnings call transcript stating that global sales of Humira were down 49.5% on an operational basis.
+
+S Provides a “Negative Point” for AbbVie Inc. (ABBV) stating that global sales of Humira were down due to faster share erosion from biosimilar competition.
+
+M Provides a “Negative Point” for AbbVie Inc. (ABBV) stating that aesthetics global sales were down 10.2% on an operational basis.
+
+S Provides a “Negative Point” for AbbVie Inc. (ABBV) stating that Botox cosmetic revenues were down 10.7%.
+
+S Provides a “Negative Point” for AbbVie Inc. (ABBV) stating that Juvederm sales were down 20%.
+
+· · · +29 more rubric items
+
+## B Dataset statistics
+
+Use cases. Each query carries exactly one of six use cases spanning the investor workflow; Table 6 gives the full counts and descriptions.
+
+Table 6. Use case descriptions and distribution.
+<table><tr><td>Use case</td><td>Queries</td><td>Share</td><td>Description</td></tr><tr><td>Financial Data Extraction</td><td>70</td><td>31.8%</td><td>Quantitative data extraction and modeling from regulatory filings</td></tr><tr><td>Sector, Industry &amp; Macro</td><td>38</td><td>17.3%</td><td>0 Sector, industry, and macroeconomic research across many entities</td></tr><tr><td>Earnings &amp; Events</td><td>36</td><td></td><td>16.4% Queries centered on a corporate communication event (earnings call or release, investor day, 8-K)</td></tr><tr><td>Company Research</td><td>32</td><td>14.5%</td><td>Company-level research: business, strategy, and operations</td></tr><tr><td>Coverage &amp; Catalyst Monitoring</td><td>27</td><td>12.3%</td><td>Tracking a name or topic over time across sources</td></tr><tr><td>Screening &amp; Discovery</td><td>17</td><td>7.7%</td><td>Open-ended screening and discovery over an un- bounded set of entities</td></tr></table>
+
+Capabilities. Each query is additionally tagged with the reasoning and retrieval capabilities it requires. The raw counts and definitions for these capability categories are provided below in Table 7.
+
+Table 7. Capability descriptions and distribution (a query may carry several, so counts sum to more than 220).
+
+<table><tr><td>Capability</td><td>Queries</td><td>Share</td><td>Description</td></tr><tr><td>Qualitative Synthesis</td><td>99</td><td>45.0%</td><td>Curate and synthesize qualitative material across documents</td></tr><tr><td>Exhaustive Retrieval/Temporal</td><td>71</td><td>32.3%</td><td>Retrieve every qualifying item across multiple time periods</td></tr><tr><td>Exhaustive Retrieval/Cross-Entity</td><td>44</td><td>20.0%</td><td>Retrieve every qualifying item across multiple entities</td></tr><tr><td>Exhaustive Retrieval/Thematic</td><td>32</td><td>14.5%</td><td>Collect every instance of a theme or category</td></tr><tr><td>Numerical Reasoning</td><td>59</td><td>26.8%</td><td>Compute or derive figures from multiple inputs</td></tr><tr><td>Multi-hop Workflows</td><td>53</td><td>24.1%</td><td>Chained, conditional, multi-step tasks</td></tr><tr><td>Causal Reasoning</td><td>14</td><td>6.4%</td><td>Explain the drivers behind an outcome</td></tr><tr><td>Simple Retrieval</td><td>38</td><td>17.3%</td><td>Single-fact lookup or verification</td></tr></table>
+
+Rubric content categories. Each of the 11,543 public-benchmark rubrics is classified into one of eight content categories describing the kind of content the rubric demands (Table 8). Factual data extraction is the plurality (74%), consistent with rubrics being written as objective, checkable criteria; the remaining quarter spans the qualitative, forward-looking, analytical, and comparative content that a complete answer must also deliver.
+
+Rubric data source categories. In our annotation guideline, we define a ten-category data source taxonomy. Each top-level data source category is paired with examples and a finer set of second-level categories for clarity (e.g., 10-K or 10-Q as second-level categories for company filings). At annotation time, we ask the annotator to record the data source categories that each written rubric demands. For example, if the data in a specific rubric is drawn from a company 10-K document, the rubric should be tagged as using company filing as top-level source and 10-K as second-level source. We include this data source tag in the final released dataset, and show their detailed distributions by use cases in Table 9.
+
+Table 8. Rubric category descriptions and distribution.
+<table><tr><td>Rubric category</td><td>Rubrics Share Description</td><td></td><td></td></tr><tr><td>Factual Data Extraction</td><td>8,547</td><td>74.0%</td><td>Specific, verifiable data points (values, dates, names) from primary sources</td></tr><tr><td>Qualitative &amp; Contextual Information</td><td>1,039</td><td></td><td>9.0% Descriptive, non-numeric content: definitions, de- scriptions, commentary</td></tr><tr><td>Forward-Looking Information</td><td>814</td><td>7.1%</td><td>Future-oriented content: guidance, forecasts, projec- tions</td></tr><tr><td>Analysis &amp; Interpretation</td><td>558</td><td>4.8%</td><td>Synthesis, causal reasoning, and interpretive insight</td></tr><tr><td>Comparative Analysis</td><td>264</td><td></td><td>2.3% Side-by-side comparison of entities, metrics, or peri- ods</td></tr><tr><td>Format &amp; Presentation</td><td>131</td><td></td><td>1.1% How information is structured or presented</td></tr><tr><td>Source &amp; Methodology</td><td>112</td><td></td><td>1.0% Required sources, research scope, or calculation method</td></tr><tr><td>Inquiry &amp; Question Generation</td><td>78</td><td></td><td>0.7% Formulating questions for management or further research</td></tr></table>
+
+Table 9. Distribution of rubric data sources by use case. Each cell gives the number of rubric items drawn from that data source, with that source’s share of the row in parentheses (%); Total is the number of rubric items for that use case. Shares are rounded to whole numbers summing to 100 within each row. Column headings abbreviate the data sources: SEC = SEC filings; Company = company originated content (e.g., transcripts, investor presentations, press releases); Professional = professional knowledge; Market = market price data; News = news and media sources; Regulatory = regulatory and legal data; Other = other categories.
+<table><tr><td>Use case</td><td>SEC</td><td>Company</td><td>Professional</td><td>Market</td><td></td><td>News Regulatory</td><td>Other</td><td>Total</td></tr><tr><td>Financial Data Extraction</td><td>3,378 (59)</td><td>1,222 (21)</td><td>863 (15)</td><td>97 (2)</td><td>28 (0)</td><td>2 (0)</td><td>167 (3)</td><td>5,757</td></tr><tr><td>Sector, Industry &amp; Macro</td><td>643 (25)</td><td>378 (15)</td><td>825 (32)</td><td>334 (13)</td><td>78 (3)</td><td>26 (1)</td><td>269 (11)</td><td>2,553</td></tr><tr><td>Screening &amp; Discovery</td><td>81 (8)</td><td>107 (11)</td><td>194 (19)</td><td>291 (29)</td><td>120 (12)</td><td>97 (10)</td><td>106 (11)</td><td>996</td></tr><tr><td>Earnings &amp; Events</td><td>65 (8)</td><td>568 (68)</td><td>135 (16)</td><td>12 (2)</td><td>1 (0)</td><td>9 (1)</td><td>44 (5)</td><td>834</td></tr><tr><td>Coverage &amp; Catalyst</td><td>136 (19)</td><td>408 (57)</td><td>95 (13)</td><td>54 (8)</td><td>3 (0)</td><td>0 (0)</td><td>24 (3)</td><td>720</td></tr><tr><td>Company Research</td><td>235 (34)</td><td>214 (31)</td><td>108 (16)</td><td>54 (8)</td><td>38 (6)</td><td>0 (0)</td><td>34 (5)</td><td>683</td></tr><tr><td>All use cases</td><td>4,538 (39)</td><td>2,897 (25)</td><td>2,220 (19)</td><td>842 (7)</td><td>268 (3)</td><td>134 (1)</td><td>644 (6)</td><td>11,543</td></tr></table>
+
+## C Difficulty analysis details
+
+## C.1 Methodology
+
+What the score measures. Our dificulty score is a Bradley–Terry (BT) latent score [38] fit over pairwise “which query is harder?” judgments across five reasoning axes (retrieval breadth, reasoning depth, entity scope, time scope, qualitative ambiguity) on Samaya’s internal pool $( n = 4 \AA , 2 1 \AA 2 )$ We estimate latent dificulties � by minimizing the confidence-weighted, regularized negative
+
+log-likelihood
+
+$$
+\widehat \theta \ = \ \underset { \theta } { \arg \operatorname* { m i n } } \ - \ \sum _ { k } c ( m _ { k } ) \ \log \sigma \big ( \theta _ { w _ { k } } - \theta _ { \ell _ { k } } \big ) \ + \ \lambda \| \theta \| _ { 2 } ^ { 2 } ,
+$$
+
+where $\theta _ { i }$ is query $i \ ' \mathrm { s }$ dificulty, $( w _ { k } , \ell _ { k } )$ are the winner/loser query in judgment � for dificulty, $m _ { k }$ its confidence margin, $\sigma$ the logistic function, $c ( 1 , 2 , 3 ) = ( 0 . 3 , 1 . 0 , 1 . 3 )$ the margin weights, and $\lambda = 1 0 ^ { - 3 }$ . To place external benchmarks on the same scale, we pair their 227 queries with Samaya-dataset anchors into 6,810 comparison pairs, score them with the judges, and include them in the BT fit; each external query’s percentile and bucket are then read of the shared scale.
+
+Judging protocol and consensus fit. For every query in a pair, the judge sees the query text, its date, use-case and capability tags, and the full criteria rubric (each criterion labelled by essentiality, content type, and expected data source). The prompt defines dificulty as the retrieval and cognitive efort an analyst would need for a complete, defensible answer, tells the judge to weigh the five axes above, and warns against dificulty proxies—rubric count, query length, single-document extraction breadth—so a long but shallow query is not scored as hard. The judge returns a winner (ties allowed but discouraged), a 1–3 confidence margin, a per-axis vote, and a brief rationale; pairs are judged independently. Three judges—Gemini 3.1 Flash Lite, Gemini 3 Flash, and Claude Sonnet 4.5—score every pair; we merge them per pair by signed-average (the pair is a tie if the mean is within 0.5), then fit the single confidence-weighted Bradley–Terry model above to the resulting consensus verdicts—each judgment weighted by its margin at $c ( 1 , 2 , 3 ) = ( 0 . 3 , 1 . 0 , 1 . 3 )$ so close calls count for a fraction of clear ones.
+
+## C.2 Robustness
+
+Robustness to the judge model. Fit separately, each judge’s own ratings reproduce the consensus approximately (Table 10): Spearman 0.95–0.97 on the scores and 83–88% easy/medium/hard label agreement. We also observed that Claude Sonnet is the steadiest judge—it flips the fewest verdicts under order swap and ties most often.
+
+Table 10. Each judge’s individual BT fit vs. the three-judge consensus, over the full pairwise set.
+<table><tr><td>Judge BT-score Spearman</td><td> $\rho$  vs. consensus</td><td>Bucket-label agreement</td></tr><tr><td>Gemini 3 Flash</td><td>0.974</td><td>87.8%</td></tr><tr><td>Gemini 3.1 Flash Lite</td><td>0.955</td><td>83.1%</td></tr><tr><td>Claude Sonnet 4.5</td><td>0.946</td><td>82.5%</td></tr></table>
+
+Position bias. Re-judging a fixed 20,000-pair sample with the two queries in swapped A/B order flips the winner on $7 \%$ of consensus results, concentrated in low-confidence calls—28/11/2% at margins 1/2/3 (Table 11). Because the confidence-weighted fit already discounts those close calls (margin-1 judgments enter at weight 0.3), the result barely changes: Refitting on the swapped verdicts preserves the ranking (Spearman 0.996) and 95.4% of easy/medium/hard labels.
+
+Robustness to judgment volume. We probe the judgment budget two ways. First, per query: The full set averages about 35 comparisons per query, so we subsample to � comparisons each, refit, and compare to the full-data fit (Fig 12); returns diminish quickly—the ranking is essentially locked by ∼16 comparisons per query (Spearman 0.99) and tercile labels reach $9 7 \%$ agreement by ∼27. Second, overall: Refitting on random 50% and 75% subsamples of all judgments (three draws each) reproduces the full-data scores at Spearman 0.99 and 0.996 and flips only 8.0% and 4.3% of labels, respectively. These results show that we have suficient pairwise samples to assign reliable scores.
+
+Table 11. A/B position-swap flip rate by the judge’s own confidence margin, per judge and for the consensus (20,000-pair sample).
+<table><tr><td>Judge</td><td>Margin 1 (close)</td><td>Margin 2 (clear)</td><td>Margin 3 (very clear)</td><td>Overall</td></tr><tr><td>Gemini 3.1 Flash Lite</td><td>44%</td><td>28%</td><td>5%</td><td>21%</td></tr><tr><td>Gemini 3 Flash</td><td>33%</td><td>17%</td><td>3%</td><td>14%</td></tr><tr><td>Claude Sonnet 4.5</td><td>27%</td><td>12%</td><td>2%</td><td>11%</td></tr><tr><td>Consensus</td><td>28%</td><td>11%</td><td>2%</td><td>7%</td></tr></table>
+
+![](images/21e3cf1e4814dad6474b7980979ead165d1581e9f35232c2b5be56bf855962fc.jpg)  
+Figure 12. Dificulty-scale stability vs. judgment volume. Bucket match (left axis) and Spearman � (right axis) of a subsampled BT fit against the full-data consensus fit, as a function of comparisons per query (median; total BT pairs in parentheses). Both saturate well before the full budget—the ranking is essentially locked by ∼16 comparisons per query.
+
+Per-query score uncertainty. We draw � = 20 bootstrap resamples of the judgment set (sampling pairwise judgments with replacement to the original size), refit the BT model on each, and take the standard deviation of a query’s score across the refits as its uncertainty. Scores are well-determined: On a scale spanning ∼36 units (−14 to +22), the median per-query standard deviation is 0.67 and the 90th percentile 1.37 (2–4% of the range). About one query in five sits within one standard deviation of an easy/medium or medium/hard cutof, so near-boundary labels should be read as soft.
+
+## C.3 Analysis with resulting difficulty scores
+
+Dificulty is not criteria count. Rubric count only moderately predicts dificulty (Spearman $\rho = 0 . 7 1 2 , \rho ^ { 2 } \approx 0 . 5 1 )$ , explaining about half of the rank variance; the depth and breadth of reasoning a query demands matter more than its raw rubric count.
+
+Which axes drive the judgment. Restricting to non-tie pairs and pooling all three judges, reasoning depth and retrieval breadth agree with the overall winner most often (88.0% and 85.0%), followed by qualitative ambiguity (74.2%), while time scope (53.0%) and entity scope (35.4%) agree least—mainly because those two axes are themselves tied far more often (entity 62%, time 43% of pairs, versus 12–15% for the two dominant axes). Retrieval and reasoning demands discriminate between queries far more often than entity or temporal scope.
+
+Per-use-case dificulty. Dificulty varies systematically by use case (Table 12). Screening & discovery and sector/industry & macro are the two hardest use cases across the board—open-ended, unbounded-scope tasks that demand synthesis over many sources—while earnings & events and company research are comparatively more tractable.
+
+Table 12. Per-use-case dificulty, hardest to easiest.
+<table><tr><td>Use case</td><td>Queries</td><td>Median difficulty pctile</td><td>Hard / Med / Easy</td></tr><tr><td>Sector, Industry &amp; Macro</td><td>38</td><td>98.3</td><td>28/7/3</td></tr><tr><td>Screening &amp; Discovery</td><td>17</td><td>93.9</td><td>10/4/3</td></tr><tr><td>Financial Data Extraction</td><td>70</td><td>86.1</td><td>23 / 31 / 16</td></tr><tr><td>Coverage &amp; Catalyst Monitoring</td><td>27</td><td>68.2</td><td>5/9/13</td></tr><tr><td>Earnings &amp; Events</td><td>36</td><td>52.7</td><td>4/11/21</td></tr><tr><td>Company Research</td><td>32</td><td>47.5</td><td>3/12/ 17</td></tr></table>
+
+External benchmarks. Tables 13 gives the full box-plot statistics for the three external benchmarks discussed in Section 4.2.
+
+Table 13. Bradley–Terry dificulty distribution per benchmark (box-plot statistics; higher = harder).
+<table><tr><td>Benchmark</td><td>n</td><td>10th</td><td>Q1 (25%)</td><td>Median</td><td>Mean</td><td>Q3 (75%)</td><td>90th</td><td>IQR</td></tr><tr><td>FrontierFinance (ours)</td><td>220</td><td>-4.01</td><td>0.19</td><td>3.73</td><td>4.84</td><td>10.56</td><td>15.88</td><td>10.38</td></tr><tr><td>Finance Agent v2 (public)</td><td>27</td><td>-2.62</td><td>-1.53</td><td>-0.25</td><td>0.50</td><td>2.86</td><td>3.70</td><td>4.39</td></tr><tr><td>BigFinanceBench (public)</td><td>50</td><td>-4.18</td><td>-2.57</td><td>-1.26</td><td>-0.35</td><td>2.29</td><td>6.32</td><td>4.86</td></tr><tr><td>FinanceBench ([1])</td><td>150</td><td>-8.31</td><td>-6.96</td><td>-5.10</td><td>-5.42</td><td>-3.75</td><td>-2.61</td><td>3.21</td></tr></table>
+
+Table 14 reports where each benchmark’s median query falls as a percentile of Samaya’s entire pool (� = 4,212 queries) and how its queries split across dificulty buckets. FrontierFinance’s median query sits at the 80th percentile of the internal corpus while the external benchmarks sit between the 16th and 49th percentile; correspondingly, a third of FrontierFinance falls in the hard tercile versus 0–2% for the externals.
+
+Table 14. Dificulty positioning on the shared BT scale (percentile vs. Samaya’s internal distribution; higher = harder). Hard/Medium/Easy are FrontierFinance’s own BT terciles.
+<table><tr><td>Benchmark</td><td>n</td><td>Median diff. pctile</td><td>Hard</td><td>Medium</td><td>Easy</td></tr><tr><td>FrontierFinance (ours)</td><td>220</td><td>80.0</td><td>73 (33.2%)</td><td>74 (33.6%)</td><td>73 (33.2%)</td></tr><tr><td>Finance Agent v2 (public)</td><td>27</td><td>48.6</td><td>0 (0.0%)</td><td>11 (40.7%)</td><td>16 (59.3%)</td></tr><tr><td>BigFinanceBench (public)</td><td>50</td><td>41.2</td><td>1 (2.0%)</td><td>14 (28.0%)</td><td>35 (70.0%)</td></tr><tr><td>FinanceBench (Islam et al., 2023)</td><td>150</td><td>15.9</td><td>0 (0.0%)</td><td>0 (0.0%)</td><td>150 (100.0%)</td></tr></table>
+
+## D LLM API Endpoints Details
+
+We used the Microsoft Azure OpenAI API endpoints for accessing the GPT series models. This also includes the GPT 5.5 Web Search harness, for which we used Azure OpenAI’s built-in searchgrounded API. We used the Google Vertex AI API endpoints for accessing the Gemini and Claude series models, as well as their Web Search harness versions. We used the Fireworks AI API endpoints for accessing the open-weight models, including the Kimi K3, GLM 5.2 and DeepSeek V4 Pro models.
+
+## E System and user prompts for the adapted Finance Agent v2 harness
+
+We include the system and user prompts of our re-implementation of the Finance Agent v2 harness below. Compared to the original implementation, the only change is the added tool call limit paragraph in the middle of the system prompt.
+
+System prompt   
+You are a financial agent. You are given a question and you need to answer   
+it using the tools provided. You will not be able to interact with the   
+user or ask clarifications , you must answer the question only based on the   
+information provided.   
+You should answer all questions as if the current date is {date}.   
+You will have access to a data storage system. You can use this system to   
+store parsed contents of HTML pages retrieved from the web. You can then   
+use the retrieve\_information tool to apply answer questions or gather   
+information from the stored documents using LLM-based prompts. This data   
+storage system is designed to help you avoid context window issues.   
+When you have the final answer , you should call the ‘submit\_final\_result ‘   
+tool with it. Your submission will not be processed unless you call this   
+tool.   
+When making tool calls , you need to make sure you stay within the   
+following limits:   
+- The maximum number of tool calls allowed (None for no limit): {   
+max\_tool\_calls}   
+- The maximum wall -clock seconds allowed for tool calling (None for no   
+limit): {max\_tool\_call\_time}   
+If you are told that you have reached either of these limits , you must   
+call the ‘submit\_final\_result ‘ tool with the best answer you have gathered   
+so far.   
+IMPORTANT: If any tool response returns with instructions indicating that   
+tool call limit or time limit has reached , your VERY NEXT action MUST be   
+to call ‘submit\_final\_result ‘ with the best answer you have gathered so   
+far. Do not make any other tool calls except ‘submit\_final\_result ‘.   
+Failure to do so will cause the entire run to fail with no answer recorded   
+You should include any necessary step -by-step reasoning , justification ,   
+calculations , or explanation in your answer. You will be evaluated both on   
+the accuracy of the final answer , and the correctness of the supporting   
+logic.   
+When possible , please provide any calculated answers to at least two   
+decimal places (e.g. 18.78%   
+SEC filings are the most authoritative source of financial data. If a   
+number appears in both an SEC filing and another source (e.g., a press   
+release or company website), use the SEC filing ’s figure. You may freely   
+use and cite non-SEC sources for information not available in SEC filings.   
+For historical price data not available in SEC filings , use the ‘   
+price\_history ‘ tool as your primary source. Fall back to ‘web\_search ‘ if   
+the price tool is not working. You should always use the raw, unadjusted
+
+price data from the ‘price\_history ‘ tool , unless the question specifically   
+asks for the adjusted price. Share prices should be reported in dollars   
+with 2 decimal places , e.g. \$10.25 per share. Stock indices (^IXIC , ^GSPC ,   
+^SOX, etc.) are not covered by ‘price\_history ‘ - for index historical   
+levels , start with an authoritative source such as the data provided by   
+FRED. If the question references a specific source , make sure to   
+incorporate information from that source , but still cross -reference SEC   
+filings where relevant.   
+When reporting financial figures , use the same scale and units as   
+presented in the SEC filing (e.g., if the filing reports values "in   
+millions ," report your answer in millions), unless otherwise specified in   
+the question.   
+At the end of your answer , you should provide your sources in a dictionary   
+with the following format:   
+{   
+"sources": [   
+{   
+"url": "https://example.com",   
+"name ": "Name of the source"   
+},   
+]
+
+## User prompt
+
+Question:   
+{question}
+
+## F System and user prompts for the grading LLM judge in FrontierFinance
+
+We include the system and user prompts used for the LLM judges below. The same prompts are used in our code release.
+
+## System prompt
+
+You are a senior financial analyst. Your task is to evaluate a financial   
+report against a list of pre-defined rubrics. The report presented to you   
+is generated to answer a specific financial query. For each given rubric ,   
+you are expected to produce a binary judgement on whether the rubric is   
+satisfied or not by the financial report.   
+For each task , you will be given the following:   
+1. A financial query , which specifies the information the user is seeking.   
+2. The date the query was made. This is important for assessing the time   
+understanding of the system. Whenever necessary , you should use this date   
+as the temporal anchor for interpreting relative date terms in both the   
+query and the rubrics.   
+3. A financial report which aims to answer that query.
+
+4. One or more natural language rubrics , each checking a specific aspect   
+of the report.   
+All of the input will be clearly marked in XML tags. Your task is to judge   
+whether the report adequately satisfies each of the given rubrics. You   
+must evaluate the report objectively and thoroughly.   
+Pay special attention to the following aspects when making your judgement:   
+1. \*\*Each rubric should be judged independently\*\*. Even in the case that   
+one rubric seems related to another , you need to give your judgement of   
+whether each rubric is satisfied independently.   
+2. \*\*Pay attention to numerical units\*\*. The report and the rubric might   
+use different units to represent the same number. Take this into account   
+when making your judgement. For example , "USD 2.1 billion" is equivalent   
+to "USD 2,100 million".   
+3. \*\*Accept reasonable numerical approximation\*\*. A figure in the report   
+is acceptable if it equals the rubric ’s figure after rounding the rubric ’s   
+figure to the (coarser) precision the report uses. A figure stated at the   
+same or finer precision than the rubric ’s, but with a different value , is   
+NOT acceptable -- even if numerically close. For example , against a   
+rubric value of "3 ,098 million ": "3.1 billion" is acceptable (a correct   
+rounding to two significant figures), but "3,105 million" is not (it   
+asserts a precise , different value). Likewise against "7.14%
+
+## User prompt
+
+You will evaluate the report below against the given set of rubrics. The   
+report has been written to answer a specific query.   
+The query is provided below within the <query > tags.   
+<query >   
+{query}   
+</query >   
+The date the query was submitted is provided below within the <date > tags.   
+This is important for assessing whether the report correctly understands   
+the time aspect of the query.   
+<date >   
+{ query\_date }   
+</date >   
+The financial report is provided below within the <report > tags.   
+<report >   
+{report}   
+</report >   
+Now that you have read the query and the report , please evaluate whether   
+the report satisfies each of the following rubrics. The list of rubrics is   
+provided below within the <rubrics > tags. Each rubric is annotated with a   
+unique ID, which you should use in your output to refer to that rubric.   
+<rubrics >   
+{rubrics}   
+</rubrics >
+
+For each rubric , determine if the report adequately satisfies it. As a   
+reminder , pay attention to the following aspects mentioned before:   
+- Each rubric should be judged independently.   
+- Pay attention to numerical units.   
+- Accept reasonable numerical approximation.   
+Your output must be ONLY a valid JSON object with the following structure:   
+‘‘‘json   
+{   
+"0": {   
+"reason": "concise 1-sentence reason for your judgement on rubric 0",   
+"label": true/false   
+},   
+"1": {   
+"reason": "concise 1-sentence reason for your judgement on rubric 1",   
+"label": true/false   
+},   
+}
+
+## G Tool call distribution for all models
+
+We provide the tool call distribution statistics of all models under the Finance Agent v2 harness in Table 15.
+
+Table 15. Share of each system’s tool calls going to each tool available in the harness (%). Calls per query represents the average number of tool calls over all answered queries. $R _ { \mathrm { a l l } }$ represents the macro-averaged qualification rate over all rubrics.
+<table><tr><td></td><td>Web search</td><td>Parse HTML</td><td>Retrieve info.</td><td>EDGAR search</td><td>Calcu- lator</td><td>Price history</td><td>Calls / query</td><td> $R _ { \mathrm { a l l } }$  (%)</td></tr><tr><td>System Claude Fable 5</td><td>24.4</td><td>25.1</td><td>19.3</td><td>6.4</td><td>23.3</td><td>1.5</td><td>16.6</td><td>49.2</td></tr><tr><td>GPT 5.6 Sol</td><td>44.8</td><td>16.9</td><td>13.1</td><td>4.7</td><td>20.0</td><td>0.4</td><td>46.3</td><td>46.8</td></tr><tr><td>Kimi K3</td><td>36.5</td><td>26.6</td><td>18.7</td><td>6.8</td><td>9.9</td><td>1.5</td><td>19.6</td><td>46.4</td></tr><tr><td>Gemini 3.6 Flash</td><td>31.1</td><td>20.0</td><td>21.8</td><td>11.0</td><td>15.4</td><td>0.7</td><td>24.8</td><td>46.3</td></tr><tr><td>Claude Opus 4.8</td><td>29.6</td><td>27.0</td><td>20.5</td><td>6.1</td><td>15.6</td><td>1.1</td><td>16.1</td><td>45.0</td></tr><tr><td>GPT 5.5</td><td>27.7</td><td>26.2</td><td>14.6</td><td>7.7</td><td>23.1</td><td>0.7</td><td>33.7</td><td>43.5</td></tr><tr><td>GLM 5.2</td><td>28.8</td><td>29.1</td><td>22.3</td><td>11.8</td><td>7.3</td><td>0.7</td><td>26.9</td><td>42.8</td></tr><tr><td>DeepSeek V4 Pro</td><td>45.2</td><td>21.4</td><td>18.5</td><td>4.5</td><td>9.9</td><td>0.5</td><td>41.1</td><td>40.5</td></tr><tr><td>Gemini 3.1 Pro</td><td>41.3</td><td>21.1</td><td>22.0</td><td>13.4</td><td>1.0</td><td>1.0</td><td>16.1</td><td>30.5</td></tr></table>
+
+## H Performance breakdown by use case
+
+Table 16 reports the macro-averaged rubric qualification rate for each system broken down by use case. Table 17 reports the micro-averaged rubric qualification rate for each system broken down by rubric categories.
+
+Table 16. Macro-averaged rubric qualification rate (%) per use case for all evaluated systems, grouped by harness and ranked by $R _ { \mathrm { a l l } }$ within each group. Use case abbreviations: Fin. = Financial Data Extraction; Earn. = Earnings & Events; Co. = Company Research; Cov. = Coverage & Catalyst Monitoring; Sec. = Sector, Industry & Macro; Scr. = Screening & Discovery.
+<table><tr><td>System</td><td> $R _ { \mathrm { a l l } }$ </td><td>Fin.</td><td>Earn.</td><td>Co.</td><td>Cov.</td><td>Sec.</td><td>Scr.</td></tr><tr><td>Web Search Harness</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Claude Opus 4.8</td><td>33.0</td><td>31.3</td><td>45.6</td><td>32.5</td><td>28.1</td><td>30.6</td><td>27.4</td></tr><tr><td>Gemini 3.1 Pro</td><td>30.7</td><td>29.1</td><td>41.3</td><td>29.7</td><td>32.1</td><td>25.0</td><td>27.2</td></tr><tr><td>GPT 5.5</td><td>20.7</td><td>17.3</td><td>26.1</td><td>24.5</td><td>27.0</td><td>14.0</td><td>21.7</td></tr><tr><td>Finance Agent v2 Harness</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Claude Fable 5</td><td>49.2</td><td>55.6</td><td>63.9</td><td>40.5</td><td>49.0</td><td>38.1</td><td>33.3</td></tr><tr><td>GPT 5.6 Sol</td><td>46.8</td><td>48.9</td><td>58.0</td><td>42.1</td><td>46.7</td><td>40.9</td><td>36.5</td></tr><tr><td>Kimi K3</td><td>46.4</td><td>46.5</td><td>61.0</td><td>45.9</td><td>46.9</td><td>36.6</td><td>36.9</td></tr><tr><td>Gemini 3.6 Flash</td><td>46.3</td><td>56.2</td><td>54.0</td><td>41.2</td><td>36.5</td><td>36.4</td><td>36.1</td></tr><tr><td>Claude Opus 4.8</td><td>45.0</td><td>51.0</td><td>57.7</td><td>38.9</td><td>43.2</td><td>35.2</td><td>30.2</td></tr><tr><td>GPT 5.5</td><td>43.5</td><td>47.6</td><td>53.7</td><td>39.7</td><td>41.5</td><td>34.7</td><td>34.8</td></tr><tr><td>GLM 5.2</td><td>42.8</td><td>47.5</td><td>52.0</td><td>38.5</td><td>46.4</td><td>34.4</td><td>24.9</td></tr><tr><td>DeepSeek V4 Pro</td><td>40.5</td><td>45.3</td><td>54.5</td><td>32.1</td><td>38.5</td><td>32.7</td><td>28.1</td></tr><tr><td>Gemini 3.1 Pro</td><td>30.5</td><td>31.4</td><td>42.5</td><td>29.1</td><td>27.4</td><td>25.0</td><td>21.6</td></tr><tr><td>Samaya In-house Harness</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td>56.0</td><td>59.5</td><td>75.1</td><td></td><td></td><td></td><td></td></tr><tr><td>Samaya (high effort)</td><td></td><td></td><td></td><td>56.5</td><td>58.3</td><td>38.5</td><td>36.2</td></tr><tr><td>Samaya</td><td>52.9</td><td>55.3</td><td>71.0</td><td>52.8</td><td>57.8</td><td>38.7</td><td>28.6</td></tr></table>
+
+Table 17. Micro-averaged rubric qualification rate (%) per rubric category for all evaluated systems, grouped by harness and ranked by $R _ { \mathrm { a l l } }$ within each group. $R _ { \mathrm { a l l } }$ is the overall macro-averaged qualification rate (as in Table 16), included for system ranking purposes. Category columns are micro-averaged over all rubrics in each category. Category abbreviations: Fact. = Factual Data Extraction; Qual. = Qualitative & Contextual Information; Anly. = Analysis & Interpretation; Comp. = Comparative Analysis; Fwd. = Forward-Looking Information; Fmt. = Format & Presentation.
+<table><tr><td>System</td><td> $R _ { \mathrm { a l l } }$ </td><td>Fact.</td><td>Qual.</td><td>Anly.</td><td>Comp.</td><td>Fwd.</td><td>Fmt.</td></tr><tr><td>Web Search Harness</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Claude Opus 4.8 Gemini 3.1 Pro</td><td>33.0 30.7</td><td>17.4 20.0</td><td>32.4 25.6</td><td>41.5 41.9</td><td>38.1 42.9</td><td>23.8 25.9</td><td>56.6 53.4</td></tr><tr><td>GPT 5.5</td><td>20.7</td><td>16.0</td><td>29.9</td><td>40.2</td><td>39.5</td><td>24.6</td><td>59.3</td></tr><tr><td>Finance Agent v2 Harness Claude Fable 5</td><td>49.2</td><td>43.1</td><td>41.2</td><td>49.9</td><td>50.2</td><td></td><td></td></tr><tr><td>GPT 5.6 Sol</td><td>46.8</td><td>35.7</td><td>44.2</td><td>52.5</td><td>53.0</td><td>48.0</td><td>74.4</td></tr><tr><td>Kimi K3</td><td>46.4</td><td>29.7</td><td>42.6</td><td></td><td></td><td>43.4</td><td>79.4</td></tr><tr><td></td><td></td><td></td><td></td><td>49.7</td><td>49.4</td><td>35.5</td><td>65.9</td></tr><tr><td>Gemini 3.6 Flash</td><td>46.3</td><td>38.0</td><td>36.5</td><td>48.6</td><td>45.5</td><td>39.2</td><td>74.1</td></tr><tr><td>Claude Opus 4.8</td><td>45.0</td><td>38.3</td><td>36.7</td><td>49.8</td><td>50.4</td><td>38.7</td><td>73.3</td></tr><tr><td>GPT 5.5</td><td>43.5</td><td>38.3</td><td>40.4</td><td>48.4</td><td>45.6</td><td>40.7</td><td>77.5</td></tr><tr><td>GLM 5.2</td><td>42.8</td><td>28.7</td><td>38.9</td><td>43.9</td><td>45.5</td><td>38.2</td><td>67.2</td></tr><tr><td>DeepSeek V4 Pro</td><td>40.5</td><td>30.2</td><td>36.5</td><td>44.3</td><td>39.8</td><td>29.6</td><td>65.1</td></tr><tr><td>Gemini 3.1 Pro</td><td>30.5</td><td>20.2</td><td>25.7</td><td>38.5</td><td>37.9</td><td>20.0</td><td>47.3</td></tr><tr><td>Samaya In-house Harness</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td colspan="6"></td><td></td><td></td></tr><tr><td>Samaya (high effort)</td><td>56.0</td><td>46.6</td><td>48.6</td><td>54.7</td><td>48.9</td><td>51.5</td><td>75.6</td></tr><tr><td>Samaya</td><td>52.9</td><td>40.7</td><td>47.1</td><td>55.7</td><td>52.3</td><td></td><td></td></tr><tr><td colspan="6"></td><td>46.0</td><td>69.5</td></tr></table>
