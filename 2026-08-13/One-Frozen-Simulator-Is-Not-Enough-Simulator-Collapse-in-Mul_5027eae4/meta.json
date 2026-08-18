@@ -4,5 +4,32 @@
  "title": "One-Frozen-Simulator-Is-Not-Enough-Simulator-Collapse-in-Mul",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-13 04:49:36",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/1f0653d2-76f2-40a1-b2b4-aa64464ee0e9.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/1f0653d2-76f2-40a1-b2b4-aa64464ee0e9.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:54:50",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "multi-agent RL",
+    "simulator collapse",
+    "LLM user simulation",
+    "verbalized sampling",
+    "co-training",
+    "policy entropy",
+    "population training"
+   ],
+   "field": "多智能体强化学习与LLM模拟",
+   "innovations": [
+    "形式化并提出'模拟器坍缩'机制，揭示单冷冻LLM模拟器导致策略梯度偏置与熵坍缩",
+    "提出推理时语义化采样与训练时联合训练两种互补解决方案，分别在分布恢复与目标漂移层面打破坍缩",
+    "开源SCOPE框架统一多模型轮换/自博弈/带checkpoint池的Co-Training，在三个多轮基准上验证泛化提升"
+   ],
+   "benchmarks": [
+    "Persuasion for Good",
+    "τ2-bench",
+    "CooperBench"
+   ]
+  }
+ }
 }

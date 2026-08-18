@@ -4,5 +4,30 @@
  "title": "RT-SEMamba-Real-Time-Speech-Enhancement-Mamba-via-Progressiv",
  "token": "sk-twhrLv2pG...",
  "created_at": "2026-08-13 14:54:47",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/bb8a8909-91dc-427f-b96f-28e4451e30c3.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/bb8a8909-91dc-427f-b96f-28e4451e30c3.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 12:00:57",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "speech enhancement",
+    "real-time processing",
+    "Mamba",
+    "knowledge distillation",
+    "state-space models",
+    "causal streaming",
+    "voice enhancement"
+   ],
+   "field": "实时语音增强",
+   "innovations": [
+    "完全因果的时频Mamba架构实现25ms严格流式延迟",
+    "渐进式知识蒸馏将8层教师压缩至1层学生并保持0.11 RTF",
+    "复数谱三端对齐与中间特征归一化蒸馏损失设计"
+   ],
+   "benchmarks": [
+    "VCTK-DEMAND"
+   ]
+  }
+ }
 }

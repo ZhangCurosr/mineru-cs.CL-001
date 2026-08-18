@@ -4,5 +4,33 @@
  "title": "Learning-to-Persuade-Exposes-How-Easily-LLMs-Abandon-Correct",
  "token": "sk-zw57yHIgm...",
  "created_at": "2026-08-13 14:55:00",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/3645fbf9-e679-46cb-8d32-1f86a05827e3.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/3645fbf9-e679-46cb-8d32-1f86a05827e3.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:25:47",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "adversarial persuasion",
+    "reinforcement learning",
+    "LLM safety",
+    "belief manipulation",
+    "red-teaming",
+    "multi-agent systems"
+   ],
+   "field": "LLM安全与对齐",
+   "innovations": [
+    "首次用对抗性RL训练说服者agent系统性暴露LLM信念脆弱性",
+    "发现RL训练可使说服成功率从24%提升至93%且跨模型/领域迁移",
+    "课程学习突破对GPT-4o-mini等强目标的说服瓶颈"
+   ],
+   "benchmarks": [
+    "TruthfulQA",
+    "MMLU",
+    "CommonsenseQA",
+    "MedQA",
+    "ARC-Challenge"
+   ]
+  }
+ }
 }

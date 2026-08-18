@@ -4,5 +4,31 @@
  "title": "Quantifying-the-Relationship-Between-Clinical-Safety-and-Env",
  "token": "sk-hwXfRrBR3...",
  "created_at": "2026-08-13 14:54:52",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/0c1adb13-53ce-4dcd-9356-c3775973cc16.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/0c1adb13-53ce-4dcd-9356-c3775973cc16.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:58:16",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Clinical AI Safety",
+    "Therapeutic LLMs",
+    "Sustainable AI",
+    "K-Bench",
+    "EcoLogits",
+    "Pareto Frontier",
+    "Test-time Compute"
+   ],
+   "field": "可持续临床人工智能",
+   "innovations": [
+    "首次量化治疗性LLM临床安全与环境足迹的非线性权衡关系",
+    "揭示额外测试时间计算未稳定提升安全分数",
+    "提出基于Pareto前沿的动态模型选择策略"
+   ],
+   "benchmarks": [
+    "K-Bench",
+    "EcoLogits LCA Estimates"
+   ]
+  }
+ }
 }

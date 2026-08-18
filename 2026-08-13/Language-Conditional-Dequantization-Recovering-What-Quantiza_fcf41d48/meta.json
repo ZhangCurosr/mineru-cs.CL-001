@@ -4,5 +4,32 @@
  "title": "Language-Conditional-Dequantization-Recovering-What-Quantiza",
  "token": "sk-ZGznq9xBq...",
  "created_at": "2026-08-13 07:10:36",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/4dce8b7a-e31d-4355-86d9-7765f09ef5d6.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/4dce8b7a-e31d-4355-86d9-7765f09ef5d6.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:19:09",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "quantization",
+    "multilingual LLM",
+    "low-rank adaptation",
+    "post-hoc correction",
+    "language bias",
+    "perplexity-accuracy disconnect",
+    "GPTQ",
+    "LoRA"
+   ],
+   "field": "多语言大模型高效部署与公平性",
+   "innovations": [
+    "提出首个后处理且语言条件化的低秩校正方法 LCD，以 0.12% 参数/语言恢复非英语语言量化损失",
+    "首次系统量化英语校准 INT3 量化对亚 4B 模型的非英语伤害谱系（最高 4.37× 困惑度退化）",
+    "揭示并诊断困惑度恢复与下游准确率恢复的脱节现象，归因于量化误差深度分布的架构依赖性"
+   ],
+   "benchmarks": [
+    "GlobalMMLU",
+    "mC4/C4 perplexity"
+   ]
+  }
+ }
 }

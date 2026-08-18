@@ -4,5 +4,32 @@
  "title": "Robust-Multi-Tier-Infant-Centered-Audio-Understanding-with-W",
  "token": "sk-Zs9k8BxOo...",
  "created_at": "2026-08-13 14:55:00",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/95b7c5b3-3647-4dc3-9457-1550f850d7ae.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/95b7c5b3-3647-4dc3-9457-1550f850d7ae.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:59:12",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Audio Tagging",
+    "Speaker Diarization",
+    "Whisper",
+    "LoRA",
+    "Infant-Centered Audio",
+    "Multi-Tier Classification",
+    "Test-Time Adaptation"
+   ],
+   "field": "音频理解与说话人分析",
+   "innovations": [
+    "因子化说话人Token将层级通用特征与家庭偏移解耦",
+    "序列级平滑损失增强多层音频标记时序一致性",
+    "基于LoRA微调Whisper的轻量多层联合预测框架"
+   ],
+   "benchmarks": [
+    "LittleBeats multimodal recordings",
+    "Macro-F1",
+    "Cohen's Kappa"
+   ]
+  }
+ }
 }

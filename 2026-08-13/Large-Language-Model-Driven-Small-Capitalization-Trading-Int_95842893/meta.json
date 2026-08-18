@@ -4,5 +4,30 @@
  "title": "Large-Language-Model-Driven-Small-Capitalization-Trading-Int",
  "token": "sk-EqwJR1nOB...",
  "created_at": "2026-08-13 14:54:44",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/bfbe9978-d919-4c18-bd6f-a97632f36467.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/bfbe9978-d919-4c18-bd6f-a97632f36467.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:23:11",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM sentiment",
+    "portfolio construction",
+    "uncertainty-aware covariance",
+    "small-cap trading",
+    "macro-beta trigger",
+    "news clustering"
+   ],
+   "field": "金融大模型与量化组合",
+   "innovations": [
+    "将aleatoric与epistemic预测不确定性合并为跨资产协方差并直接用于组合分配",
+    "以故事为单位聚类新闻并选取代表文章构建情绪特征",
+    "把宏观beta触发分解为pure alpha、pure beta与beta交集三腿并对比持有期效应"
+   ],
+   "benchmarks": [
+    "Russell 2000 equity backtest",
+    "MVO/RP/HRP/EW/BL/BBL allocator comparison"
+   ]
+  }
+ }
 }

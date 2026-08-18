@@ -4,5 +4,10 @@
  "title": "Mechanist-AI-as-a-Scientific-Instrument-for-Discovering-the",
  "token": "sk-CZoysi7P5...",
  "created_at": "2026-08-13 14:54:48",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/906a70e0-07b4-423c-8858-ea4b7afd4231.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/906a70e0-07b4-423c-8858-ea4b7afd4231.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:52:12",
+  "chunks": 1
+ }
 }

@@ -4,5 +4,32 @@
  "title": "AVA-Encoder-Towards-Agent-Native-Video-Representation-Learni",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-13 03:36:23",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/932dc3e8-fba0-4e93-9183-e636759b311c.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/932dc3e8-fba0-4e93-9183-e636759b311c.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:11:40",
+  "chunks": 6,
+  "meta": {
+   "keywords": [
+    "Agent-Native Video Representation",
+    "Agentic Video Auto-Encoder",
+    "TextGrad",
+    "Knowledge Graph",
+    "Video Evaluation",
+    "Film Understanding",
+    "Multi-granularity Encoding",
+    "Anti-Forgetting"
+   ],
+   "field": "视频理解与Agent表示学习",
+   "innovations": [
+    "首次将Agent原生视频表示学习表述为自演化自动编码闭环（视频→KG→重建）",
+    "双环文本梯度演化机制：外环策略更新+内环KG表示精炼，参数-free优化",
+    "4方向×8维度原子化QA-Reward评估体系，自动化与人工对齐率97.3%"
+   ],
+   "benchmarks": [
+    "Agentic Video Representation Benchmark",
+    "Film Knowledge Graph Dataset"
+   ]
+  }
+ }
 }

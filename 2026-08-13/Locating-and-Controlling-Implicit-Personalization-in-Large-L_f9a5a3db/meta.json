@@ -4,5 +4,32 @@
  "title": "Locating-and-Controlling-Implicit-Personalization-in-Large-L",
  "token": "sk-OZiRtsQic...",
  "created_at": "2026-08-13 14:56:09",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/8f8e6fff-59bb-456e-bb9c-b38d4593eba4.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/8f8e6fff-59bb-456e-bb9c-b38d4593eba4.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:28:11",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "implicit personalization",
+    "activation contrast",
+    "directional ablation",
+    "causal mediation",
+    "intersectional cues",
+    "fairness auditing"
+   ],
+   "field": "大语言模型公平性与可控性",
+   "innovations": [
+    "线索诱导激活对比幅度可逐样本追踪隐性个性化行为（最高 r=0.87）",
+    "多重线索内部线性组合而行为亚加性（低 28%-38%）",
+    "方向消融在推理时选择性抑制线索影响且优于显式提示"
+   ],
+   "benchmarks": [
+    "MMLU",
+    "TMDB movie recommendation",
+    "SED-desc",
+    "CAR"
+   ]
+  }
+ }
 }

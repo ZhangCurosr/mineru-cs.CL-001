@@ -4,5 +4,39 @@
  "title": "MASSIVE-ACTIVATIONS-IN-HYBRID-LINEAR-ATTEN-TION-LARGE-LANGUA",
  "token": "sk-331OfnzjD...",
  "created_at": "2026-08-13 14:54:45",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/1460a947-842c-445f-afeb-0ac637c1904f.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/1460a947-842c-445f-afeb-0ac637c1904f.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:40:08",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "massive activations",
+    "hybrid linear attention",
+    "pre-attention spikes",
+    "inter-spike plateaus",
+    "systematic outliers",
+    "attention sink",
+    "mechanistic interpretability"
+   ],
+   "field": "混合线性注意力大语言模型内部动力学",
+   "innovations": [
+    "首次系统揭示 HLA LLM 中 MA 的 PAS/ISP 双层架构对齐形态",
+    "提出 sink-conditioned 追踪方案与 ISR/对齐率定量指标",
+    "建立以 MA 抵消时机为核心的统一生命周期机制框架"
+   ],
+   "benchmarks": [
+    "WikiText-103",
+    "GSM8K",
+    "CodeSearchNet",
+    "FLORES-200",
+    "Scientific Papers",
+    "NIAH-1/2/3",
+    "SWDE",
+    "FDA",
+    "SQuAD",
+    "Natural Questions"
+   ]
+  }
+ }
 }

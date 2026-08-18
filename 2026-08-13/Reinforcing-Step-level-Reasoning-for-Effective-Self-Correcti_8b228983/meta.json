@@ -4,5 +4,32 @@
  "title": "Reinforcing-Step-level-Reasoning-for-Effective-Self-Correcti",
  "token": "sk-yjjHVmEWF...",
  "created_at": "2026-08-13 14:55:00",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/cfb6abbb-9a9b-4901-bd6e-9da1c41e21f1.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/cfb6abbb-9a9b-4901-bd6e-9da1c41e21f1.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:58:43",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "self-correction",
+    "step-level reasoning",
+    "preference optimization",
+    "DPO",
+    "LLM reasoning",
+    "reinforcement learning"
+   ],
+   "field": "大语言模型推理与自纠错",
+   "innovations": [
+    "两阶段 RL 框架：先 step-level 偏好优化再自纠错训练",
+    "教师辅助变体 SFS-DPO-R 引入错误解释 rationale 增强纠错信号",
+    "证明分阶段串行训练优于无初始化或联合训练"
+   ],
+   "benchmarks": [
+    "MATH",
+    "GSM8K",
+    "GK2023",
+    "OCW"
+   ]
+  }
+ }
 }

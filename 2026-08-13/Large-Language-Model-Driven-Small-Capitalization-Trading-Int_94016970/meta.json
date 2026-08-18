@@ -4,5 +4,31 @@
  "title": "Large-Language-Model-Driven-Small-Capitalization-Trading-Int",
  "token": "sk-n7iJ0Z1Ol...",
  "created_at": "2026-08-13 03:36:22",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/bfbe9978-d919-4c18-bd6f-a97632f36467.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/bfbe9978-d919-4c18-bd6f-a97632f36467.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:19:56",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Large Language Model",
+    "Quantitative Trading",
+    "Portfolio Construction",
+    "Uncertainty Quantification",
+    "Financial Sentiment",
+    "Small-cap Stocks"
+   ],
+   "field": "LLM驱动的量化投资组合管理",
+   "innovations": [
+    "将aleatoric和epistemic不确定性分解后直接注入投资组合协方差矩阵，而非仅调整预期收益",
+    "分离pure-alpha和pure-beta选股通道，实证表明分离通道优于双通道交集",
+    "新闻聚类去重构造story-level情绪信号，避免重复报道放大偏差"
+   ],
+   "benchmarks": [
+    "Russell 2000",
+    "Sharpe Ratio",
+    "Maximum Drawdown"
+   ]
+  }
+ }
 }

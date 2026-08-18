@@ -4,5 +4,30 @@
  "title": "On-Weak-Bisimilarities-in-CCSK",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-13 07:10:35",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/14db7ef0-d425-45e9-b48c-06a369c5d834.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/14db7ef0-d425-45e9-b48c-06a369c5d834.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:46:56",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "CCSK",
+    "可逆计算",
+    "弱双类似性",
+    "混合双类似性",
+    "同余性",
+    "行为等价",
+    "并发演算"
+   ],
+   "field": "可逆并发理论",
+   "innovations": [
+    "提出混合与方向性弱可逆双类似性两种新变体",
+    "证明混合双类似性是congruence且完全抽象τ动作",
+    "揭示CCS双类似性扩展到CCSK后普遍丧失同余性"
+   ],
+   "benchmarks": [
+    "CCSK标准进程对层级验证"
+   ]
+  }
+ }
 }

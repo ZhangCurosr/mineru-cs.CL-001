@@ -4,5 +4,32 @@
  "title": "LazyTrain-Limited-resource-Allocation-toward-Zero-waste-Yiel",
  "token": "sk-9ieZJEGxv...",
  "created_at": "2026-08-13 14:54:50",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/0773f812-32bf-4125-abe4-fc3f60cc595e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/0773f812-32bf-4125-abe4-fc3f60cc595e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:23:01",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM training",
+    "mixed-integer programming",
+    "activation scheduling",
+    "MegaTrain",
+    "CPU offloading",
+    "NVMe-aware training",
+    "8-bit optimizer"
+   ],
+   "field": "受限资源下的大语言模型训练系统",
+   "innovations": [
+    "将层流执行中的检查点/放置/重计算/通信重叠联合建模为 MILP 并在离线阶段求解",
+    "在层流可行空间内以固定启发式为下界进行搜索并证明其可行性",
+    "提出 Hybrid 8-bit 算子，耦合 8-bit 优化器状态与快速梯度裁剪以对冲 CPU 更新开销"
+   ],
+   "benchmarks": [
+    "MetaMathQA",
+    "H800 80GB 单卡 Qwen3.6-27B",
+    "RTX 3090 24GB 3B-27B 多尺度"
+   ]
+  }
+ }
 }

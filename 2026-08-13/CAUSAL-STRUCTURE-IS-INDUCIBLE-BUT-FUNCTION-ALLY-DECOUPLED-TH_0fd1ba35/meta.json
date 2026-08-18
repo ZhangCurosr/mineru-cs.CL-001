@@ -4,5 +4,31 @@
  "title": "CAUSAL-STRUCTURE-IS-INDUCIBLE-BUT-FUNCTION-ALLY-DECOUPLED-TH",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-13 07:10:28",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/9abe69f7-2b01-4d43-a25b-d3148e23296f.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/9abe69f7-2b01-4d43-a25b-d3148e23296f.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:02:07",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "causal reasoning",
+    "mechanism library",
+    "model editing",
+    "routing/readout boundary",
+    "preregistration",
+    "moving null",
+    "permutation test",
+    "auditable state"
+   ],
+   "field": "模型可解释性与机制库",
+   "innovations": [
+    "发现显式机制库的 routing/readout 解耦边界（H-α），推翻电路板直觉",
+    "提出配对置换归因协议应对 moving null",
+    "建立零成本、bit-exact 可逆的可审计状态管理基础设施"
+   ],
+   "benchmarks": [
+    "causal-world benchmark with exact interventional ground truth"
+   ]
+  }
+ }
 }

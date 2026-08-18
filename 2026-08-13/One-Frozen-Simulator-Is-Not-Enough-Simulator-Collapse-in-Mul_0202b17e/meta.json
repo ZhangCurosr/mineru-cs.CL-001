@@ -4,5 +4,31 @@
  "title": "One-Frozen-Simulator-Is-Not-Enough-Simulator-Collapse-in-Mul",
  "token": "sk-dQ65jxzP4...",
  "created_at": "2026-08-13 14:54:45",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/1f0653d2-76f2-40a1-b2b4-aa64464ee0e9.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/1f0653d2-76f2-40a1-b2b4-aa64464ee0e9.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:56:52",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "multi-agent RL",
+    "simulator collapse",
+    "user simulation",
+    "co-training",
+    "verbalized sampling",
+    "policy entropy"
+   ],
+   "field": "多智能体强化学习",
+   "innovations": [
+    "形式化模拟器坍缩并证明其导致策略梯度偏置和熵几何收敛",
+    "Verbalized Sampling在推理时恢复模拟器多样性无需重训练",
+    "Co-Training联合训练策略和用户模拟器打破固定模式利用集"
+   ],
+   "benchmarks": [
+    "Persuasion for Good",
+    "τ²-bench",
+    "CooperBench"
+   ]
+  }
+ }
 }

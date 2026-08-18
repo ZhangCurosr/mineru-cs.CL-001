@@ -4,5 +4,32 @@
  "title": "MuseCritic-Learning-Multi-Aspect-Song-Rewards-through-Natura",
  "token": "sk-mtKOSZtKc...",
  "created_at": "2026-08-13 14:56:08",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/02634c1c-66c5-44ee-9daa-c1e04bd574f5.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/02634c1c-66c5-44ee-9daa-c1e04bd574f5.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:42:40",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "奖励模型",
+    "歌曲生成",
+    "自然语言评论",
+    "半标量模型",
+    "偏好对齐",
+    "GRPO",
+    "长音频评估"
+   ],
+   "field": "多模态奖励建模",
+   "innovations": [
+    "提出半标量奖励模型将自然语言评论作为歌曲表示与连续审美分数之间的中间变量",
+    "设计两阶段训练（教师SFT→自生成评论奖励学习）缓解评论分布偏移",
+    "在 SongEval 与 Music Arena 上均取得最优性能并成功用于 Muse-0.6B 的 GRPO 对齐训练"
+   ],
+   "benchmarks": [
+    "SongEval",
+    "Music Arena",
+    "Audiobox Aesthetics"
+   ]
+  }
+ }
 }

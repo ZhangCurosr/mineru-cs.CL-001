@@ -3,5 +3,30 @@
  "batch_id": "cd482895-3b8f-40c7-99a2-8675c780800b",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 14:58:38",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/1dcb6660-9094-4d29-a928-0c323bd1c015.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/1dcb6660-9094-4d29-a928-0c323bd1c015.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 11:38:05",
+  "chunks": 7,
+  "meta": {
+   "keywords": [
+    "rational contracting",
+    "LLM agents",
+    "negotiation-performance game",
+    "natural language contracts",
+    "multi-agent simulation",
+    "Concordia"
+   ],
+   "field": "多智能体系统与自然语言理解",
+   "innovations": [
+    "将自然语言合同翻译为联合策略约束的离线验证管道",
+    "RC/RE/RCC 三种理性行为者的形式化定义与对比基线",
+    "基于个体理性与目标 P_sat 的合成合同生成与搜索框架"
+   ],
+   "benchmarks": [
+    "Hotel Cleaning",
+    "AI Model Hosting"
+   ]
+  }
+ }
 }
