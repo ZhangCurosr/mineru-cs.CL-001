@@ -4,5 +4,31 @@
  "title": "AutoDesign-Meta-Harness-Optimization-for-Long-Horizon-Agenti",
  "token": "sk-WJrSFDicB...",
  "created_at": "2026-08-14 04:08:05",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/b587fc2f-9214-4031-928d-e4b00f3b0e50.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/b587fc2f-9214-4031-928d-e4b00f3b0e50.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:37:20",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "meta-harness optimization",
+    "long-horizon agentic design",
+    "multimodal design",
+    "self-improving harness",
+    "paper-to-poster",
+    "poster evaluation benchmark",
+    "design harness evolution"
+   ],
+   "field": "多模态智能体与系统自改进",
+   "innovations": [
+    "将 design harness 作为可递归优化的外层目标而非单次 artifact 修正，实现 persistent design prior 的累积",
+    "五组件分解 + 单组件更新 + 训练/开发双集接受门控，防止 harness 过拟合同时保持 credit assignment 可解释",
+    "建立 PosterBench 七维加权 rubric 与 record-level ceiling 的统一评估协议，并在系统盲评中与人类偏好显著对齐"
+   ],
+   "benchmarks": [
+    "PosterBench (100-paper Main Track)",
+    "PosterBench-mini (10-paper shared subset)"
+   ]
+  }
+ }
 }

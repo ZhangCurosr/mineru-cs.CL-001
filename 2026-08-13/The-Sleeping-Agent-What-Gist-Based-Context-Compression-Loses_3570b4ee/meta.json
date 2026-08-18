@@ -4,5 +4,29 @@
  "title": "The-Sleeping-Agent-What-Gist-Based-Context-Compression-Loses",
  "token": "sk-ZGznq9xBq...",
  "created_at": "2026-08-13 07:10:36",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/c86be15d-686b-4cba-bed0-1105d79c623b.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/c86be15d-686b-4cba-bed0-1105d79c623b.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:31:46",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "context compression",
+    "long-horizon agent",
+    "memory management",
+    "temporal anchor",
+    "gist abstraction",
+    "LoCoMo"
+   ],
+   "field": "长上下文 Agent 记忆管理",
+   "innovations": [
+    "揭示通用 gist 摘要选择性丢失时间锚点机制",
+    "一句 prompt 修改实现 20 倍时间保留率提升并恢复 +0.314 时态准确率",
+    "SWC 诊断框架 + 类别级评估方法论"
+   ],
+   "benchmarks": [
+    "LoCoMo"
+   ]
+  }
+ }
 }

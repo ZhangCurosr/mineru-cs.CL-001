@@ -4,5 +4,31 @@
  "title": "Who-Thinks-Best-Depends-on-How-Long-You-Let-Them-Budget-Depe",
  "token": "sk-ZHrWl9Czg...",
  "created_at": "2026-08-13 14:54:45",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/e0ff5d4e-165e-431e-b493-3bd3f01bf899.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/e0ff5d4e-165e-431e-b493-3bd3f01bf899.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:36:48",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM evaluation",
+    "test-time compute",
+    "token budget",
+    "model routing",
+    "overthinking",
+    "benchmark robustness"
+   ],
+   "field": "大语言模型评测与方法",
+   "innovations": [
+    "首次系统揭示 LLM 推理基准排名随 token 预算显著反转",
+    "提出 item‑level 行为分类学量化模型特异性的 overthinking 现象",
+    "设计并验证预算感知路由器可捕获 14.1% oracle 缺口"
+   ],
+   "benchmarks": [
+    "GSM8K",
+    "MATH-500",
+    "GPQA-Diamond"
+   ]
+  }
+ }
 }

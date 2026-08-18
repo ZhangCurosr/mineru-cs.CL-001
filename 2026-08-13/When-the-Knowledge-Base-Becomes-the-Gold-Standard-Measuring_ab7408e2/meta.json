@@ -4,5 +4,10 @@
  "title": "When-the-Knowledge-Base-Becomes-the-Gold-Standard-Measuring",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-13 06:51:38",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/226a41c4-8600-40a6-bf3a-37048e8ae7ef.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/226a41c4-8600-40a6-bf3a-37048e8ae7ef.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:34:54",
+  "chunks": 1
+ }
 }

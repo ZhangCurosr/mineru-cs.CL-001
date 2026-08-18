@@ -4,5 +4,29 @@
  "title": "ToolHazard-Scaling-Adversarial-Environments-for-Security-Eva",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-13 06:51:38",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/d0a64ead-4e03-4b15-9507-72c72652f113.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/d0a64ead-4e03-4b15-9507-72c72652f113.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:33:27",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "间接提示注入",
+    "LLM Agent 安全",
+    "对抗环境合成",
+    "Agent 对齐",
+    "自动红队"
+   ],
+   "field": "LLM Agent 安全与对齐",
+   "innovations": [
+    "提出 ToolHazard 框架，自动合成可执行状态化 agent 环境并发现可行注入点",
+    "构建 ToolHazard-Bench/Align 双数据集，支持长程任务评测与 SFT+RL 对抗对齐",
+    "实证发现注入时机与位置显著影响攻击效果，并提出结构化解法"
+   ],
+   "benchmarks": [
+    "ToolHazard-Bench",
+    "AgentDojo"
+   ]
+  }
+ }
 }

@@ -4,5 +4,31 @@
  "title": "Total-Recall-at-What-Cost-Benchmarking-the-Serving-Cost-of-A",
  "token": "sk-4LF0lBYcu...",
  "created_at": "2026-08-13 14:54:51",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/ec8c88a4-5503-48a7-bd61-e19b88b88fea.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/ec8c88a4-5503-48a7-bd61-e19b88b88fea.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:32:46",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "agentic memory systems",
+    "LLM inference cost",
+    "cost benchmarking",
+    "break-even analysis",
+    "LoCoMo",
+    "long-running conversational agents",
+    "cost-accuracy trade-off"
+   ],
+   "field": "AI系统成本评估",
+   "innovations": [
+    "首个控制性智能体记忆系统服务成本基准测试",
+    "可分离成本模型结合LOOCV诊断内部状态驱动的成本",
+    "联合成本-准确性矩阵与盈亏平衡分析框架"
+   ],
+   "benchmarks": [
+    "LoCoMo",
+    "合成对话网格(N×t)"
+   ]
+  }
+ }
 }

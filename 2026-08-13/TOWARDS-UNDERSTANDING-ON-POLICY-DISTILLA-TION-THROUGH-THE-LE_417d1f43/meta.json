@@ -4,5 +4,34 @@
  "title": "TOWARDS-UNDERSTANDING-ON-POLICY-DISTILLA-TION-THROUGH-THE-LE",
  "token": "sk-ZGznq9xBq...",
  "created_at": "2026-08-13 07:10:35",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/d3f812b4-6faa-4285-b497-ae880104b838.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/d3f812b4-6faa-4285-b497-ae880104b838.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:31:01",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "On-Policy Distillation",
+    "Test-Time Scaling",
+    "pass@K",
+    "avg@K",
+    "Illusory Distillation",
+    "Reverse KL",
+    "Capability Boundary",
+    "Sampling Efficiency"
+   ],
+   "field": "大语言模型推理能力增强",
+   "innovations": [
+    "通过测试时缩放框架揭示OPD主要提升采样效率而非能力边界",
+    "发现OPD遗忘已解问题多于学会新问题，提出‘虚幻蒸馏’概念",
+    "跨OPD变体验证效率‑边界权衡的普适性，并与非对策蒸馏对比定位"
+   ],
+   "benchmarks": [
+    "AMC2023",
+    "AIME2024",
+    "AIME2025",
+    "AIME2026"
+   ]
+  }
+ }
 }

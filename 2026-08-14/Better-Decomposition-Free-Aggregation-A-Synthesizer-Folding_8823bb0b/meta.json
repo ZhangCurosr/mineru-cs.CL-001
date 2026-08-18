@@ -4,5 +4,31 @@
  "title": "Better-Decomposition-Free-Aggregation-A-Synthesizer-Folding",
  "token": "sk-4LF0lBYcu...",
  "created_at": "2026-08-14 04:07:52",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/314f0cb2-65d6-4773-81bd-689227a83909.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/314f0cb2-65d6-4773-81bd-689227a83909.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:37:50",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Multilingual QA",
+    "Multi-hop Reasoning",
+    "Retrieval-Augmented Generation",
+    "Question Decomposition",
+    "Synthesizer-Folding",
+    "Cross-lingual RAG"
+   ],
+   "field": "多语言多跳问答",
+   "innovations": [
+    "合成器折叠：将终态聚合调用替换为分解器生成的终端子问题，使聚合与分解在单一逻辑步骤内完成",
+    "条件式双语回退：以分解忠实度检查为门控，翻译仅在单语分解不可靠时激活",
+    "跨语言 MMR 去重：用最大边际相关性抑制平行翻译文档冗余"
+   ],
+   "benchmarks": [
+    "HotpotQA",
+    "2WikiMultiHopQA",
+    "MuSiQue"
+   ]
+  }
+ }
 }

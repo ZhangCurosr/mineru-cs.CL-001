@@ -4,5 +4,31 @@
  "title": "When-the-API-Speaks-the-Wrong-Language-Revisiting-Post-Train",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-13 07:10:29",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/02ec91f8-0565-4e50-8a6f-d6f110a8f60d.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/02ec91f8-0565-4e50-8a6f-d6f110a8f60d.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:34:25",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "多语言API调用",
+    "Argument Language Mismatch",
+    "SFT vs RL",
+    "GRPO",
+    "结构化生成",
+    "参数语言一致性",
+    "工具调用"
+   ],
+   "field": "多语言工具调用与结构化生成",
+   "innovations": [
+    "形式化ALM失败模式并建立五层分层评测指标体系",
+    "证明SFT在多语言API接地任务上是强基线，RL仅提供增量收益",
+    "设计参数分解奖励RM-3并结合GRPO实现细粒度信用分配"
+   ],
+   "benchmarks": [
+    "Berkeley Function Calling (BFC) multilingual extension",
+    "Multilingual MGSM"
+   ]
+  }
+ }
 }

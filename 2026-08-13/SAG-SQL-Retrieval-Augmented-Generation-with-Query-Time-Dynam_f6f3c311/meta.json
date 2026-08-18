@@ -4,5 +4,34 @@
  "title": "SAG-SQL-Retrieval-Augmented-Generation-with-Query-Time-Dynam",
  "token": "sk-Yw2JG3IRJ...",
  "created_at": "2026-08-13 14:54:46",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/3d93b486-3a9c-4376-b2c6-c4fc0849bc80.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/3d93b486-3a9c-4376-b2c6-c4fc0849bc80.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:12:38",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "RAG",
+    "多跳检索",
+    "知识图谱",
+    "SQL JOIN",
+    "超边",
+    "事件提取",
+    "大语言模型"
+   ],
+   "field": "检索增强生成",
+   "innovations": [
+    "事件-实体索引替代全局知识图谱，通过 SQL join 动态激活查询相关超边",
+    "双路检索（实体引导结构化召回 + 直接向量召回）结合 LLM 上下文联合选择",
+    "append-only 索引支持持续语料增长，固定候选预算保证可扩展性"
+   ],
+   "benchmarks": [
+    "MuSiQue",
+    "2WikiMultiHopQA",
+    "HotpotQA",
+    "NQ",
+    "NarrativeQA"
+   ]
+  }
+ }
 }

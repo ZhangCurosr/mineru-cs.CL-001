@@ -4,5 +4,30 @@
  "title": "AQuA-Recursively-Self-Improving-Quantitative-Trading-Researc",
  "token": "sk-Hms67LeAf...",
  "created_at": "2026-08-14 04:11:25",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/428803e2-1b34-41a6-ba4b-2c9053152feb.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/428803e2-1b34-41a6-ba4b-2c9053152feb.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:36:39",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "recursive self-improvement",
+    "quantitative trading",
+    "alpha factor discovery",
+    "autonomous research agent",
+    "sealed sandbox",
+    "financial time series"
+   ],
+   "field": "量化投资与金融AI",
+   "innovations": [
+    "在因子发现和模型开发两个独立系统中分别实现研究流程层面的递归自改进，通过密封沙箱和分离优化/报告指标双重封堵数据泄漏",
+    "引入可证伪假设框架驱动因子发现，要求每个因子在生成前先陈述经济机制与反证标准",
+    "以配置差异（config dif）驱动混合时间序列模型的自主搜索，保证变体间直接可比"
+   ],
+   "benchmarks": [
+    "Crypto-five-minute universe (combined IC ~0.190)",
+    "US equities 30-min prediction (per-stock IC +0.0843, Sharpe +2.50 held-out)"
+   ]
+  }
+ }
 }

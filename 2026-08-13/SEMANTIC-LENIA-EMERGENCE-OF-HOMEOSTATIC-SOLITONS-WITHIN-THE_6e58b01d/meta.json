@@ -4,5 +4,31 @@
  "title": "SEMANTIC-LENIA-EMERGENCE-OF-HOMEOSTATIC-SOLITONS-WITHIN-THE",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-13 07:10:31",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/68efbec5-3b16-493e-8ebf-4136b8a89250.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/68efbec5-3b16-493e-8ebf-4136b8a89250.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:11:02",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Semantic Lenia",
+    "Large Language Models",
+    "Homeostatic Solitons",
+    "Continuous Dynamical Systems",
+    "Decoding-time Intervention",
+    "Artificial Life"
+   ],
+   "field": "LLM推理动力学与生成控制",
+   "innovations": [
+    "将Lenia连续动力学框架迁移至LLM logit空间，构建非线性稳态反馈循环",
+    "发现句法惯性与干预能量的物理缩放定律及宜居脊临界相变规律",
+    "引入困惑度方差作为热力学度量以区分真实溯因跃迁与虚假衰减路径"
+   ],
+   "benchmarks": [
+    "Llama-3.1-8B",
+    "Llama-3.1-70B",
+    "Gemma-7B"
+   ]
+  }
+ }
 }

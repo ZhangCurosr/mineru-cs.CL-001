@@ -4,5 +4,41 @@
  "title": "MASSIVE-ACTIVATIONS-IN-HYBRID-LINEAR-ATTEN-TION-LARGE-LANGUA",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-13 04:49:37",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/1460a947-842c-445f-afeb-0ac637c1904f.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/1460a947-842c-445f-afeb-0ac637c1904f.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:15:23",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "巨量激活",
+    "混合线性注意力",
+    "系统性离群值",
+    "预注意力尖峰",
+    "尖峰间平台",
+    "attention sink",
+    "门控机制"
+   ],
+   "field": "大语言模型可解释性",
+   "innovations": [
+    "首次系统揭示 HLA LLMs 中 MAs 的 PAS 与 ISP 两种架构对齐形态及其跨架构可复现性",
+    "提出以取消时机为核心的统一系统性离群值生命周期框架解释 PAS/ISP 连续谱",
+    "受控预训练证明全注意力输出门控可显著衰减但无法消除 MAs 的层间组织"
+   ],
+   "benchmarks": [
+    "WikiText-103",
+    "GSM8K",
+    "CodeSearchNet",
+    "FLORES-200",
+    "RULER NIAH-1/2/3",
+    "HellaSwag",
+    "PIQA",
+    "ARC-Easy",
+    "SWDE",
+    "FDA",
+    "SQuAD",
+    "Natural Questions"
+   ]
+  }
+ }
 }

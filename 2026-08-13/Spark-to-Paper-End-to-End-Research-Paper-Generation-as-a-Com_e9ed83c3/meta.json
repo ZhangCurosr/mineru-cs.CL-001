@@ -4,5 +4,30 @@
  "title": "Spark-to-Paper-End-to-End-Research-Paper-Generation-as-a-Com",
  "token": "sk-JqniBRrr0...",
  "created_at": "2026-08-13 14:54:49",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/0ac74298-a986-4b59-9e5d-ca6856061035.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/0ac74298-a986-4b59-9e5d-ca6856061035.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:14:55",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "end-to-end research paper generation",
+    "composable skills",
+    "autonomous research agent",
+    "citation integrity",
+    "self-refutation loop",
+    "editable vector figures",
+    "evidence-grounded generation"
+   ],
+   "field": "自动化科学研究与学术写作",
+   "innovations": [
+    "将端到端研究论文生成实现为现有代码助手内的13个可组合技能，无需独立编排平台",
+    "预提交实验设计+证据引导声明修订+确定性门控+有界自我反驳循环的长期生成机制",
+    "角色感知可编辑矢量图生成：实验图从测量数据直接绘制，方法图经图像生成+HTML代码重建"
+   ],
+   "benchmarks": [
+    "8个受控研究主题的引用有效性、图表可编辑性、伪造检测率、审查精确率"
+   ]
+  }
+ }
 }
