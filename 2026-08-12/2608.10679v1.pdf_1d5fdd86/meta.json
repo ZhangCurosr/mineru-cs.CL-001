@@ -3,5 +3,30 @@
  "batch_id": "1d5fdd86-7339-4053-8939-17797188cd58",
  "token": "sk-Ir4JqYCnj...",
  "created_at": "2026-08-12 15:32:17",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/996f79b8-7201-4665-b914-06098f1e59aa.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/996f79b8-7201-4665-b914-06098f1e59aa.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:38:36",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "企业问答",
+    "检索增强生成",
+    "多跳推理",
+    "知识图谱",
+    "基准测试",
+    "组织结构推理",
+    "图神经网络"
+   ],
+   "field": "企业级信息检索与问答",
+   "innovations": [
+    "提出潜在组织推理能力及其三级能力分解框架",
+    "图接地基准构建：先重建审计企业世界再编译问题，确保可答性和答案唯一性",
+    "引入认证惯例库和证明证书机制，将组织推断与发布证据分离"
+   ],
+   "benchmarks": [
+    "ENTLORE"
+   ]
+  }
+ }
 }

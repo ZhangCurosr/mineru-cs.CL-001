@@ -3,5 +3,31 @@
  "batch_id": "606e020a-8616-43da-a3bc-4fd62bc18cbe",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-12 15:01:53",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/945717da-c0a1-4190-b986-0ce06039ad24.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/945717da-c0a1-4190-b986-0ce06039ad24.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:38:45",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "语料审计",
+    "中文大模型",
+    "BPE tokenizer",
+    "网络污染",
+    "Common Crawl",
+    "数据质量",
+    "token 级分析",
+    "采样估计"
+   ],
+   "field": "大语言模型语料审计与数据质量",
+   "innovations": [
+    "提出 SAMPLED-BPE 采样+BPE 训练实现 token 级语料污染轻量化审计；首次用层级 token 树结构表征组合污染与共享核心-专属尾部结构；量化 0.25% 采样率下的精度-成本权衡（148.4× 加速、35.8× 内存削减、4.25% WRE）"
+   ],
+   "benchmarks": [
+    "11 个公开中文语料（OSCAR/mC4/HPLT/CulturaX/CWT/ROOTS/WanJuan/MAPCC/SkyPile/CCI3/WuDao）",
+    "Chinese Common Crawl 2021–2026 六期快照",
+    "GLM-4-32B 微调分类器（97.32% test accuracy)"
+   ]
+  }
+ }
 }

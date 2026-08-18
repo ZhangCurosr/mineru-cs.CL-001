@@ -3,5 +3,32 @@
  "batch_id": "cde4d58d-4ce2-4ecb-abc5-1f51b36e7993",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 16:05:12",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/88bb0c70-e0e6-4452-9baa-614aa30b7df8.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/88bb0c70-e0e6-4452-9baa-614aa30b7df8.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:38:25",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "evolutionary prompt optimization",
+    "cost-aware LLM search",
+    "cross-tier transfer",
+    "reflective mutation",
+    "multi-fidelity optimization",
+    "prompt transferability"
+   ],
+   "field": "大语言模型提示词自动化优化与成本效率",
+   "innovations": [
+    "将进化循环中的评分/变异/部署角色解耦到不同价格层级，以廉价评估器+强变异算子实现跨层迁移",
+    "系统刻画向上跨层迁移的成功边界与显式性结构成因",
+    "提出基于价格临界比λ*与部署盈亏体积N*的成本可复算框架"
+   ],
+   "benchmarks": [
+    "HotpotQA",
+    "IFBench",
+    "LiveBench-Math",
+    "HoVer"
+   ]
+  }
+ }
 }

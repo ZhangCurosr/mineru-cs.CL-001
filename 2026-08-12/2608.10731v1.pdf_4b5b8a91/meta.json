@@ -3,5 +3,33 @@
  "batch_id": "4b5b8a91-7197-4e0c-8ffc-45d1f127dcc0",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-12 14:58:32",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/092675b6-3c7a-4b8a-ac47-35e7c9fa3d00.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/092675b6-3c7a-4b8a-ac47-35e7c9fa3d00.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:40:18",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "bifactor model",
+    "distinguishability",
+    "partially exploratory factor analysis",
+    "covariance equivalence",
+    "stable structure",
+    "reducibility tier",
+    "variational Bayes"
+   ],
+   "field": "因素分析与心理测量模型",
+   "innovations": [
+    "在协方差层面建立二因子与相关因子可区分性的充分条件（Theorem 1）与可约等价性（Proposition 1）",
+    "提出PEFA两步流程：先跨相邻计数识别稳定结构核心，再条件性比较g因子必要性",
+    "揭示anchor-zero设计在二因子总体上假性拒绝率高达42.5%，确立anchor-only为优先选择"
+   ],
+   "benchmarks": [
+    "ICAR认知能力数据集（N=1248，16题×4聚类）",
+    "Holzinger-Swineford 24项测验（N=301，24题×5聚类）",
+    "PID-5 DSM-5人格障碍量表facet均值（N=2012，15域×5域）",
+    "bfi大五人格量表（N=2436，25题×5聚类）"
+   ]
+  }
+ }
 }

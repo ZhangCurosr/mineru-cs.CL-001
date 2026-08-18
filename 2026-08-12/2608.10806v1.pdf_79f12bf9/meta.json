@@ -3,5 +3,31 @@
  "batch_id": "79f12bf9-0831-42a7-9075-015206306bed",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:32:13",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/7ee7369b-b1c2-4a73-ab78-013387789053.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/7ee7369b-b1c2-4a73-ab78-013387789053.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:42:04",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Reliability Estimation",
+    "Monte Carlo Dropout",
+    "BERT",
+    "Question Answering",
+    "Input Perturbation",
+    "SQuAD",
+    "QuAC"
+   ],
+   "field": "自然语言处理-模型可靠性评估",
+   "innovations": [
+    "提出MCD内部扰动+paraphrasing输入扰动双通道可靠性评估框架",
+    "首次系统论证QA任务中MCD dropout率的选取（10%为最优平衡点）",
+    "揭示准确率与可靠性解耦现象，证明RoBERTa整体最可靠而ALBERT/DistilBERT存在显著不一致"
+   ],
+   "benchmarks": [
+    "SQuAD 2.0",
+    "QuAC"
+   ]
+  }
+ }
 }

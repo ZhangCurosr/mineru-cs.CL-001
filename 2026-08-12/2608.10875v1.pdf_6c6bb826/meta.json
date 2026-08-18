@@ -3,5 +3,28 @@
  "batch_id": "6c6bb826-bde2-4033-ada6-25befa78417d",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:32:11",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/1cf9de96-2cc1-4645-a495-b7025a348196.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/1cf9de96-2cc1-4645-a495-b7025a348196.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:45:22",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "agent benchmark",
+    "proactive agent",
+    "long-horizon",
+    "life assistant",
+    "living world",
+    "LLM evaluation"
+   ],
+   "field": "Agent评估与基准测试",
+   "innovations": [
+    "提出静默突变机制测量无提示时的主动感知能力",
+    "构建200个跨10领域多周生活任务benchmark与分层加权评分体系"
+   ],
+   "benchmarks": [
+    "VibeLifeBench"
+   ]
+  }
+ }
 }

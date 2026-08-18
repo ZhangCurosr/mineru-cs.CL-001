@@ -3,5 +3,32 @@
  "batch_id": "0e3a97ee-5575-4852-bcf6-360248e10e9f",
  "token": "sk-n7iJ0Z1Ol...",
  "created_at": "2026-08-12 15:01:40",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/7ee7369b-b1c2-4a73-ab78-013387789053.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/7ee7369b-b1c2-4a73-ab78-013387789053.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:41:18",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Reliability Estimation",
+    "Monte Carlo Dropout",
+    "BERT",
+    "Question Answering",
+    "Robustness",
+    "Paraphrasing",
+    "SQuAD",
+    "QuAC"
+   ],
+   "field": "NLP模型可靠性评估",
+   "innovations": [
+    "双维度可靠性评估框架：内部随机性(MCD)与输入扰动(改写)正交评估",
+    "首次系统对比四个BERT变体在QA任务上的准确性-可靠性解耦现象",
+    "提供dropout率选择的实证依据(10%为平衡操作点)"
+   ],
+   "benchmarks": [
+    "SQuAD v2.0",
+    "QuAC"
+   ]
+  }
+ }
 }

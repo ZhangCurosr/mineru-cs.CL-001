@@ -3,5 +3,30 @@
  "batch_id": "77bd44bf-be04-4033-97ff-f8c0e1096179",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-13 02:57:48",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/bfbe9978-d919-4c18-bd6f-a97632f36467.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/bfbe9978-d919-4c18-bd6f-a97632f36467.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:02:05",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM sentiment",
+    "portfolio construction",
+    "uncertainty decomposition",
+    "small-cap trading",
+    "macro-beta trigger",
+    "aleatoric epistemic"
+   ],
+   "field": "金融NLP与量化投资组合",
+   "innovations": [
+    "将MC-dropout估计的aleatoric+epistemic协方差直接注入投资组合分配器",
+    "新闻故事聚类去重后的news-summary情感构建管道",
+    "纯alpha/纯beta分离macro-beta触发机制揭示非单调持有期优势"
+   ],
+   "benchmarks": [
+    "Russell 2000回测 Sharpe 2.33 at 100bps",
+    "Equal Weight / Risk Parity / HRP / MVO / Black-Litterman / Bayesian Black-Litterman"
+   ]
+  }
+ }
 }

@@ -3,5 +3,29 @@
  "batch_id": "964025b5-0c50-4859-8088-c144cbb821a2",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:32:10",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/e9021250-3379-4145-be6d-05f14820c1d2.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/e9021250-3379-4145-be6d-05f14820c1d2.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:53:12",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "taxonomy expansion",
+    "large language model",
+    "hierarchical knowledge",
+    "structure-aware validation",
+    "recursive generation"
+   ],
+   "field": "知识表示与分类法构建",
+   "innovations": [
+    "将零样本LLM候选生成与路径感知分类器验证结合，解决生成式分类法扩展的结构一致性",
+    "构造六种层次扰动难负样本以学习父子边合法性",
+    "引入递归扩展置信度衰减控制机制抑制错误累积"
+   ],
+   "benchmarks": [
+    "SemEval-2016 Environment taxonomy",
+    "Schema.org"
+   ]
+  }
+ }
 }

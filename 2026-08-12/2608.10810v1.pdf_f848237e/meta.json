@@ -3,5 +3,34 @@
  "batch_id": "f848237e-38fc-453c-a759-a1d01951ccb4",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-12 14:58:30",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/ea102072-0ddf-49ca-8fae-3be323b90295.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/ea102072-0ddf-49ca-8fae-3be323b90295.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:43:48",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Affective Stance",
+    "Unsaid Emotion",
+    "Explicit-Implicit Matrix",
+    "Chinese Discourse",
+    "Pragmatic Intent",
+    "Fine-grained Emotion",
+    "LLM Prompting"
+   ],
+   "field": "情感计算与自然语言处理",
+   "innovations": [
+    "提出显式-隐式立场矩阵，将情感立场建模为显式信号与隐式倾向的复合结构化关系",
+    "设计矩阵引导的 Chain-of-Thought 推理协议，实现从表面表达到深层意图的逐步可解释推断",
+    "构建混合标注流水线（双模型一致性+人工裁决+偏差控制LLM裁决），平衡规模与标注质量"
+   ],
+   "benchmarks": [
+    "CUE-Bench",
+    "DailyDialog",
+    "IEST",
+    "GoEmotions",
+    "CMMA"
+   ]
+  }
+ }
 }

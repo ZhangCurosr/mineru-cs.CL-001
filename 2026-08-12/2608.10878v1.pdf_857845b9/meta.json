@@ -3,5 +3,30 @@
  "batch_id": "857845b9-8845-406f-a335-becc4398610a",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:32:12",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/788299ad-c253-4c37-a45b-014daf63c57e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/788299ad-c253-4c37-a45b-014daf63c57e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:48:18",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Streaming ASR",
+    "Turn-taking Detection",
+    "Frame-Synchronous Prediction",
+    "Delayed-Stream Modeling",
+    "Dual-Head Architecture",
+    "Spoken Dialogue Systems"
+   ],
+   "field": "流式语音识别与话轮检测",
+   "innovations": [
+    "帧同步双头并行架构：在预训练流式 ASR 骨干上添加并行 turn head，单次前向推理同步输出 ASR 和话轮状态",
+    "ASR-anchored supervision：将词级话轮标签投影到 80ms 帧级 ASR token 时间线，实现逐帧时序对齐",
+    "统一延迟接口 τ：通过 AdaRMSNorm 条件化，单模型覆盖 80ms-2400ms 多延迟配置"
+   ],
+   "benchmarks": [
+    "EasyTurn-zh",
+    "EasyTurn-en"
+   ]
+  }
+ }
 }

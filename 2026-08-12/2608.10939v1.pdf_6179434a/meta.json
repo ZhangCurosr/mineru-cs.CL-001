@@ -3,5 +3,32 @@
  "batch_id": "6179434a-adf2-4f9a-b79e-f70e73c16301",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-12 15:32:07",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/4d3e5edb-be33-4482-832a-7be0d1b93e50.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/4d3e5edb-be33-4482-832a-7be0d1b93e50.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:49:58",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "多语言文本分类",
+    "路由策略",
+    "翻译后分类",
+    "低资源语言",
+    "零样本推理",
+    "紧凑句子编码器",
+    "SIB-200",
+    "MASSIVE"
+   ],
+   "field": "多语言自然语言处理",
+   "innovations": [
+    "提出固定列表语言分级路由策略，在零样本自托管场景下系统比较多语言推理与翻译后分类的边界",
+    "以 tier 级精度同时报告 Macro-F1 增量与延迟，揭示最优翻译边界因数据集而异",
+    "发现低资源 tier 翻译增益在 SIB-200 与 MASSIVE 两数据集上高度稳定（约 +0.22 Macro-F1）"
+   ],
+   "benchmarks": [
+    "SIB-200",
+    "MASSIVE"
+   ]
+  }
+ }
 }

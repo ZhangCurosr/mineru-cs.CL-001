@@ -3,5 +3,28 @@
  "batch_id": "79f4dcce-fe6f-4946-8822-8e5b9961befd",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-12 14:58:33",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/b5b4bac3-6a2b-4084-9b03-507b8ee0eb1e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/b5b4bac3-6a2b-4084-9b03-507b8ee0eb1e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:39:14",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM人格",
+    "行为模式轴",
+    "激活空间控制",
+    "行为数据",
+    "特质漂移",
+    "BCL带"
+   ],
+   "field": "LLM行为对齐与可解释性",
+   "innovations": [
+    "提出thought-derived与response-derived两种BMA来源并证明前者控制更干净",
+    "发现行为控制集中在earlier-to-middle Behavioral Control Layer带且跨模型泛化"
+   ],
+   "benchmarks": [
+    "20个心理测量子域×4种prompt register情境化行为探针"
+   ]
+  }
+ }
 }

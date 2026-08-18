@@ -3,5 +3,36 @@
  "batch_id": "b0c8c81f-b9f3-4ecb-8f27-b4024b023316",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-12 14:58:31",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/a0a825b1-3228-45f0-97e8-8d726957dfd4.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/a0a825b1-3228-45f0-97e8-8d726957dfd4.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:41:09",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "上下文干扰",
+    "搜索智能体",
+    "强化学习",
+    "上下文精炼",
+    "检索增强生成",
+    "多轮推理",
+    "GRPO"
+   ],
+   "field": "Agent 系统与检索增强生成",
+   "innovations": [
+    "首次系统分析多轮搜索智能体中上下文干扰的来源，证明最新检索文档是主要干扰源",
+    "提出基于蒸馏的上下文精炼器，用小模型复现强教师的信息提取能力",
+    "将上下文精炼器嵌入 GRPO 训练流水线（CRRL），同时提升可靠性和效率"
+   ],
+   "benchmarks": [
+    "NQ",
+    "TriviaQA",
+    "PopQA",
+    "HotpotQA",
+    "2Wiki",
+    "MuSiQue",
+    "Bamboogle"
+   ]
+  }
+ }
 }

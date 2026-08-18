@@ -3,5 +3,36 @@
  "batch_id": "60848341-3847-4d0f-a4ca-36c5a012c97f",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-12 14:58:29",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/1cf9de96-2cc1-4645-a495-b7025a348196.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/1cf9de96-2cc1-4645-a495-b7025a348196.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:45:15",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM Agent",
+    "benchmark",
+    "proactivity",
+    "long-horizon",
+    "living world",
+    "agent evaluation",
+    "life assistant"
+   ],
+   "field": "Agent 评估基准",
+   "innovations": [
+    "提出无声突变(Mutation)事件机制以可量化测量 Agent 主动性",
+    "设计 per-stage/cross-stage/final 三层加权评分体系评估长周期一致性",
+    "构建覆盖10个日常生活域的200任务长周期基准VibeLifeBench"
+   ],
+   "benchmarks": [
+    "VibeLifeBench",
+    "ClawBench",
+    "ClawMark",
+    "UltraHorizon",
+    "JobBench",
+    "Terminal-Bench",
+    "SWE-Milestone"
+   ]
+  }
+ }
 }

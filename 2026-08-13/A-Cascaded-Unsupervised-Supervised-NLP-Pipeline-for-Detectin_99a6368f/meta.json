@@ -4,5 +4,30 @@
  "title": "A-Cascaded-Unsupervised-Supervised-NLP-Pipeline-for-Detectin",
  "token": "sk-DXHHyylpH...",
  "created_at": "2026-08-13 14:54:44",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/ac6ce048-e77f-457b-898e-92fbdf11fef0.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/ac6ce048-e77f-457b-898e-92fbdf11fef0.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:04:08",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Public Procurement Corruption Detection",
+    "Cascaded Unsupervised-Supervised Pipeline",
+    "Word2Vec Embedding Clustering",
+    "Class Imbalance Handling",
+    "Gaussian Mixture Model",
+    "Random Forest Classification"
+   ],
+   "field": "Anti-corruption NLP / Public Sector AI",
+   "innovations": [
+    "领域自适应Word2Vec在噪声西班牙语评论聚类中超越Transformer嵌入",
+    "关键词启发式聚类识别替代人工标注以定位指控性语料子群",
+    "级联预过滤+SMOTE协同缓解极端类别不平衡（3%正样本）"
+   ],
+   "benchmarks": [
+    "SOCE Ecuador Public Procurement Comments Dataset",
+    "Silhouette Score / MNAPK / Relative Accusatory Frequency"
+   ]
+  }
+ }
 }

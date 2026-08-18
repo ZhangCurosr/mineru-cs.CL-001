@@ -3,5 +3,34 @@
  "batch_id": "2f41f2a7-a161-4f42-96c0-beb59711189e",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-13 02:44:16",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/4fef70cb-64fb-4cfd-a648-372b60cd26db.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/4fef70cb-64fb-4cfd-a648-372b60cd26db.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:01:44",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "strong-to-weak scaffolding",
+    "test-time capability transfer",
+    "inference-time harness",
+    "deterministic offloading",
+    "cognitive load reduction",
+    "Theory of Mind",
+    "model distillation alternative",
+    "agent harness design"
+   ],
+   "field": "LLM推理优化与能力迁移",
+   "innovations": [
+    "形式化强到弱测试时脚手架为独立能力迁移范式，不更新目标模型参数",
+    "发现确定性卸载（r=0.72）和headroom-gated提升是核心机制",
+    "提出scaffolding作为builder模型评估新基准"
+   ],
+   "benchmarks": [
+    "BigToM",
+    "Hi-ToM",
+    "MMToM-QA",
+    "MuMA-ToM"
+   ]
+  }
+ }
 }

@@ -3,5 +3,32 @@
  "batch_id": "e8eb9809-60dc-4acc-b367-2555f1bb94c0",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-12 15:32:15",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/092675b6-3c7a-4b8a-ac47-35e7c9fa3d00.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/092675b6-3c7a-4b8a-ac47-35e7c9fa3d00.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:42:43",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "bifactor model",
+    "distinguishability",
+    "partially exploratory factor analysis",
+    "covariance equivalence",
+    "stable structure",
+    "factor count selection"
+   ],
+   "field": "心理测量学/因子分析",
+   "innovations": [
+    "从协方差层面建立分叉与相关因子模型的可区分性判据（命题1与定理1）",
+    "提出基于PEFA的两步流程，将因子数不确定性与结构稳定性纳入统一框架",
+    "揭示吸收局部残差依赖可模仿一般因子且误差随N增长的机制"
+   ],
+   "benchmarks": [
+    "ICAR能力数据 (N=1,248)",
+    "Holzinger-Swineford 24 (N=301)",
+    "PID-5 (N=1,260)",
+    "bfi (N=2,436)"
+   ]
+  }
+ }
 }

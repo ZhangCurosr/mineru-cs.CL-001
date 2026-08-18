@@ -3,5 +3,32 @@
  "batch_id": "326bfbfb-7349-44b7-86a4-a79192db9ab3",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-13 02:44:17",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/bfbe9978-d919-4c18-bd6f-a97632f36467.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/bfbe9978-d919-4c18-bd6f-a97632f36467.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:59:35",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Large Language Model",
+    "Financial Sentiment",
+    "Portfolio Construction",
+    "Uncertainty Quantification",
+    "Small-Cap Trading",
+    "Macro-Beta Trigger",
+    "Dropout Monte Carlo"
+   ],
+   "field": "量化金融与LLM交叉",
+   "innovations": [
+    "将新闻聚类与代表性文章情绪合成结合，避免重复报道噪音",
+    "通过Dropout MC分解aleatoric与epistemic协方差并注入投资组合构建",
+    "分离纯alpha与纯beta触发器揭示不同时间尺度的最优选股机制"
+   ],
+   "benchmarks": [
+    "Russell 2000 equities",
+    "58 macro/sector indicators",
+    "GPT-4o mini/FinBERT/Mistral-7B/Llama-2-13B sentiment scorers"
+   ]
+  }
+ }
 }

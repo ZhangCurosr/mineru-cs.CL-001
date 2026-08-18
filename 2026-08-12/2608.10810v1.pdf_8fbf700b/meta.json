@@ -3,5 +3,30 @@
  "batch_id": "8fbf700b-195f-47fb-bedf-aa97948c1239",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 16:05:10",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/ea102072-0ddf-49ca-8fae-3be323b90295.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/ea102072-0ddf-49ca-8fae-3be323b90295.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 07:43:50",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Affective Stance",
+    "Explicit-Implicit Matrix",
+    "CUE-Bench",
+    "Chinese Discourse Emotion",
+    "Pragmatic Intent",
+    "Matrix-Guided CoT",
+    "LLM Adjudication"
+   ],
+   "field": "情感计算与多模态情感理解",
+   "innovations": [
+    "提出显式-隐式立场矩阵，将情感立场定义为显式信号与隐式倾向的结构化合成产物；",
+    "设计矩阵引导的链式推理范式，规定从显式→隐式→立场→意图→情感的固定推理顺序并可在提示中强制输出中间字段；",
+    "构建混合标注流水线（双模型候选+人工黄金+偏置控制LLM双向裁决），以降低位置偏差并控制残留噪声（~3.1%）"
+   ],
+   "benchmarks": [
+    "CUE-Bench"
+   ]
+  }
+ }
 }
