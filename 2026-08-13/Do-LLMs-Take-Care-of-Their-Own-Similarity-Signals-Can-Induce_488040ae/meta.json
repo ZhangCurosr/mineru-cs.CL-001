@@ -4,5 +4,35 @@
  "title": "Do-LLMs-Take-Care-of-Their-Own-Similarity-Signals-Can-Induce",
  "token": "sk-F7cBp1IrI...",
  "created_at": "2026-08-13 14:54:47",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/0612d034-7627-4bca-aa8d-ac341d5d50dc.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/0612d034-7627-4bca-aa8d-ac341d5d50dc.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:47:08",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "cooperative AI",
+    "LLM decision making",
+    "similarity signaling",
+    "game theory",
+    "multi-agent systems",
+    "evidential decision theory",
+    "prisoner's dilemma"
+   ],
+   "field": "合作人工智能与多智能体策略互动",
+   "innovations": [
+    "提出b-相似性均衡概念，在纳什均衡与证据决策理论间建立连续插值",
+    "首个系统评估LLM对梯度相似性信号响应的开源框架",
+    "揭示内源性相似性评估比外源性评分更有效促进合作"
+   ],
+   "benchmarks": [
+    "CoopEval",
+    "Humanity's Last Exam",
+    "TRAIT",
+    "Newcomb-like Problems",
+    "Moral Choice",
+    "Greatest Good Benchmark"
+   ]
+  }
+ }
 }

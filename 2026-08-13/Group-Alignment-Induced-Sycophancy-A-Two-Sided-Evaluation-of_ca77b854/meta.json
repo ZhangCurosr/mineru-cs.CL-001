@@ -4,5 +4,30 @@
  "title": "Group-Alignment-Induced-Sycophancy-A-Two-Sided-Evaluation-of",
  "token": "sk-xfpcKPjW4...",
  "created_at": "2026-08-13 14:55:01",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/ac9e1059-bc86-459c-9065-9ebafe555be1.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/ac9e1059-bc86-459c-9065-9ebafe555be1.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:51:41",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "group alignment",
+    "sycophancy",
+    "pluralistic alignment",
+    "alignment evaluation",
+    "preference optimization"
+   ],
+   "field": "多人群体对齐评估",
+   "innovations": [
+    "首次系统评估群体对齐诱导的阿谀奉承行为变化",
+    "提出GAS双向评估框架分离群体拟合增益与sycophancy偏移",
+    "揭示DPO在fit-displacement权衡上优于SFT"
+   ],
+   "benchmarks": [
+    "OpinionQA",
+    "ELEPHANT",
+    "SycophancyEval"
+   ]
+  }
+ }
 }

@@ -3,5 +3,31 @@
  "batch_id": "aefdb467-9fb8-4652-8afb-8c1be15d114e",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:32:11",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/f944415b-ad36-45e0-9ca7-5a9b3858ca6e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/f944415b-ad36-45e0-9ca7-5a9b3858ca6e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:29:39",
+  "chunks": 7,
+  "meta": {
+   "keywords": [
+    "covariate shift",
+    "selective risk control",
+    "conformal prediction",
+    "coverage floor",
+    "certificate",
+    "cross-model"
+   ],
+   "field": "分布外泛化与选择性预测",
+   "innovations": [
+    "硬覆盖地板形式化：首次将覆盖率下界作为可验证证书引入协变量移位场景",
+    "局部泛函替代全局ESS：用局部接受区域泛函追踪认证成本，Spearman相关从.026提升至.936",
+    "四块分割Algorithm 1：分离风险测试/地板测试/权重估计，使样本效率比oracle-A提升128×"
+   ],
+   "benchmarks": [
+    "SQuAD→NewsQA",
+    "Grid Audit (256 cells)",
+    "Deep Audit (6 cells × 4000 repeats)"
+   ]
+  }
+ }
 }

@@ -4,5 +4,31 @@
  "title": "DexterSQL-Deep-Schema-Exploration-and-Rule-based-Correction",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-13 06:51:37",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/a952ad52-ca1b-44f1-b592-f67202ad9033.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/a952ad52-ca1b-44f1-b592-f67202ad9033.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:43:22",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Text-to-SQL",
+    "non-fine-tuning",
+    "schema exploration",
+    "dependency tree",
+    "rule-based correction",
+    "BIRD benchmark",
+    "schema linking"
+   ],
+   "field": "Text-to-SQL 生成",
+   "innovations": [
+    "Deep Schema Explorator: 通过统计探查(coverage/fan-out/agreement)和LLM裁决识别歧义列并生成消歧注记",
+    "Database-agnostic Rule Creator: 从训练数据挖掘重复性生成错误并提炼通用纠正规则",
+    "Dependency-tree-based multi-path SQL generation: 用确定性依存树映射替代自由分解生成多样候选SQL"
+   ],
+   "benchmarks": [
+    "BIRD-Dev",
+    "Spider-Test"
+   ]
+  }
+ }
 }

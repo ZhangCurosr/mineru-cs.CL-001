@@ -4,5 +4,29 @@
  "title": "Beyond-Single-Turn-Confidence-Trajectory-Adapted-Uncertainty",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-13 07:10:33",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/74243a73-9220-46e9-b471-7d52b4c2ce32.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/74243a73-9220-46e9-b471-7d52b4c2ce32.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:39:01",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "uncertainty quantification",
+    "LLM agents",
+    "trajectory confidence",
+    "tool-use",
+    "self-consistency"
+   ],
+   "field": "大语言模型不确定性量化",
+   "innovations": [
+    "系统评估三类单轮UQ方法在多轮智能体轨迹上的迁移性",
+    "提出轨迹级白盒聚合、黑盒一致性（TER/ASC/ADC/AEC）与反思式评分的统一框架",
+    "揭示stuck-policy导致的一致性评分歧义及聚合策略的关键影响"
+   ],
+   "benchmarks": [
+    "BFCL-v4",
+    "τ²-bench"
+   ]
+  }
+ }
 }

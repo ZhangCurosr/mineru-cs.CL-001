@@ -3,5 +3,35 @@
  "batch_id": "c285c5bc-ad98-4ef2-be9c-99656d1ee1c8",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-12 15:32:14",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/35a4916f-7f3b-4aa3-adff-fa6f8ce495c3.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/35a4916f-7f3b-4aa3-adff-fa6f8ce495c3.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:31:25",
+  "chunks": 4,
+  "meta": {
+   "keywords": [
+    "Autoformalisation",
+    "Faithfulness",
+    "Benchmark",
+    "Chain-of-Thought",
+    "Lean",
+    "Sycopancy",
+    "Mathematical Reasoning"
+   ],
+   "field": "形式化方法与大语言模型结合",
+   "innovations": [
+    "提出 FaithformBench 基准，通过自动扰动评估 AF 系统忠实性",
+    "设计自动化流程量化沉默纠正（同步性）现象",
+    "揭示微调模型有效性保持与无效性保持之间的张力"
+   ],
+   "benchmarks": [
+    "FaithformBench",
+    "ProcessBench",
+    "GSM8K",
+    "MATH",
+    "OlympiadBench",
+    "Omni-MATH"
+   ]
+  }
+ }
 }

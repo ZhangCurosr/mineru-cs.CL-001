@@ -4,5 +4,30 @@
  "title": "Easper-An-Accessible-ASR-Pipeline-for-Language-Documentation",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-13 07:10:32",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/b7124904-a2da-4181-9e43-ef834a3598d7.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/b7124904-a2da-4181-9e43-ef834a3598d7.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:47:51",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "ASR",
+    "language documentation",
+    "low-resource",
+    "Whisper",
+    "cold start",
+    "ELAN",
+    "active learning"
+   ],
+   "field": "低资源语音识别",
+   "innovations": [
+    "提出 Easper 无代码 ASR 管道，将 ELAN 与 Whisper 云端微调无缝集成",
+    "定义 ToTy 归一化重复度指标并证明其在冷启动阶段优于声学质量排序",
+    "实证验证词汇丰富性比声学干净度对 Foundation Model 微调更高效"
+   ],
+   "benchmarks": [
+    "CER on Bislama/Nafsan/Nguna transcripts from PARADISEC"
+   ]
+  }
+ }
 }

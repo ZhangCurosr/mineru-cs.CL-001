@@ -4,5 +4,30 @@
  "title": "Asymptotic-Risk-Calibration-for-Selective-Question-Answering",
  "token": "sk-Wt6bONApk...",
  "created_at": "2026-08-13 14:54:48",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/e8b1d15d-9daf-47c8-a46f-1ac4a2e9c46a.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/e8b1d15d-9daf-47c8-a46f-1ac4a2e9c46a.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:33:57",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "selective question answering",
+    "uncertainty quantification",
+    "risk calibration",
+    "conformal prediction",
+    "asymptotic risk control",
+    "non-monotone loss"
+   ],
+   "field": "大语言模型可靠性与不确定性校准",
+   "innovations": [
+    "将选择条件误差率线性期望化并构造单调化经验风险",
+    "结合渐近修正项实现非单调损失的风险控制",
+    "后验无训练校准框架兼容多种不确定性估计器"
+   ],
+   "benchmarks": [
+    "CoQA",
+    "MedMCQA"
+   ]
+  }
+ }
 }

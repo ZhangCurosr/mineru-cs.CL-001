@@ -4,5 +4,29 @@
  "title": "Asymptotic-Risk-Calibration-for-Selective-Question-Answering",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-13 06:51:35",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/e8b1d15d-9daf-47c8-a46f-1ac4a2e9c46a.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/e8b1d15d-9daf-47c8-a46f-1ac4a2e9c46a.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:35:47",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "selective question answering",
+    "risk calibration",
+    "conformal prediction",
+    "uncertainty quantification",
+    "language models"
+   ],
+   "field": "大语言模型可靠性与不确定性校准",
+   "innovations": [
+    "将选择性问答风险控制重构为线性期望约束并配合单调化经验风险处理非单调损失",
+    "提出后验渐进校准框架A-CRC-QA无需额外训练",
+    "在前缀最大值意义下实现统计可控的接受率-风险权衡"
+   ],
+   "benchmarks": [
+    "CoQA",
+    "MedMCQA"
+   ]
+  }
+ }
 }

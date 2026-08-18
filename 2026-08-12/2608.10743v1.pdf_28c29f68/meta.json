@@ -3,5 +3,36 @@
  "batch_id": "28c29f68-2a0b-4d8d-8a18-7239fd2a5fb9",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-12 15:01:40",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/a0a825b1-3228-45f0-97e8-8d726957dfd4.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/a0a825b1-3228-45f0-97e8-8d726957dfd4.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:23:08",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Search Agent",
+    "Context Interference",
+    "Reinforcement Learning",
+    "RAG",
+    "Multi-turn Reasoning",
+    "GRPO",
+    "Context Refinement"
+   ],
+   "field": "多轮搜索 Agent 与上下文管理",
+   "innovations": [
+    "揭示多轮搜索 Agent 上下文干扰主要来自最新检索文档",
+    "提出蒸馏式上下文精炼器，以SFT训练小模型实现低开销动态精炼",
+    "将上下文精炼集成到GRPO的rollout中形成CRRL训练框架"
+   ],
+   "benchmarks": [
+    "NQ",
+    "TriviaQA",
+    "PopQA",
+    "HotpotQA",
+    "2Wiki-MultiHopQA",
+    "MuSiQue",
+    "Bamboogle"
+   ]
+  }
+ }
 }

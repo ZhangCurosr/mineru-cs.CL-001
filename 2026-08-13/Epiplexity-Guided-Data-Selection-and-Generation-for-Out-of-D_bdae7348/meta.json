@@ -4,5 +4,34 @@
  "title": "Epiplexity-Guided-Data-Selection-and-Generation-for-Out-of-D",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-13 07:10:29",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/e5fd6ab3-2897-45e4-8e25-592c8c462995.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/e5fd6ab3-2897-45e4-8e25-592c8c462995.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:48:45",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "epiplexity",
+    "数据选择",
+    "合成数据生成",
+    "分布外泛化",
+    "课程学习",
+    "缩放律",
+    "自博弈",
+    "信息论"
+   ],
+   "field": "数据高效学习与泛化",
+   "innovations": [
+    "首次将 epiplexity 操作化为在线训练信号用于数据选择（EpiSelect）",
+    "首次以 epiplexity 为 reward 的纯合成数据生成方法（EpiGen）",
+    "发现 The Pile 基准因域不平衡而饱和并提出 Common Pile 替代方案"
+   ],
+   "benchmarks": [
+    "LM Evaluation Harness (10 tasks)",
+    "GLUE (7 tasks)",
+    "Common Pile",
+    "OpenWebText"
+   ]
+  }
+ }
 }

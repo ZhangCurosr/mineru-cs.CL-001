@@ -4,5 +4,30 @@
  "title": "Accuracy-and-Order-Sensitivity-Diverge-Under-Label-Free-Stra",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-13 06:51:36",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/0f29f2c8-be68-45e7-955b-3b0e6055648c.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/0f29f2c8-be68-45e7-955b-3b0e6055648c.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:32:41",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "多项选择题评估",
+    "位置敏感性",
+    "去偏策略",
+    "LLM评估",
+    "选项顺序效应",
+    "prompt工程"
+   ],
+   "field": "大语言模型评估方法",
+   "innovations": [
+    "系统验证两阶段提示与独立假设评分对位置敏感性的影响",
+    "通过2×2分解定位两阶段策略瓶颈为隐藏选项而非匹配步骤",
+    "提出flip rate作为直接每问题位置敏感性度量并揭示其与准确率的分离"
+   ],
+   "benchmarks": [
+    "MMLU",
+    "ARC-Challenge"
+   ]
+  }
+ }
 }

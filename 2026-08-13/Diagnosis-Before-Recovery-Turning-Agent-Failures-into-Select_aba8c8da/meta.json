@@ -4,5 +4,33 @@
  "title": "Diagnosis-Before-Recovery-Turning-Agent-Failures-into-Select",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-13 14:56:07",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/ae26c789-183b-4ea4-8d8d-7882ae8dd029.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/ae26c789-183b-4ea4-8d8d-7882ae8dd029.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:45:58",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "language agents",
+    "self-correction",
+    "failure diagnosis",
+    "recovery policies",
+    "agent evaluation",
+    "ALFWorld",
+    "AppWorld",
+    "XBRL Finance"
+   ],
+   "field": "语言代理自我修正与恢复策略",
+   "innovations": [
+    "将代理失败诊断转化为任务族级别的恢复干预剪枝与成本感知策略蒸馏",
+    "提出 DARC 两阶段框架：开发集故障诊断 + 训练集验证器反馈的策略枚举",
+    "在三个异构基准上统一验证选择性恢复的有效性并降低环境/检索成本"
+   ],
+   "benchmarks": [
+    "ALFWorld",
+    "AppWorld",
+    "XBRL Finance"
+   ]
+  }
+ }
 }

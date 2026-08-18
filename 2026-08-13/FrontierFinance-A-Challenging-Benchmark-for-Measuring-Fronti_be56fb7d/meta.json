@@ -4,5 +4,30 @@
  "title": "FrontierFinance-A-Challenging-Benchmark-for-Measuring-Fronti",
  "token": "sk-aknYEUs8O...",
  "created_at": "2026-08-13 14:56:10",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/848f382d-00b0-4c1f-934e-51dfb2b7facd.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/848f382d-00b0-4c1f-934e-51dfb2b7facd.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:50:48",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "金融智能体",
+    "基准测试",
+    "开放端研究",
+    "评估方法",
+    "Bradley-Terry 模型",
+    "溯源评分标准",
+    "工具链"
+   ],
+   "field": "多模态智能体评估与基准",
+   "innovations": [
+    "发布包含 220 个专家查询和 11,543 个溯源评分标准的大规模金融智能体基准 FrontierFinance",
+    "揭示工具链（Harness）对金融智能体性能的影响超过底层模型",
+    "通过轨迹分析发现利用参数化知识直接访问来源会导致更高错误率的关键失败模式"
+   ],
+   "benchmarks": [
+    "FrontierFinance"
+   ]
+  }
+ }
 }

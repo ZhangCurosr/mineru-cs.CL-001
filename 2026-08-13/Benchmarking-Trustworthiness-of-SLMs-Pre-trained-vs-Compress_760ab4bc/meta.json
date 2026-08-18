@@ -4,5 +4,34 @@
  "title": "Benchmarking-Trustworthiness-of-SLMs-Pre-trained-vs-Compress",
  "token": "sk-4GZLsbGFG...",
  "created_at": "2026-08-13 14:54:49",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/6a7bd24e-8bdb-48fc-840a-97c1b37891eb.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/6a7bd24e-8bdb-48fc-840a-97c1b37891eb.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:40:12",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Small Language Models",
+    "Trustworthiness",
+    "Quantization",
+    "Pruning",
+    "Knowledge Distillation",
+    "Model Compression"
+   ],
+   "field": "可信语言模型评估",
+   "innovations": [
+    "发现量化比剪枝更能保留SLMs可信度，且压缩可信大模型优于预训练SLMs",
+    "揭示知识蒸馏可从可信教师模型提升学生模型在各可信度维度的表现",
+    "系统评估剪枝/量化/蒸馏对SLMs可信度的影响并提供工程实践指导"
+   ],
+   "benchmarks": [
+    "TrustLLM",
+    "ETHICS",
+    "Social-Chem-101",
+    "MoralChoice",
+    "AdvGLUE",
+    "AdvInstruction"
+   ]
+  }
+ }
 }

@@ -4,5 +4,31 @@
  "title": "AWARe-Mitigating-Catastrophic-Forgetting-via-Activation-Weig",
  "token": "sk-zybFjYcVd...",
  "created_at": "2026-08-13 14:56:07",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/48968ae4-43be-4f4a-9e67-3c2dd8888e6e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/48968ae4-43be-4f4a-9e67-3c2dd8888e6e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 08:33:25",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "灾难性遗忘",
+    "多模态大语言模型",
+    "参数高效微调",
+    "激活重要性",
+    "持续学习"
+   ],
+   "field": "多模态持续学习",
+   "innovations": [
+    "基于激活权重的自适应参数保留框架 AWARe，首次将激活 saliency 从压缩领域迁移至 MLLM 遗忘缓解",
+    "行级梯度掩码冻结机制，无需修改模型架构且训练后可恢复原始配置",
+    "通用校准集（MMMU）替代方案，在上游数据不可得时仍保持高性能"
+   ],
+   "benchmarks": [
+    "IconQA",
+    "COCO-Caption",
+    "MLLM-DCL",
+    "Qwen2.5-VL-7B on MLLM-DCL"
+   ]
+  }
+ }
 }
