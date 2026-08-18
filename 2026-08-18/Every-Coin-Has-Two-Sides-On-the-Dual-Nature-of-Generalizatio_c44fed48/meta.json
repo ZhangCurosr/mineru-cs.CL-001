@@ -4,5 +4,39 @@
  "title": "Every-Coin-Has-Two-Sides-On-the-Dual-Nature-of-Generalizatio",
  "token": "sk-AsgiqoBdE...",
  "created_at": "2026-08-18 02:53:23",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/a9a5cef1-aeec-4dd5-9771-4b3ca0360796.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/a9a5cef1-aeec-4dd5-9771-4b3ca0360796.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:38:27",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "对策略蒸馏",
+    "多教师蒸馏",
+    "泛化",
+    "模型同源",
+    "跨域迁移",
+    "跷跷板效应",
+    "LLM后训练"
+   ],
+   "field": "大语言模型后训练与知识蒸馏",
+   "innovations": [
+    "揭示OPD传递推理行为而非答案，对训练问题难度不敏感",
+    "发现模型同源关系是决定OPD泛化广度的核心因素，同源泛化远优于跨源",
+    "阐明MOPD中因教师跨域影响无法隔离而产生的跷跷板效应"
+   ],
+   "benchmarks": [
+    "AMC2023",
+    "MATH-500",
+    "AIME2025/2026",
+    "BeyondAIME",
+    "OlymMATH-Hard/ZH",
+    "LiveMathBench-ZH",
+    "R-Horizon",
+    "LiveCodeBench",
+    "GPQA-Diamond",
+    "IF-Eval"
+   ]
+  }
+ }
 }

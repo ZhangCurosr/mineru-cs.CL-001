@@ -4,5 +4,31 @@
  "title": "DuplexGen-Decoupling-Content-Timing-and-Acoustics-for-Synthe",
  "token": "sk-aEeqX9tmP...",
  "created_at": "2026-08-18 14:31:05",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/e2c9a2a9-dfc5-40cb-8bc3-6b7a87764f7f.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/e2c9a2a9-dfc5-40cb-8bc3-6b7a87764f7f.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:37:39",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "全双工对话合成",
+    "对话时序建模",
+    "重叠语音",
+    "可控生成",
+    "ASR基准"
+   ],
+   "field": "对话语音合成与全双工建模",
+   "innovations": [
+    "显式解耦内容、时序与声学的三步对话合成框架",
+    "脚本约束全双工解码策略实现词表级内容锁定与交互时序涌现",
+    "构建带构建时标注的三难度医学对话ASR压力测试基准"
+   ],
+   "benchmarks": [
+    "PriMock57",
+    "FTO Wasserstein距离",
+    "KS统计量",
+    "overlap-region WER"
+   ]
+  }
+ }
 }

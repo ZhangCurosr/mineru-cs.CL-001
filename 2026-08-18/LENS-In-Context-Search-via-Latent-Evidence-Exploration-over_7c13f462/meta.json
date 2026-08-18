@@ -4,5 +4,29 @@
  "title": "LENS-In-Context-Search-via-Latent-Evidence-Exploration-over",
  "token": "sk-ovHaiDbC4...",
  "created_at": "2026-08-18 14:31:03",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/a933f1ac-522f-465d-8822-0509f046857e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/a933f1ac-522f-465d-8822-0509f046857e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:41:09",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Retrieval-Augmented Generation",
+    "Dynamic Documents",
+    "Evidence Localization",
+    "Sequential Search",
+    "In-Context Learning"
+   ],
+   "field": "动态知识库检索与证据定位",
+   "innovations": [
+    "提出无索引的序贯信念更新框架以定位动态原始文档中的证据",
+    "形式化预算受限的证据定位问题并设计互补提议策略",
+    "建立联合评估答案质量、证据定位与生命周期鲁棒性的新协议"
+   ],
+   "benchmarks": [
+    "HotpotQA Fullwiki",
+    "Constructed Corpus Snapshots (D_125, D_250, D_500)"
+   ]
+  }
+ }
 }

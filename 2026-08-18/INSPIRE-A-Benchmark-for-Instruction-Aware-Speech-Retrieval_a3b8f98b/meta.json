@@ -4,5 +4,33 @@
  "title": "INSPIRE-A-Benchmark-for-Instruction-Aware-Speech-Retrieval",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-18 02:55:52",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/057568f3-0bd0-404d-8e55-22927a4e2efd.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/057568f3-0bd0-404d-8e55-22927a4e2efd.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:40:51",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "speech retrieval",
+    "instruction-aware",
+    "audio-language model",
+    "self-supervised speech",
+    "multimodal retrieval",
+    "benchmark"
+   ],
+   "field": "语音检索与多模态理解",
+   "innovations": [
+    "首个指令感知语音检索基准，支持语义/说话人/风格/环境多属性动态约束",
+    "揭示语义检索与声学属性之间的根本性权衡，级联管道vs自监督模型各有专长",
+    "系统评估四种检索范式的失败模式，指出统一架构和指令感知训练的必要性"
+   ],
+   "benchmarks": [
+    "INSPIRE",
+    "DailyTalk",
+    "VCTK",
+    "Expresso",
+    "Synthetic"
+   ]
+  }
+ }
 }

@@ -4,5 +4,30 @@
  "title": "TRAPSBench-Vision-Language-Models-Encode-but-Fail-to-Express",
  "token": "sk-MljcAo9Bd...",
  "created_at": "2026-08-14 14:48:52",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/8d9b6f93-4260-4b69-914a-cfc1e3b11399.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/8d9b6f93-4260-4b69-914a-cfc1e3b11399.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:36:46",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "vision-language models",
+    "epistemic calibration",
+    "abstention",
+    "physical reasoning",
+    "activation steering",
+    "probing",
+    "uncertainty"
+   ],
+   "field": "视觉语言模型可靠性与认知校准",
+   "innovations": [
+    "TRAPSBench: 首个程序化生成视频物理基准系统评估VLM选择性回避能力",
+    "证明VLM内部编码认知不确定性但输出端被抑制（表征-输出鸿沟）",
+    "PECS: 同时约束正确率与选择性回避的惩罚性认知校准指标"
+   ],
+   "benchmarks": [
+    "TRAPSBench"
+   ]
+  }
+ }
 }

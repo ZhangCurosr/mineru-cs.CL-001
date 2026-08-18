@@ -4,5 +4,32 @@
  "title": "Executable-Code-Knowledge-Code-as-a-Native-Validation-Carryi",
  "token": "sk-yJ5h9Go8b...",
  "created_at": "2026-08-18 14:31:00",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/a3600eab-7f50-4887-9afc-b59dc2d2a034.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/a3600eab-7f50-4887-9afc-b59dc2d2a034.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:38:26",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "AI coding agents",
+    "executable code knowledge",
+    "validation evidence",
+    "code representation",
+    "freshness checking",
+    "patch impact analysis",
+    "agent context"
+   ],
+   "field": "AI for Software Engineering / 编程代理知识表示",
+   "innovations": [
+    "提出 ECKU：将选定代码单元直接表示为携带源绑定、契约、可执行证据与新鲜度状态的验证型知识对象",
+    "揭示显式可执行证据对精确测试选择器恢复的决定性贡献（9/11 vs 1/11，p=0.0078）",
+    "构建源-知识-契约-证据四维指纹的新鲜度检测机制，在 50 正向/17 负向扰动下达到 1.000 敏感度与特异性"
+   ],
+   "benchmarks": [
+    "python-dotenv / python-slugify / tomli 三仓库 26 受控补丁",
+    "合成企业级三层服务（orders/pricing、subscriptions/entitlements、refunds/risk）18 补丁",
+    "Qwen2.5-Coder-32B-AWQ / Qwen2.5-7B-Instruct 本地评测"
+   ]
+  }
+ }
 }

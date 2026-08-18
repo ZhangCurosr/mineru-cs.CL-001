@@ -4,5 +4,29 @@
  "title": "HalluTracer-Hallucination-Detection-via-Depth-Averaging-Trut",
  "token": "sk-4LF0lBYcu...",
  "created_at": "2026-08-18 02:54:46",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/ab3fdd82-f33d-4dd0-8a92-4ead42bdd029.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/ab3fdd82-f33d-4dd0-8a92-4ead42bdd029.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:42:10",
+  "chunks": 4,
+  "meta": {
+   "keywords": [
+    "Hallucination Detection",
+    "Depth Averaging",
+    "Probe Analysis",
+    "Isotropy",
+    "Effective Rank",
+    "Zero-shot Detection"
+   ],
+   "field": "大语言模型可解释性与可靠性",
+   "innovations": [
+    "证明探针各向同性分布由环境维度 d_h 主导而非稳定秩 r_eff",
+    "量化真相信号极端稀疏性（0.54-0.66%）并据此设计无需训练的深度平均检测器"
+   ],
+   "benchmarks": [
+    "Qwen2.5-7B/14B-Instruct",
+    "LLaMA-2-7B/LLaMA-3.1-8B-Instruct"
+   ]
+  }
+ }
 }

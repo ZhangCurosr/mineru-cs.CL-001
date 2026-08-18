@@ -4,5 +4,31 @@
  "title": "Policy-Iteration-with-Human-Feedback-Bringing-Post-Training",
  "token": "sk-xjs1Z4GZW...",
  "created_at": "2026-08-18 14:30:46",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/77829066-2d5a-4d0b-a405-17a60f875ec7.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/77829066-2d5a-4d0b-a405-17a60f875ec7.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:43:38",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Policy Iteration",
+    "Human Feedback",
+    "In-context Learning",
+    "Rare Disease Diagnosis",
+    "Frozen Executor",
+    "Process Feedback"
+   ],
+   "field": "大模型对齐与策略迭代",
+   "innovations": [
+    "将强化学习策略迭代映射到外部版本化 artifact（自然语言策略+工具集），保持执行器权重冻结",
+    "LLM批评者+临床专家双层反馈架构，实现过程归因与结果验证的解耦",
+    "证明同一策略artifact可跨不同参数规模与架构的executor迁移复用"
+   ],
+   "benchmarks": [
+    "LIRICAL Development Panel",
+    "Undiagnosed Diseases Network (UDN)",
+    "Public Rare Disease Benchmark (1,243 cases)"
+   ]
+  }
+ }
 }

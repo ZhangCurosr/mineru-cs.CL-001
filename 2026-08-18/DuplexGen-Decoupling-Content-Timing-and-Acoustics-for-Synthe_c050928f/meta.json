@@ -4,5 +4,32 @@
  "title": "DuplexGen-Decoupling-Content-Timing-and-Acoustics-for-Synthe",
  "token": "sk-aEeqX9tmP...",
  "created_at": "2026-08-18 02:57:08",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/e2c9a2a9-dfc5-40cb-8bc3-6b7a87764f7f.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/e2c9a2a9-dfc5-40cb-8bc3-6b7a87764f7f.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:37:53",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "full-duplex dialogue",
+    "conversational speech synthesis",
+    "turn-taking",
+    "overlapping speech",
+    "speech recognition benchmark",
+    "dialogue corpus"
+   ],
+   "field": "对话语音合成",
+   "innovations": [
+    "显式解耦内容-时序-声学三阶段对话合成框架",
+    "脚本约束的全双工解码策略保证内容锁定同时涌现自然时序",
+    "构建带构时标注的患者-临床医生对话语料库"
+   ],
+   "benchmarks": [
+    "PriMock57",
+    "FTO Wasserstein distance",
+    "KS statistic",
+    "Overlap-region WER"
+   ]
+  }
+ }
 }

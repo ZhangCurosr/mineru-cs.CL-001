@@ -4,5 +4,29 @@
  "title": "Prior-Audit-Repair-Context-Shifts-LLM-Verifier-Thresholds-To",
  "token": "sk-mtKOSZtKc...",
  "created_at": "2026-08-18 14:31:07",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/08baa704-c8c7-4c0a-8cab-034ac62c975f.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/08baa704-c8c7-4c0a-8cab-034ac62c975f.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:44:09",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM verifier",
+    "false alarm rate",
+    "signal detection theory",
+    "in-context learning",
+    "pipeline architecture",
+    "process verification"
+   ],
+   "field": "LLM verification & evaluation",
+   "innovations": [
+    "Prior audit-repair episode lowers false alarm rate by 2.8-11.5 pp across all 15 model×wording combinations",
+    "Effect is a criterion shift (c) not discrimination gain (d') per signal detection analysis",
+    "Five-control decomposition (AF/AV/AN/AX/AXN) isolates content vs format effects, contradicting polarity drift theory"
+   ],
+   "benchmarks": [
+    "ProcessBench"
+   ]
+  }
+ }
 }

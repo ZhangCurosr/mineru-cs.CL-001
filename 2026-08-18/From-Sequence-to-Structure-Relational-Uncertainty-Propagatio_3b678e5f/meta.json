@@ -4,5 +4,30 @@
  "title": "From-Sequence-to-Structure-Relational-Uncertainty-Propagatio",
  "token": "sk-NnOQ8YDzm...",
  "created_at": "2026-08-18 02:56:09",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/292de367-b99b-4798-92ab-1ebd3ffc30e4.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/292de367-b99b-4798-92ab-1ebd3ffc30e4.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:38:49",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Uncertainty Quantification",
+    "LLM Agents",
+    "Trajectory Analysis",
+    "Graph-based Reasoning",
+    "Risk Propagation"
+   ],
+   "field": "可信大语言模型",
+   "innovations": [
+    "提出RUPA框架，将Agent执行轨迹建模为有向关系依赖图进行不确定性传播",
+    "设计关系感知边权重学习机制，自动校准七类依赖关系的传播重要性",
+    "通过outcome-blind校准实现轨迹级早期失败检测与下游Agent性能提升"
+   ],
+   "benchmarks": [
+    "τ-2",
+    "Terminal-Bench-2",
+    "GAIA"
+   ]
+  }
+ }
 }

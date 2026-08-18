@@ -4,5 +4,10 @@
  "title": "HYPERSKILL-Self-Evolving-LLM-Agents-via-Hypergraph-Structure",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-18 02:58:09",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/987ab95a-822a-4fe6-9c58-e1eb473b0748.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/987ab95a-822a-4fe6-9c58-e1eb473b0748.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:39:41",
+  "chunks": 1
+ }
 }

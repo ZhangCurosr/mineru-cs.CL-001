@@ -4,5 +4,33 @@
  "title": "TEMPO-Makespan-Aware-Expert-Parallel-Load-Balancing-Across-M",
  "token": "sk-hwXfRrBR3...",
  "created_at": "2026-08-14 14:48:54",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/801026ba-033a-428f-be1e-6337a039c984.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/801026ba-033a-428f-be1e-6337a039c984.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:36:34",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Mixture-of-Experts",
+    "Expert Parallelism",
+    "Load Balancing",
+    "LLM Serving",
+    "Makespan Optimization",
+    "MoE Dispatch",
+    "Inference System"
+   ],
+   "field": "大语言模型推理系统优化",
+   "innovations": [
+    "两段式专家成本模型（激活地板+M-tile填充）与黑盒校准闭环",
+    "将per-batch EP调度形式化为固定费用makespan问题并给出加法近似保证",
+    "毫秒级启发式求解器+零关键路径SGLang集成，相图预测部署收益"
+   ],
+   "benchmarks": [
+    "Testbed A 8-GPU 壁钟微基准",
+    "Qwen3-235B-FP8 EP8 端到端吞吐与p99 TPOT",
+    "DeepSeek-V3 EP8 端到端验证",
+    "Testbed B 2-node EP16 RoCE 多节点基准"
+   ]
+  }
+ }
 }

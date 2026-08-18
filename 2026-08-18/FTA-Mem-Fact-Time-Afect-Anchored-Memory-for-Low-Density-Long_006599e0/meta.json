@@ -4,5 +4,30 @@
  "title": "FTA-Mem-Fact-Time-Afect-Anchored-Memory-for-Low-Density-Long",
  "token": "sk-haVkJ3VAf...",
  "created_at": "2026-08-18 02:53:42",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/ae6d014c-3719-46c1-8f13-f8fed6fc3e4c.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/ae6d014c-3719-46c1-8f13-f8fed6fc3e4c.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:39:02",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "long-term dialogue memory",
+    "low-density dialogue",
+    "retrieval-augmented generation",
+    "fact-time-affect memory",
+    "boundary-preserving window segmentation",
+    "emotional-support agents"
+   ],
+   "field": "多轮对话记忆系统",
+   "innovations": [
+    "提出情境级事实-时间-情感（FTA）记忆单元，联合编码证据、时间有效性与情感上下文",
+    "边界保留窗口分割（BWS）避免长对话切分边界截断并保留未确定性尾部供接续处理",
+    "结构化上下文合成将主证据、链接邻居、源span与辅助语义记忆分组建包以提升 grounding"
+   ],
+   "benchmarks": [
+    "ES-MemEval",
+    "LoCoMo"
+   ]
+  }
+ }
 }

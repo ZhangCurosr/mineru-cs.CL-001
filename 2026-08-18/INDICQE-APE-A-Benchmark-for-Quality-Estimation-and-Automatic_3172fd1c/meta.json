@@ -4,5 +4,30 @@
  "title": "INDICQE-APE-A-Benchmark-for-Quality-Estimation-and-Automatic",
  "token": "sk-JdJPQj6CY...",
  "created_at": "2026-08-18 02:54:28",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/0d6501f3-44f1-47c4-b98d-df9f738c7508.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/0d6501f3-44f1-47c4-b98d-df9f738c7508.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:39:56",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Quality Estimation",
+    "Automatic Post-Editing",
+    "Indic Languages",
+    "Machine Translation Evaluation",
+    "Cross-lingual Comparability"
+   ],
+   "field": "低资源机器翻译评估",
+   "innovations": [
+    "整合WMT 2020-2024印度语QE/APE数据为单一对齐基准，支持跨任务评估",
+    "揭示语言内QE准确性不等于跨语言可比性，量化per-language offset问题",
+    "构建难度分层测试集，仅信号冲突轴在控制后仍显著降低系统性能"
+   ],
+   "benchmarks": [
+    "INDICQE-APE",
+    "WMT QE/APE Shared Tasks",
+    "MLQE-PE"
+   ]
+  }
+ }
 }

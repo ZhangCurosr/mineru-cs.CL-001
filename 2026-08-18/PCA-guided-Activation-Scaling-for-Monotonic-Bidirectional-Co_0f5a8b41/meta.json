@@ -4,5 +4,33 @@
  "title": "PCA-guided-Activation-Scaling-for-Monotonic-Bidirectional-Co",
  "token": "sk-331OfnzjD...",
  "created_at": "2026-08-18 02:54:25",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/9747db39-d95b-49da-acb9-aa33a4786a4f.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/9747db39-d95b-49da-acb9-aa33a4786a4f.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:43:10",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "activation steering",
+    "sycophancy",
+    "PCA",
+    "monotonic control",
+    "LLM alignment",
+    "representation engineering"
+   ],
+   "field": "大语言模型对齐与可控生成",
+   "innovations": [
+    "PCA多方向分解替代单向量 steering，首次实现单调双向控制",
+    "非对称缩放指数(beta^2/beta)平衡 steering 强度与表示稳定性",
+    "基于AUC的无标注自动层/维度搜索流程"
+   ],
+   "benchmarks": [
+    "NLPClaim",
+    "Feedback (SycophancyEval)",
+    "MATH",
+    "ELEPHANT AITA-NTA-FLIP",
+    "OpinionQA"
+   ]
+  }
+ }
 }

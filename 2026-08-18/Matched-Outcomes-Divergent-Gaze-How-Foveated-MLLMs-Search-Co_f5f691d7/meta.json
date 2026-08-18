@@ -4,5 +4,10 @@
  "title": "Matched-Outcomes-Divergent-Gaze-How-Foveated-MLLMs-Search-Co",
  "token": "sk-4GZLsbGFG...",
  "created_at": "2026-08-18 02:55:08",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/7fe1347e-753b-405f-ae21-20b680cd97da.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/7fe1347e-753b-405f-ae21-20b680cd97da.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:42:14",
+  "chunks": 1
+ }
 }

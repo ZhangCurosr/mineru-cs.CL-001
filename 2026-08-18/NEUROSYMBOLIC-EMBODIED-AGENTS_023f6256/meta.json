@@ -4,5 +4,31 @@
  "title": "NEUROSYMBOLIC-EMBODIED-AGENTS",
  "token": "sk-dQ65jxzP4...",
  "created_at": "2026-08-18 02:54:52",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/208e7696-7c14-48d2-a3e8-7461b77de0cb.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/208e7696-7c14-48d2-a3e8-7461b77de0cb.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:43:36",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "neurosymbolic planning",
+    "embodied agents",
+    "constrained decoding",
+    "PDDL",
+    "Monte Carlo tree search",
+    "virtual home",
+    "alfworld"
+   ],
+   "field": "具身智能与神经符号规划",
+   "innovations": [
+    "以窄符号接口解耦主动视觉获取与符号规划",
+    "状态依赖的 token 级 PDDL 约束解码",
+    "语言先验加权的受限 MCTS 与域无关启发式评估"
+   ],
+   "benchmarks": [
+    "VirtualHome",
+    "ALFWorld"
+   ]
+  }
+ }
 }

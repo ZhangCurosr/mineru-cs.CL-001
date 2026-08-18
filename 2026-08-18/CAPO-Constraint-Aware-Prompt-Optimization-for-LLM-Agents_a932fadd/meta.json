@@ -4,5 +4,30 @@
  "title": "CAPO-Constraint-Aware-Prompt-Optimization-for-LLM-Agents",
  "token": "sk-FMTQpgZxg...",
  "created_at": "2026-08-18 14:31:37",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/b880b358-cb6e-4657-9115-aa3e061f9a27.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/b880b358-cb6e-4657-9115-aa3e061f9a27.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:38:35",
+  "chunks": 4,
+  "meta": {
+   "keywords": [
+    "Prompt Optimization",
+    "Constrained RL",
+    "LLM Agent",
+    "Primal-Dual",
+    "System Prompt"
+   ],
+   "field": "大语言模型智能体提示优化",
+   "innovations": [
+    "自适应对偶权重驱动的约束感知提示优化框架",
+    "冻结任务模型的池化GRPO重写器训练"
+   ],
+   "benchmarks": [
+    "TAU2-BENCH",
+    "SWE-BENCH Lite",
+    "PUPA-IFBench",
+    "GSM8K"
+   ]
+  }
+ }
 }

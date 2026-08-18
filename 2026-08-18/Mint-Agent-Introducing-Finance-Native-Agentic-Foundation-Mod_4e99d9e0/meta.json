@@ -4,5 +4,33 @@
  "title": "Mint-Agent-Introducing-Finance-Native-Agentic-Foundation-Mod",
  "token": "sk-9ieZJEGxv...",
  "created_at": "2026-08-18 02:56:06",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/216a9044-60d6-497f-99ad-08afd54e0f54.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/216a9044-60d6-497f-99ad-08afd54e0f54.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:42:11",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "financial agent",
+    "RLVR",
+    "on-policy distillation",
+    "model merging",
+    "evidence ledger",
+    "deep research"
+   ],
+   "field": "垂直领域 Agent 基础模型",
+   "innovations": [
+    "双专家分离训练+TIES合并+多教师在线蒸馏（MOPD）的金融原生 Agent 构建范式",
+    "MintHarness 证据账本与状态化管理框架实现研究过程完全可审计",
+    "可验证 reward（RLVR）按能力类型分解答案/证据/推导三重验证信号"
+   ],
+   "benchmarks": [
+    "BizFinBench",
+    "FinanceBench",
+    "RFC-Bench Task 2",
+    "FinanceAgentBench v1.1/v2",
+    "FinSearchComp T2/T3"
+   ]
+  }
+ }
 }

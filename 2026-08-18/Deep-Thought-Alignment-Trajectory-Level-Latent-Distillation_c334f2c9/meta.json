@@ -4,5 +4,33 @@
  "title": "Deep-Thought-Alignment-Trajectory-Level-Latent-Distillation",
  "token": "sk-hwXfRrBR3...",
  "created_at": "2026-08-18 02:53:42",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/cf3d4d97-c072-4572-b7f6-626d0517d999.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/cf3d4d97-c072-4572-b7f6-626d0517d999.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:37:15",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "视频推理",
+    "On-Policy Distillation",
+    "隐状态蒸馏",
+    "多模态大模型",
+    "模型压缩",
+    "轨迹级对齐"
+   ],
+   "field": "视频多模态推理与模型蒸馏",
+   "innovations": [
+    "提出Latent-OPD，在OPD输出层蒸馏之外新增轨迹级隐状态对齐分支",
+    "设计稀疏尾部锚点+渐进式teacher-lookahead映射实现跨异构架构高效迁移"
+   ],
+   "benchmarks": [
+    "VSI-Bench",
+    "Video-MMMU",
+    "MMVU",
+    "MVBench",
+    "TempCompass",
+    "Video-MME"
+   ]
+  }
+ }
 }

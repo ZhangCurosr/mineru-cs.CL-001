@@ -4,5 +4,32 @@
  "title": "Executable-Code-Knowledge-Code-as-a-Native-Validation-Carryi",
  "token": "sk-yJ5h9Go8b...",
  "created_at": "2026-08-18 02:53:42",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/a3600eab-7f50-4887-9afc-b59dc2d2a034.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/a3600eab-7f50-4887-9afc-b59dc2d2a034.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:38:25",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "AI coding agents",
+    "executable knowledge",
+    "code representation",
+    "validation evidence",
+    "freshness checking",
+    "patch impact analysis",
+    "agent context"
+   ],
+   "field": "AI辅助编程与代码智能",
+   "innovations": [
+    "提出ECKU作为源码绑定的可执行知识单元，直接承载验证证据与新鲜度状态",
+    "精确changed-line影响分析实现1.000 F1的patch-to-unit映射",
+    "证据消融显示显式可执行证据将精确选择器召回从0.091提升至0.818（p=0.0078）"
+   ],
+   "benchmarks": [
+    "python-dotenv",
+    "python-slugify",
+    "tomli"
+   ]
+  }
+ }
 }

@@ -4,5 +4,33 @@
  "title": "Model-Hypnosis-Strong-control-of-Al-via-additive-subliminal",
  "token": "sk-EqwJR1nOB...",
  "created_at": "2026-08-18 14:31:26",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/c0ced4a8-4795-4a4d-b1a8-7bd7e81dc07c.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/c0ced4a8-4795-4a4d-b1a8-7bd7e81dc07c.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:42:35",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "prompt steering",
+    "model hypnosis",
+    "subliminal cues",
+    "additive effects",
+    "AI safety",
+    "interpretability",
+    "adversarial prompts",
+    "cross-model transfer"
+   ],
+   "field": "LLM 安全性与可解释性",
+   "innovations": [
+    "提出模型催眠：多弱线索加性叠加驱动 LLM 输出的系统化方法与实证",
+    "在 16 类非推理模型与 7 类推理模型上验证跨模型/跨尺度迁移性",
+    "用 Boolean Fourier 分析量化高阶交互贡献，证明一阶加性主导"
+   ],
+   "benchmarks": [
+    "5v7 number preference",
+    "Trolley moral judgment",
+    "Consciousness philosophical question"
+   ]
+  }
+ }
 }

@@ -4,5 +4,31 @@
  "title": "PolyDebate-A-Game-Orchestrated-Multimodal-System-for-Debate",
  "token": "sk-LV19Ft0NN...",
  "created_at": "2026-08-18 02:57:08",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/7b6f3cb6-f999-4391-9cc3-116da8fb7c3b.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/7b6f3cb6-f999-4391-9cc3-116da8fb7c3b.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:44:00",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Debate practice",
+    "Multimodal learning system",
+    "AI debater",
+    "Automated evaluation",
+    "Game-based learning",
+    "LLM judge",
+    "Formative feedback"
+   ],
+   "field": "多模态教育计算与智能评测",
+   "innovations": [
+    "游戏化编排的多模态辩论练习系统，打通分阶段对抗与结构化形成性反馈",
+    "技能卡牌驱动的阶段感知AI对手，使对抗者同时承担技巧示范功能",
+    "基于真实Rubric的文本/音频/视频三维度对齐评估与弱项诊断"
+   ],
+   "benchmarks": [
+    "Intelligence Squared Debates Corpus",
+    "ELC2012 Rubric (adapted)"
+   ]
+  }
+ }
 }

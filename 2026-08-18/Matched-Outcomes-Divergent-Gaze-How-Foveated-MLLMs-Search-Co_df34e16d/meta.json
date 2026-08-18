@@ -4,5 +4,30 @@
  "title": "Matched-Outcomes-Divergent-Gaze-How-Foveated-MLLMs-Search-Co",
  "token": "sk-4GZLsbGFG...",
  "created_at": "2026-08-18 14:31:37",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/7bd4acd7-74bd-4e8e-b02d-55cba9dff3ae.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/7bd4acd7-74bd-4e8e-b02d-55cba9dff3ae.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:41:26",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Visual Search",
+    "Foveated Vision",
+    "Multimodal LLMs",
+    "Eye Movements",
+    "COCO-Search18",
+    "Human-Model Alignment",
+    "Scanpath Prediction"
+   ],
+   "field": "多模态大模型视觉认知评估",
+   "innovations": [
+    "将类人搜索解耦为决策/找到/注视三维并发现模型在决策和找到轴匹配人类但注视轴显著偏离",
+    "发现三个跨架构MLLM共享低熵大振幅高自洽非人类注视签名，证明单次通过非串行架构属性",
+    "系统性退化sweep证明无运行点可同时达到类人首次命中率与类人最终成功率"
+   ],
+   "benchmarks": [
+    "COCO-Search18"
+   ]
+  }
+ }
 }

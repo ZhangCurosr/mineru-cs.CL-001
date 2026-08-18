@@ -4,5 +4,37 @@
  "title": "Mint-Agent-Introducing-Finance-Native-Agentic-Foundation-Mod",
  "token": "sk-9ieZJEGxv...",
  "created_at": "2026-08-18 14:31:37",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/2f726565-5149-4ce6-a74f-6d55ba616cd5.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/2f726565-5149-4ce6-a74f-6d55ba616cd5.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:42:05",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "financial agent",
+    "verifiable reward",
+    "on-policy distillation",
+    "model merging",
+    "long-horizon execution",
+    "evidence ledger",
+    "RLVR",
+    "GSPO"
+   ],
+   "field": "金融智能体与可验证强化学习",
+   "innovations": [
+    "TIES 合并 + 多教师 on-policy 蒸馏（MOPD）统一财务推理与长程执行双专家",
+    "原子/长程双轨可验证奖励 R_atom=A·S·C 与 R_long=A·G·H 的 verifier 设计",
+    "MintHarness 证据优先的状态化执行框架实现长轨迹可审计"
+   ],
+   "benchmarks": [
+    "BizFinBench",
+    "FinanceBench",
+    "RFC-Bench Task 2",
+    "FinanceAgentBench v1.1",
+    "FinanceAgentBench v2",
+    "FinSearchComp T2",
+    "FinSearchComp T3"
+   ]
+  }
+ }
 }

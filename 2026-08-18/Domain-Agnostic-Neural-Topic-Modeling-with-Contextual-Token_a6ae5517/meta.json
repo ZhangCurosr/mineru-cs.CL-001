@@ -4,5 +4,30 @@
  "title": "Domain-Agnostic-Neural-Topic-Modeling-with-Contextual-Token",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-18 14:31:02",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/47958ea7-3d5f-4083-ad01-4bf7b7560c35.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/47958ea7-3d5f-4083-ad01-4bf7b7560c35.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:37:55",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "neural topic modeling",
+    "graph neural networks",
+    "domain adaptation",
+    "pre-trained language models",
+    "topic coherence"
+   ],
+   "field": "自然语言处理-主题模型",
+   "innovations": [
+    "提出token-level语义图与冻结PLM联合优化的领域无关主题建模框架",
+    "通过图学习层重塑嵌入几何，无需编码器微调即可提升专业领域主题质量",
+    "在通用、生物医学、法律三领域基准上统一取得最优主题连贯性与多样性"
+   ],
+   "benchmarks": [
+    "20News-Group",
+    "BioASQ",
+    "BillSum"
+   ]
+  }
+ }
 }
