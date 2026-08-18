@@ -3,5 +3,27 @@
  "batch_id": "b8343674-368a-4d8f-b066-35b18f7395ac",
  "token": "sk-Ir4JqYCnj...",
  "created_at": "2026-08-12 15:32:18",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/4762a4e5-7215-49a8-bfa3-e777c1953614.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/4762a4e5-7215-49a8-bfa3-e777c1953614.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:35:40",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "terminal UI",
+    "conversational agent",
+    "state display",
+    "motion grammar",
+    "deterministic animation",
+    "accessibility",
+    " HCI"
+   ],
+   "field": "终端/命令行交互与代理状态可观测性",
+   "innovations": [
+    "一态一运动规则的空间-语义单行轨道（不依赖颜色）",
+    "纯函数帧生成使 UI 动画可 golden-frame 回归测试",
+    "诚实约束禁止伪造进度/活动并形式化为规范条款"
+   ]
+  }
+ }
 }

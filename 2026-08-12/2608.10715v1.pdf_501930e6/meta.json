@@ -3,5 +3,30 @@
  "batch_id": "501930e6-7ce5-41ce-a2f0-0876ee92b6c8",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-12 15:32:17",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0ca7ac24-2d13-40a9-9392-0357cae460bf.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0ca7ac24-2d13-40a9-9392-0357cae460bf.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:40:28",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM 辅助写作",
+    "学术出版",
+    "词频分析",
+    "PubMed Central",
+    "估算方法",
+    "语言趋同"
+   ],
+   "field": "计算语言学 / 科学计量学",
+   "innovations": [
+    "提出基于标记词频率变化的无偏 LLM 使用比例估计方法，突破此前仅能给出下界的限制",
+    "首次在 PMC 全文层面按章节细粒度分析 LLM 使用差异",
+    "通过模拟实验验证估计器对真实值的高精度还原（误差<2%）"
+   ],
+   "benchmarks": [
+    "PubMed Central (PMC) Open Access Subset",
+    "379 个 LLM 标记词集合"
+   ]
+  }
+ }
 }

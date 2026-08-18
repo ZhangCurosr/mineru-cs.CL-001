@@ -3,5 +3,32 @@
  "batch_id": "00ac2c2b-6576-429b-878c-cf8e0c2ba134",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-12 15:01:42",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/00bd6608-ad2c-4be4-b75b-c19bb1805811.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/00bd6608-ad2c-4be4-b75b-c19bb1805811.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:41:45",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "omni-modal dialogue",
+    "visual thought plan",
+    "multi-codebook speech units",
+    "prefix streaming",
+    "video diffusion distillation",
+    "audio-video synchronization",
+    "heterogeneous data training"
+   ],
+   "field": "全模态对话与视频生成",
+   "innovations": [
+    "结构化VTP将对话上下文转化为显式五字段视觉指导",
+    "原生16码书语音单元作为共享声学-时间接口连接语音合成与视频生成",
+    "前缀流式蒸馏机制通过停梯度clean latent前缀抑制累积尾部退化"
+   ],
+   "benchmarks": [
+    "VoiceBench CommonEval",
+    "OmniCharacter",
+    "SpeakerVid"
+   ]
+  }
+ }
 }

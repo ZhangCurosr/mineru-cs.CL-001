@@ -3,5 +3,34 @@
  "batch_id": "9a760c7c-6b8a-471b-8dae-6faa70d8c264",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-12 15:01:40",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/b5b4bac3-6a2b-4084-9b03-507b8ee0eb1e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/b5b4bac3-6a2b-4084-9b03-507b8ee0eb1e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:39:21",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM personality",
+    "behavioral control",
+    "activation steering",
+    "B-data",
+    "behavioral mode axes",
+    "trait drift",
+    "psychometrics"
+   ],
+   "field": "LLM行为可控性与可解释性",
+   "innovations": [
+    "提出情境化B-data框架替代LLM人格自报告测量",
+    "构建思维derived与响应derived BMAs并证明前者机制忠实性更高",
+    "发现行为控制效果集中于跨模型可迁移的BCL层带"
+   ],
+   "benchmarks": [
+    "BFI-2C",
+    "DOSPERT",
+    "GCS",
+    "HEXACO",
+    "UPPS"
+   ]
+  }
+ }
 }

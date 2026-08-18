@@ -3,5 +3,32 @@
  "batch_id": "fb72fbd1-2932-4dd4-9b8b-2c4b6daa3c9f",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 16:05:12",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/10422a98-a488-47e7-91f0-4a7eb8114ff6.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/10422a98-a488-47e7-91f0-4a7eb8114ff6.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:38:15",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "移动助手",
+    "分散个人信息",
+    "基准测试",
+    "工具调用",
+    "认知能力",
+    "信息检索"
+   ],
+   "field": "移动助手评估",
+   "innovations": [
+    "首个评估LLM利用跨应用分散个人信息能力的基准测试SPIEVAL",
+    "五维认知能力分解框架（推理/消歧/整合/偏好推断/多意图分解）",
+    "参数级可验证评估协议避免LLM-as-a-judge偏差"
+   ],
+   "benchmarks": [
+    "SPIEVAL",
+    "AppWorld",
+    "PersonaBench",
+    "ToolHop"
+   ]
+  }
+ }
 }

@@ -3,5 +3,30 @@
  "batch_id": "59d5c55e-bf53-4faf-b466-4984f3443079",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 16:05:11",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0ca7ac24-2d13-40a9-9392-0357cae460bf.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0ca7ac24-2d13-40a9-9392-0357cae460bf.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:40:46",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM使用率估计",
+    "学术写作",
+    "词汇频率分析",
+    "生物医学文献",
+    "语言变化检测"
+   ],
+   "field": "计算语言学与学术出版",
+   "innovations": [
+    "提出无偏估计方法突破仅下界限制",
+    "跨章节/国家细粒度分析LLM使用模式"
+   ],
+   "benchmarks": [
+    "PubMed Central (PMC)",
+    "频率差下界方法",
+    "混合模型方法",
+    "分布重叠方法"
+   ]
+  }
+ }
 }

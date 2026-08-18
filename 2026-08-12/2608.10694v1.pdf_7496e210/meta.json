@@ -3,5 +3,32 @@
  "batch_id": "7496e210-fe25-49b3-8796-34a52194085d",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-12 15:01:40",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/88bb0c70-e0e6-4452-9baa-614aa30b7df8.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/88bb0c70-e0e6-4452-9baa-614aa30b7df8.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:38:05",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "evolutionary prompt optimization",
+    "cross-tier transfer",
+    "cost-aware LLM search",
+    "multi-fidelity optimization",
+    "GEPA",
+    "prompt portability"
+   ],
+   "field": "LLM 提示词自动化优化与成本控制",
+   "innovations": [
+    "将进化优化中的回答/变异/部署三角色解耦到不同价格层，利用强反射+廉价评估实现跨层正向迁移",
+    "系统性刻画向上跨层迁移的成本-质量权衡边界，给出 lambda* 和 N* 两类均衡度量",
+    "提出 structural explicitness 解释机制并通过 2x2 角色消融定位迁移能力来源于变异算子而非廉价评测器"
+   ],
+   "benchmarks": [
+    "HotpotQA",
+    "IFBench",
+    "LiveBench-Math",
+    "HoVer"
+   ]
+  }
+ }
 }

@@ -3,5 +3,31 @@
  "batch_id": "83c7de9e-b264-46ad-b660-02d9c070e375",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-12 15:32:21",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/4869cb4c-9787-4310-be0b-a27a76b67e4a.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/4869cb4c-9787-4310-be0b-a27a76b67e4a.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:33:45",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Keyphrase Extraction",
+    "Eye-tracking",
+    "Webcam-based",
+    "Chinese Academic Text",
+    "Reading Behavior",
+    "CLIS-ET",
+    "Attention Mechanism"
+   ],
+   "field": "认知NLP / 关键短语提取",
+   "innovations": [
+    "基于低成本网络摄像头的中文学术阅读眼动数据收集平台",
+    "构建CLIS-ET字符级眼动语料并验证其对KPE的增益",
+    "揭示早期加工(FFD)与累积加工(TFD)特征在不同数据规模下的互补效应"
+   ],
+   "benchmarks": [
+    "Abstract-320 (五折交叉验证)",
+    "Abstract-5190 (4:1划分)"
+   ]
+  }
+ }
 }

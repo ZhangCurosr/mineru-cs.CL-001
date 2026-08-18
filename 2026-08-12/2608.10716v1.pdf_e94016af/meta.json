@@ -3,5 +3,29 @@
  "batch_id": "e94016af-0eb2-4eaf-a447-80601e08c83b",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 16:05:11",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/582f2af4-9c84-47ad-9dc3-e8bf4ead5c00.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/582f2af4-9c84-47ad-9dc3-e8bf4ead5c00.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:41:32",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "speech-to-speech",
+    "voice agent benchmark",
+    "full-duplex dialogue",
+    "tool calling",
+    "conversational dynamics",
+    "agentic capability"
+   ],
+   "field": "语音代理评测基准",
+   "innovations": [
+    "提出DUPLEXWORLD基准，首次统一评估语音代理在六个世界和十一种对话类型上的代理能力、对话动态和自然度",
+    "引入路径规划（Pathfinding）世界测试语音导航能力，提出探索-利用分析框架",
+    "揭示三种核心能力（任务完成、对话流畅、声学质量）彼此解耦，提出under-effort share作为关键过程诊断指标"
+   ],
+   "benchmarks": [
+    "DUPLEXWORLD"
+   ]
+  }
+ }
 }

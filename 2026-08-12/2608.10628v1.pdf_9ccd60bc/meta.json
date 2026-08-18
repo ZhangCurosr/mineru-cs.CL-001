@@ -3,5 +3,34 @@
  "batch_id": "9ccd60bc-53c0-489d-925b-c814e829fcfe",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 14:58:36",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/3a689c63-de07-4f68-9c38-e837d7447860.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/3a689c63-de07-4f68-9c38-e837d7447860.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:32:12",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "long-document VQA",
+    "agentic visual perception",
+    "coarse-to-fine reasoning",
+    "zoom-in tool",
+    "context rot mitigation",
+    "SFT+RL training"
+   ],
+   "field": "多模态长文档理解",
+   "innovations": [
+    "端到端无检索器的 adaptive zoom-in 智能体框架，将视觉分辨率作为推理时自适应资源",
+    "三阶段 cascade 过滤 + 两智能体轨迹生成构建 17.9K SFT / 19.2K RL 主动感知训练语料",
+    "在 8B 模型上实现超 GPT 级长文档 VQA 准确率同时降低 41%-68% 延迟和 40%+ 幻觉率"
+   ],
+   "benchmarks": [
+    "DUDE",
+    "MP-DocVQA",
+    "MMLongBench-Doc",
+    "LongDocURL",
+    "MME-RealWorld-Lite",
+    "O3-Bench"
+   ]
+  }
+ }
 }

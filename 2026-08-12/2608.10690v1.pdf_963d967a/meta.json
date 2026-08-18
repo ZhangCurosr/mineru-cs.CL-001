@@ -3,5 +3,33 @@
  "batch_id": "963d967a-a29c-46d3-99bd-f0cbb46c51db",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 16:05:13",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/7110c4a7-4926-4eb2-a142-78ed6a853850.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/7110c4a7-4926-4eb2-a142-78ed6a853850.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:35:49",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM 词表分析",
+    "语料构成估计",
+    "BPE tokenizer",
+    "token-level 估计",
+    "分布迁移",
+    "预训练语料透明度"
+   ],
+   "field": "LLM 数据透明度与可解释性",
+   "innovations": [
+    "证明 BPE 词表的 ID-ratio 分布在跨语料间可迁移，为词表逆向推断提供理论基础",
+    "提出 QGDE，通过多分位数趋势拟合+局部密度加权实现任意 token 的细粒度语料占比估计",
+    "在 SmolLM 真实发布词表上验证，token-level 误差低至 3.00%，category-level 聚合后 3.08%"
+   ],
+   "benchmarks": [
+    "mC4",
+    "OSCAR",
+    "FineWeb",
+    "CodeParrot",
+    "SmolLM"
+   ]
+  }
+ }
 }

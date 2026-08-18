@@ -3,5 +3,32 @@
  "batch_id": "9e048528-548f-4590-b72b-39d19d493db1",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-12 15:32:19",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/88bb0c70-e0e6-4452-9baa-614aa30b7df8.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/88bb0c70-e0e6-4452-9baa-614aa30b7df8.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:37:14",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "prompt optimization",
+    "evolutionary computation",
+    "cost-aware LLM",
+    "cross-tier transfer",
+    "multi-fidelity optimization",
+    "prompt transferability"
+   ],
+   "field": "LLM prompt optimization",
+   "innovations": [
+    "Cost-aware cross-tier decoupling of evaluator/variation/deployment roles in evolutionary prompt search",
+    "Systematic characterization of weak-to-strong zero-shot prompt transfer with structural explicitness mechanism",
+    "2x2 role ablation locating transferability gain in strong reflector rather than cheap evaluator"
+   ],
+   "benchmarks": [
+    "HotpotQA",
+    "IFBench",
+    "LiveBench-Math",
+    "HoVer"
+   ]
+  }
+ }
 }

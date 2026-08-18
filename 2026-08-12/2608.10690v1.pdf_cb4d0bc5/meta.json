@@ -3,5 +3,30 @@
  "batch_id": "cb4d0bc5-e97a-4075-8976-81fd5a794a1b",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-12 15:32:20",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/7110c4a7-4926-4eb2-a142-78ed6a853850.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/7110c4a7-4926-4eb2-a142-78ed6a853850.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:36:14",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM词表分析",
+    "预训练语料估计",
+    "BPE分词器",
+    "分位数回归",
+    "数据透明度",
+    "token级估计"
+   ],
+   "field": "大语言模型可解释性与数据审计",
+   "innovations": [
+    "发现BPE token ID-ratio分布跨语料可迁移",
+    "提出QGDE方法实现任意token级别语料比率估计"
+   ],
+   "benchmarks": [
+    "mC4语言设置",
+    "FineWeb/Wiki/Code/Math领域设置",
+    "SmolLM真实tokenizer验证"
+   ]
+  }
+ }
 }

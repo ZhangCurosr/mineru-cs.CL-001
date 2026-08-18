@@ -3,5 +3,33 @@
  "batch_id": "6838dc0f-635e-4bf0-83e6-44db6335723f",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-12 15:32:15",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/582f2af4-9c84-47ad-9dc3-e8bf4ead5c00.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/582f2af4-9c84-47ad-9dc3-e8bf4ead5c00.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:41:05",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "语音代理评测",
+    "全双工语音",
+    "S2S agent",
+    "benchmark",
+    "对话动力学",
+    "任务能力",
+    "路径规划"
+   ],
+   "field": "语音代理评测基准",
+   "innovations": [
+    "首个覆盖六世界十一对话类型的统一语音代理评测基准",
+    "十二指标三支柱统一套件揭示三大能力彼此解耦",
+    "引入探索-利用视角分析语音导航行为"
+   ],
+   "benchmarks": [
+    "DUPLEXWORLD",
+    "τ-Voice",
+    "EVA-Bench",
+    "Full-Duplex-Bench"
+   ]
+  }
+ }
 }

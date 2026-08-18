@@ -3,5 +3,29 @@
  "batch_id": "3107d517-c59a-40ef-a680-03b1400d4ee4",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-12 14:58:32",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0ca7ac24-2d13-40a9-9392-0357cae460bf.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0ca7ac24-2d13-40a9-9392-0357cae460bf.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:40:39",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM辅助写作",
+    "学术出版",
+    "词频分析",
+    "PubMed Central",
+    "检测指标",
+    "学术诚信"
+   ],
+   "field": "科学计量学与AI伦理",
+   "innovations": [
+    "提出分母修正的无偏LLM使用率估计方法（从下界升级为近似真实值）",
+    "首次在全文段落粒度系统刻画Discussions与Methods的LLM使用差异",
+    "揭示LLM驱动的全球学术英语语言趋同现象"
+   ],
+   "benchmarks": [
+    "PubMed Central Open Access Subset (1,194,287 papers, 2017-2025)"
+   ]
+  }
+ }
 }

@@ -3,5 +3,31 @@
  "batch_id": "2cf951ef-cccf-414e-aca1-a03a9281ce61",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-12 15:01:41",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0ca7ac24-2d13-40a9-9392-0357cae460bf.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0ca7ac24-2d13-40a9-9392-0357cae460bf.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:39:45",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM usage estimation",
+    "academic writing",
+    "bibliometrics",
+    "text analysis",
+    "PubMed Central",
+    "marker words",
+    "frequency gap"
+   ],
+   "field": "学术出版与AI伦理",
+   "innovations": [
+    "提出基于反事实人类频率的紧下界估计量β̂_LB=(q-p̂_human)/(1-p̂_human)实现无偏LLM使用率估算",
+    "通过阈值优化与模拟验证确立可靠估计流程",
+    "首次提供PMC论文分节段及国家级的细粒度LLM使用时空图谱"
+   ],
+   "benchmarks": [
+    "PubMed Central open-access subset (1.19M papers)",
+    "379 LLM-associated marker words from prior work"
+   ]
+  }
+ }
 }

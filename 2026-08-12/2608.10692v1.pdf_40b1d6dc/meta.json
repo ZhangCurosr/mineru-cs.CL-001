@@ -3,5 +3,28 @@
  "batch_id": "40b1d6dc-f256-4323-8b4b-abcd6e04a6af",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-12 14:58:34",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/10422a98-a488-47e7-91f0-4a7eb8114ff6.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/10422a98-a488-47e7-91f0-4a7eb8114ff6.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:36:28",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "mobile assistant",
+    "scattered personal information",
+    "LLM evaluation benchmark",
+    "tool use",
+    "information localization",
+    "cognitive capability"
+   ],
+   "field": "手机助手Agent评测",
+   "innovations": [
+    "首个面向分散个人信息场景的手机助手评测基准",
+    "五维认知能力分类框架用于系统化评估手机助手能力"
+   ],
+   "benchmarks": [
+    "SPIEVAL"
+   ]
+  }
+ }
 }

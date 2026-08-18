@@ -3,5 +3,29 @@
  "batch_id": "b34eab6d-5559-4c33-a3a8-c1b5c16bf3a4",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-12 14:58:35",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/996f79b8-7201-4665-b914-06098f1e59aa.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/996f79b8-7201-4665-b914-06098f1e59aa.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:33:07",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Enterprise QA",
+    "Benchmark",
+    "Graph Reasoning",
+    "Retrieval-Augmented Generation",
+    "Organizational Inference",
+    "Multi-hop Reasoning"
+   ],
+   "field": "企业问答与知识增强生成",
+   "innovations": [
+    "提出潜在组织推理能力定义与L3问题层级，填补企业QA基准空白",
+    "图驱动基准构建框架，分离审计真值图与匿名化发布语料",
+    "56配置评估矩阵揭示结构化检索与词法检索在组织关系恢复上的选择性优势"
+   ],
+   "benchmarks": [
+    "ENTLORE"
+   ]
+  }
+ }
 }
