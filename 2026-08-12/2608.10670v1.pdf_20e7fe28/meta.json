@@ -3,5 +3,32 @@
  "batch_id": "20e7fe28-d545-486f-b823-7ff4ff54088c",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-12 15:32:21",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/27833487-0f7b-4432-adb7-f10a3543b5bc.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/27833487-0f7b-4432-adb7-f10a3543b5bc.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:03:14",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "低资源语音识别",
+    "Garhwali",
+    "多种子评估",
+    "自监督预训练",
+    "CTC",
+    "Focal Loss",
+    "方言ASR",
+    "可重复性"
+   ],
+   "field": "低资源语音识别",
+   "innovations": [
+    "提出低资源方言ASR多种子评估协议并证明单种子对比不可靠",
+    "在Garhwali上建立首个基于官方VAANI splits的多种子可复现ASR基准",
+    "证明w2v-BERT 2.0的预训练设计优于更大规模的MMS/XLS-R/HuBERT模型"
+   ],
+   "benchmarks": [
+    "VAANI Garhwali official splits",
+    "Garhwali ASR multi-seed benchmark"
+   ]
+  }
+ }
 }

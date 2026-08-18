@@ -3,5 +3,34 @@
  "batch_id": "32c584e0-836f-4645-945d-c4eb79fdf255",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-12 16:05:18",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0124ee76-70c6-4369-8338-ccf32396c4a9.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0124ee76-70c6-4369-8338-ccf32396c4a9.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 04:55:07",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "语音摘要",
+    "多语言",
+    "跨语言翻译",
+    "长文档理解",
+    "语音语言模型",
+    "JSumT",
+    "VOXSUMM"
+   ],
+   "field": "多语言语音摘要",
+   "innovations": [
+    "首次形式化联合语音摘要与翻译（JSumT）任务并提供端到端评测框架",
+    "构建首个多语言长格式语音摘要基准 VOXSUMM（24 种语言、703 小时、10,045 对 BBC 音频-摘要）",
+    "系统揭示先摘要后翻译优于先翻译后摘要的级联顺序效应及低资源语言性能差异规律"
+   ],
+   "benchmarks": [
+    "VOXSUMM",
+    "CrossSum",
+    "XL-Sum",
+    "MuST-C",
+    "CoVoST 2"
+   ]
+  }
+ }
 }

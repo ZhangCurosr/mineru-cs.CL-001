@@ -3,5 +3,31 @@
  "batch_id": "6df6e7c6-64d4-4f5c-a4ee-c3ee07495881",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:01:47",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/1dcb6660-9094-4d29-a928-0c323bd1c015.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/1dcb6660-9094-4d29-a928-0c323bd1c015.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 04:58:59",
+  "chunks": 7,
+  "meta": {
+   "keywords": [
+    "LLM agent",
+    "自然语言合约",
+    "谈判-执行博弈",
+    "ContractSim",
+    "理性基线",
+    "contingency clauses",
+    "重复博弈"
+   ],
+   "field": "多智能体协商与合约执行",
+   "innovations": [
+    "谈判-执行两阶段博弈形式化框架，将自然语言合约翻译为策略约束集合",
+    "RC/RE/RCC 精确理性基线族与重复博弈合规性定理",
+    "ContractSim 多供应商 benchmark 覆盖 contingent & incomplete contracts"
+   ],
+   "benchmarks": [
+    "ContractSim 6 environments × 3 settings",
+    "Catering / Hotel Cleaning / AI Hosting"
+   ]
+  }
+ }
 }

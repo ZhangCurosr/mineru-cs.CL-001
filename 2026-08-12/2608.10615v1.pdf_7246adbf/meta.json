@@ -3,5 +3,31 @@
  "batch_id": "7246adbf-dd4d-4f1f-a281-69327e535166",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 15:32:23",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/b6153476-0e0d-4d6b-8305-b933f0653a49.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/b6153476-0e0d-4d6b-8305-b933f0653a49.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 04:59:49",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "discrete diffusion",
+    "uniform diffusion",
+    "simplex relaxation",
+    "Dirichlet-categorical augmentation",
+    "Rao-Blackwellized objective",
+    "OpenWebText",
+    "Sudoku generation"
+   ],
+   "field": "离散扩散生成模型",
+   "innovations": [
+    "在保持均匀离散扩散分类边缘不变的前提下引入精确 Dirichlet-单纯形增广",
+    "通过辅助分类解码的 Rao-Blackwellized 闭式反桥目标消除采样噪声",
+    "基于同一增广层次导出保留分类输入的随机祖先采样器"
+   ],
+   "benchmarks": [
+    "OpenWebText unconditional generation",
+    "Sudoku conditional and unconditional generation"
+   ]
+  }
+ }
 }

@@ -3,5 +3,31 @@
  "batch_id": "e932537f-9fa3-41cf-b322-442de7de26a4",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 14:58:37",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/4aed4458-7014-4bd5-aae0-f60ffa18cc8e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/4aed4458-7014-4bd5-aae0-f60ffa18cc8e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 04:57:19",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "VLA",
+    "action tokenization",
+    "semantic alignment",
+    "VQ-VAE",
+    "language-conditioned control",
+    "verb grounding",
+    "embodied language"
+   ],
+   "field": "具身智能与语言-动作对齐",
+   "innovations": [
+    "首次系统诊断VLA动作接口的语义损失，证明离散化系统性侵蚀动词接地信息",
+    "提出SALT：在VQ-VAE tokenizer中引入冻结VLM的指令生成辅助损失，使动作词汇自发形成动词特化代码",
+    "在匹配压缩率设定下将SimplerEnv平均成功率从42.7%提升至71.9%，同时保持重建保真度"
+   ],
+   "benchmarks": [
+    "BridgeV2",
+    "SimplerEnv WidowX"
+   ]
+  }
+ }
 }

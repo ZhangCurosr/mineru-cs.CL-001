@@ -3,5 +3,26 @@
  "batch_id": "994c43da-1fa6-4445-85b1-b69c8d0f5dd7",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 16:05:14",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/a39c865e-bb0f-4836-9e5f-1f48bfe62733.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/a39c865e-bb0f-4836-9e5f-1f48bfe62733.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:04:03",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Human-AI interaction",
+    "relational engagement",
+    "self-disclosure",
+    "longitudinal study",
+    "AI companionship",
+    "regulation"
+   ],
+   "field": "人机交互与情感计算",
+   "innovations": [
+    "实证证明通用AI默认具备主动关系代理能力",
+    "揭示系统行为与用户感知的背离机制",
+    "提出基于行为的AI监管范式"
+   ]
+  }
+ }
 }

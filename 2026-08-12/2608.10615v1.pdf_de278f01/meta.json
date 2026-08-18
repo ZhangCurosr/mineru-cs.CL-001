@@ -3,5 +3,30 @@
  "batch_id": "de278f01-2d05-4119-8421-8d6fe978b389",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-12 15:01:45",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/b6153476-0e0d-4d6b-8305-b933f0653a49.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/b6153476-0e0d-4d6b-8305-b933f0653a49.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:00:21",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "discrete diffusion",
+    "Dirichlet-categorical augmentation",
+    "Rao-Blackwellized objective",
+    "simplex relaxation",
+    "OpenWebText",
+    "Sudoku generation"
+   ],
+   "field": "离散扩散模型",
+   "innovations": [
+    "精确 Dirichlet-categorical 增强保持原始类别扩散为边际",
+    "Rao-Blackwellized 反向桥损失解析闭合形式",
+    "基于增强层次的随机祖先采样器"
+   ],
+   "benchmarks": [
+    "OpenWebText",
+    "Sudoku"
+   ]
+  }
+ }
 }

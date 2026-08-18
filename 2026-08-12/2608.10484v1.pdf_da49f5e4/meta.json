@@ -3,5 +3,31 @@
  "batch_id": "da49f5e4-13c9-4ba1-992b-789e2e66073b",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:01:47",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/4aed4458-7014-4bd5-aae0-f60ffa18cc8e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/4aed4458-7014-4bd5-aae0-f60ffa18cc8e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 04:56:30",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Vision-Language-Action",
+    "action tokenization",
+    "semantic alignment",
+    "verb grounding",
+    "VQ-VAE",
+    "robotic manipulation",
+    "language-conditioned control"
+   ],
+   "field": "具身语言-动作表征对齐",
+   "innovations": [
+    "提出SALT，在VQ-VAE tokenizer训练中引入冻结VLM指令生成辅助损失，使动作词汇表围绕动词语义组织",
+    "首次在BridgeV2上用互信息分解量化证明7-DoF动作轨迹携带超出视觉终态的动词专属信息（~0.059 bits）",
+    "证明仅重建目标的离散tokenizer系统性侵蚀动词 grounding，且压缩越强损失越大"
+   ],
+   "benchmarks": [
+    "BridgeV2",
+    "SimplerEnv WidowX"
+   ]
+  }
+ }
 }

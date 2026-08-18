@@ -3,5 +3,36 @@
  "batch_id": "c06c47e8-21ce-4e9c-ada1-f9411ef4ca72",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 15:32:23",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/3a689c63-de07-4f68-9c38-e837d7447860.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/3a689c63-de07-4f68-9c38-e837d7447860.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:01:38",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "long-document VQA",
+    "agentic visual perception",
+    "zoom-in reasoning",
+    "coarse-to-fine",
+    "context rot mitigation",
+    "vision-language model",
+    "active perception",
+    "SFT+RL"
+   ],
+   "field": "多模态长文档理解",
+   "innovations": [
+    "将视觉分辨率作为推理时动态可调用的自适应资源，实现端到端无检索器的多轮主动感知",
+    "在 region-level（bbox 级）进行子页面裁剪与证据聚合，而非仅停留在整页级",
+    "构造 37K+ 高质量主动感知训练语料并引入加权 refill RL sampler，显著提升轨迹效率与幻觉抑制"
+   ],
+   "benchmarks": [
+    "DUDE",
+    "MP-DocVQA",
+    "MMLongBench-Doc",
+    "LongDocURL",
+    "MME-RealWorld-Lite",
+    "O3-Bench"
+   ]
+  }
+ }
 }

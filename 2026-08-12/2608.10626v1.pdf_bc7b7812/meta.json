@@ -3,5 +3,32 @@
  "batch_id": "bc7b7812-e804-4c6e-a84e-f72bc9565df2",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 15:32:22",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/c0aa3eb9-ceac-4a89-95fc-6ebf73076c6e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/c0aa3eb9-ceac-4a89-95fc-6ebf73076c6e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:00:39",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "多轮共情对话",
+    "可验证情感奖励",
+    "双循环自进化",
+    "自适应课程学习",
+    "强化学习",
+    "用户模拟器"
+   ],
+   "field": "多轮情感支持对话强化学习",
+   "innovations": [
+    "提出双循环自进化框架，共享情感反馈同时驱动策略优化与交互分布自适应",
+    "设计意图-状态分层因子化的控制器，通过留一意图先验稳定稀疏多轮通过率估计",
+    "以边界通过率（≈0.5）优先结合不确定性探索进行 interaction-condition 分配，无需增加 rollout 预算"
+   ],
+   "benchmarks": [
+    "SAGE",
+    "ESC-Eval",
+    "EIBench",
+    "ESConv"
+   ]
+  }
+ }
 }

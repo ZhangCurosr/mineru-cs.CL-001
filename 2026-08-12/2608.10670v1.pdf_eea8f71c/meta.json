@@ -3,5 +3,29 @@
  "batch_id": "eea8f71c-eb1c-455d-aaff-a4465d637f9f",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 16:05:13",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/27833487-0f7b-4432-adb7-f10a3543b5bc.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/27833487-0f7b-4432-adb7-f10a3543b5bc.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:03:54",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "低资源ASR",
+    "多种子评估",
+    "方言语音识别",
+    "Focal CTC",
+    "w2v-BERT",
+    "Garhwali",
+    "预训练设计"
+   ],
+   "field": "低资源方言自动语音识别",
+   "innovations": [
+    "建立首个低资源方言多种子可复现ASR基准，证明单种子比较不可靠",
+    "系统验证目标函数工程与跨语言迁移在低资源方言场景下无效，预训练设计才是关键杠杆"
+   ],
+   "benchmarks": [
+    "VAANI Garhwali official split"
+   ]
+  }
+ }
 }

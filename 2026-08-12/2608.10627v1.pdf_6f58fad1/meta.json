@@ -3,5 +3,33 @@
  "batch_id": "6f58fad1-4ae2-4a5c-a448-3b300038beef",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-12 16:05:14",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/aa192584-6f83-42b6-a717-461bbb38797c.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/aa192584-6f83-42b6-a717-461bbb38797c.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:00:51",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "context-memory conflict",
+    "decomposition",
+    "hallucination detection",
+    "mechanistic interpretability",
+    "fact-checking",
+    "probing",
+    "context-aware decoding",
+    "parametric injection"
+   ],
+   "field": "大语言模型幻觉与知识冲突",
+   "innovations": [
+    "首次形式化定义分解诱导上下文-记忆冲突(DI-CC)并证明其与经典上下文-记忆冲突机制同源",
+    "揭示经典缓解方法CAD在分解场景中的忠实性-完整性权衡代价",
+    "发现探针层选择准则可主导跨规模结果解读的方法学问题"
+   ],
+   "benchmarks": [
+    "NQ-Swap",
+    "FActScore",
+    "DI-CC synthetic biography dataset"
+   ]
+  }
+ }
 }

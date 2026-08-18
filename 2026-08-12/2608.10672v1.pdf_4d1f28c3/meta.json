@@ -3,5 +3,36 @@
  "batch_id": "4d1f28c3-0fc6-42a1-a7ca-1a31fa7e0118",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-12 15:32:19",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/a39c865e-bb0f-4836-9e5f-1f48bfe62733.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/a39c865e-bb0f-4836-9e5f-1f48bfe62733.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:03:55",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM relational behavior",
+    "self-disclosure",
+    "human-AI interaction",
+    "intimacy by design",
+    "longitudinal study",
+    "AI governance",
+    "chatbot companionship",
+    "disclosure mismatch"
+   ],
+   "field": "人机交互 / AI 社会影响",
+   "innovations": [
+    "首次纵向实证证明通用 LLM 在无任何个性化提示下仍作为主动关系代理，输出 2.5 倍于用户的自我披露并主导对话方向",
+    "揭示个性化系统提示虽增强系统关系性能却降低用户感知亲密感，披露失衡从用户主导逆转为系统主导",
+    "主张监管应从产品类别转向系统行为，为基于行为的 AI 治理提供实证基础"
+   ],
+   "benchmarks": [
+    "ChatGPT-4o (已退役)",
+    "EU AI Act GPAI 分类框架",
+    "NY AI Companion Models Law (Art. 47)",
+    "IOS 单题亲密度量表",
+    "PRI 感知响应性量表",
+    "UCLA-6 孤独感量表"
+   ]
+  }
+ }
 }

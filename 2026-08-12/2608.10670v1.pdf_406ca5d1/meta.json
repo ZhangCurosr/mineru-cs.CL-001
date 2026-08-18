@@ -3,5 +3,32 @@
  "batch_id": "406ca5d1-f956-4fd4-8723-5685c285f3af",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-12 15:01:43",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/27833487-0f7b-4432-adb7-f10a3543b5bc.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/27833487-0f7b-4432-adb7-f10a3543b5bc.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:03:37",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "低资源ASR",
+    "Garhwali",
+    "w2v-BERT 2.0",
+    "多seed评估",
+    "Focal CTC",
+    "方差感知评测",
+    "VAANI",
+    "CTC目标函数"
+   ],
+   "field": "低资源方言语音识别",
+   "innovations": [
+    "在Garhwali上建立首个基于官方划分与多seed显著性检验的可复现ASR基准",
+    "系统验证Focal CTC、matra加权目标与Hindi迁移均未能稳定优于标准CTC",
+    "证明预训练设计质量比模型规模更能决定低资源方言ASR性能"
+   ],
+   "benchmarks": [
+    "VAANI Garhwali官方划分",
+    "FLEURS Hindi（迁移源）"
+   ]
+  }
+ }
 }

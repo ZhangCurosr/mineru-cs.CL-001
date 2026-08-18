@@ -3,5 +3,32 @@
  "batch_id": "40a12892-54b0-40aa-a0c1-f04c4ac1f790",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-12 16:05:14",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/c0aa3eb9-ceac-4a89-95fc-6ebf73076c6e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/c0aa3eb9-ceac-4a89-95fc-6ebf73076c6e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:00:42",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "情感支持对话",
+    "多轮对话",
+    "强化学习",
+    "可验证奖励",
+    "课程学习",
+    "双循环框架"
+   ],
+   "field": "情感计算与多轮对话",
+   "innovations": [
+    "双循环自进化框架：内循环优化策略、外循环调整交互分布，共享可验证情感反馈",
+    "分层意图-状态证据共享与边界优先分配机制，缓解稀疏长链rollout的样本效率问题",
+    "24状态可控交互空间：3轴（披露/激活/信任）行为可操作化，经独立验证保留语义并产生可区分对话行为"
+   ],
+   "benchmarks": [
+    "SAGE",
+    "ESConv",
+    "ESC-Eval",
+    "EIBench"
+   ]
+  }
+ }
 }

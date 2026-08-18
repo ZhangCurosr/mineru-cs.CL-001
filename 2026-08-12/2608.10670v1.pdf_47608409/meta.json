@@ -3,5 +3,33 @@
  "batch_id": "47608409-5976-463f-af10-c851dd0055c4",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 14:58:15",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/27833487-0f7b-4432-adb7-f10a3543b5bc.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/27833487-0f7b-4432-adb7-f10a3543b5bc.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 05:03:46",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "低资源ASR",
+    "方言语音识别",
+    "多种子评估",
+    "自监督语音模型",
+    "CTC目标函数",
+    "Garhwali",
+    "VAANI"
+   ],
+   "field": "低资源自动语音识别",
+   "innovations": [
+    "建立首个基于官方分割的多种子Garhwali ASR基准，证明目标函数工程与跨语言迁移无稳定增益",
+    "揭示预训练设计（w2v-BERT 2.0）比模型规模更关键，简单速度增强是最可靠提升杠杆",
+    "通过配对显著性检验与功效分析，展示低资源方言ASR中单种子结果的脆弱性"
+   ],
+   "benchmarks": [
+    "VAANI Garhwali official split",
+    "FLEURS Hindi (transfer source)",
+    "w2v-BERT 2.0 baseline",
+    "MMS-1B, XLS-R, HuBERT, Whisper Large-v3"
+   ]
+  }
+ }
 }

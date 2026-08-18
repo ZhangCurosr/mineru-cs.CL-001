@@ -3,5 +3,29 @@
  "batch_id": "30735fd6-4b6c-42f5-b942-e9fd53c841c5",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:01:46",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/947d482e-f26a-4e6f-8e8a-5902789b92ad.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/947d482e-f26a-4e6f-8e8a-5902789b92ad.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 04:58:22",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "放射学报告生成",
+    "阈值可控生成",
+    "医疗视觉问答",
+    "ROC 评估",
+    "多模态大模型"
+   ],
+   "field": "医疗影像报告生成",
+   "innovations": [
+    "首次实现报告生成的阈值可控性，使报告ROC追踪分类器ROC",
+    "融合分类器置信度与VQA报告生成器的三重组件架构",
+    "通过LLM免训练重写实现诊断内容与阈值化分类的对齐"
+   ],
+   "benchmarks": [
+    "MIMIC-CXR",
+    "CheXpert"
+   ]
+  }
+ }
 }
