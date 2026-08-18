@@ -3,5 +3,28 @@
  "batch_id": "bb64369d-8954-402a-b304-3d208da70323",
  "token": "sk-n7iJ0Z1Ol...",
  "created_at": "2026-08-12 15:32:25",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/d254aeaa-a09e-436d-bb7e-cab52d8fbe9d.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/d254aeaa-a09e-436d-bb7e-cab52d8fbe9d.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:07:05",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Data Science Agent",
+    "GUI Agent",
+    "Benchmark",
+    "OS Interaction",
+    "Multi-tool Workflow",
+    "Vision-Language Model"
+   ],
+   "field": "数据科学Agent评测",
+   "innovations": [
+    "首个在真实操作系统中评估端到端数据科学工作流自动化的基准（275任务/六阶段生命周期）",
+    "确定性执行评测+LLM视觉裁判的分层评估机制，超越纯代码正确性检查"
+   ],
+   "benchmarks": [
+    "DSAgentBench"
+   ]
+  }
+ }
 }

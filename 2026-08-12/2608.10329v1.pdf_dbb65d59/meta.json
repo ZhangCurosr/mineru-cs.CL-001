@@ -3,5 +3,33 @@
  "batch_id": "dbb65d59-2322-4d26-91b8-51365ead111e",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:01:50",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/98dad0eb-aff0-43c0-9515-f4f489fc2f0e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/98dad0eb-aff0-43c0-9515-f4f489fc2f0e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:04:37",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "public participation",
+    "regulatory responsiveness",
+    "LLM-as-judge",
+    "algorithmic accountability",
+    "obligation-level auditing",
+    "regulatory text analysis",
+    "equity in administrative systems"
+   ],
+   "field": "计算政策分析与算法问责",
+   "innovations": [
+    "提出义务级别响应性审计框架，将分析单元从规则文档下沉到离散法规义务",
+    "建立分层审计验证体系，透明报告每个AI辅助组件的验证状态（可靠/试探性/推迟）",
+    "揭示参与权形式开放与实质影响力之间的结构性不平等：组织与个人选择进入不同规则制定"
+   ],
+   "benchmarks": [
+    "EPA regulations.gov 786,197条评论语料库",
+    "36个锚定规则制定案例（70,075条评论）",
+    "Leahey FRTracker基准（precision 0.9545, κ=1.0）",
+    "Love LLM响应性编码（κ=0.64作为校准锚）"
+   ]
+  }
+ }
 }

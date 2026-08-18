@@ -3,5 +3,31 @@
  "batch_id": "debdbca5-9a75-4d27-92b2-143363a3be4a",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-12 15:41:44",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0124ee76-70c6-4369-8338-ccf32396c4a9.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0124ee76-70c6-4369-8338-ccf32396c4a9.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:06:27",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "语音摘要",
+    "跨语言生成",
+    "多语言基准",
+    "联合任务",
+    "语音大模型",
+    "级联系统"
+   ],
+   "field": "多语言语音摘要",
+   "innovations": [
+    "提出JSumT联合语音摘要与翻译任务",
+    "发布首个24语言VOXSUMM语音摘要基准"
+   ],
+   "benchmarks": [
+    "VOXSUMM",
+    "CrossSum",
+    "xCOMET-XL",
+    "BERTScore-F1"
+   ]
+  }
+ }
 }

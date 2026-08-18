@@ -3,5 +3,28 @@
  "batch_id": "63c2f8f7-a5fa-4339-b84a-97e9b8105564",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 14:58:45",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/d254aeaa-a09e-436d-bb7e-cab52d8fbe9d.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/d254aeaa-a09e-436d-bb7e-cab52d8fbe9d.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:06:20",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "数据科学智能体",
+    "端到端工作流评估",
+    "GUI 接地",
+    "基准测试",
+    "多工具编排"
+   ],
+   "field": "数据科学智能体与基准评测",
+   "innovations": [
+    "首个在真实OS环境中评估端到端数据科学工作流的基准DSAGENTBench",
+    "确定性+LLM评委混合评估器验证数值、可视化与模型性能语义正确性",
+    "揭示当前智能体在长程推理、跨工具协调与真实环境接地方面的显著能力缺口"
+   ],
+   "benchmarks": [
+    "DSAGENTBench"
+   ]
+  }
+ }
 }

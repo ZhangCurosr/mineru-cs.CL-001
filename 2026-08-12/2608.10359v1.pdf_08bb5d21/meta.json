@@ -3,5 +3,31 @@
  "batch_id": "08bb5d21-9754-453a-b237-5ebb22d82607",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:01:50",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0124ee76-70c6-4369-8338-ccf32396c4a9.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0124ee76-70c6-4369-8338-ccf32396c4a9.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:05:56",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "语音摘要",
+    "跨语言摘要",
+    "多语言基准",
+    "联合生成",
+    "语音语言模型",
+    "长文档处理"
+   ],
+   "field": "多语言语音理解与生成",
+   "innovations": [
+    "首次正式定义联合语音摘要与翻译（JSumT）任务",
+    "构建首个覆盖24种语言的长语音跨语言摘要基准VOXSUMM（703小时/10,045对）",
+    "系统揭示管道顺序、语言方向与模型能力的交互规律"
+   ],
+   "benchmarks": [
+    "VOXSUMM",
+    "CrossSum",
+    "XL-Sum"
+   ]
+  }
+ }
 }

@@ -3,5 +3,27 @@
  "batch_id": "5b5a0a5a-fd2f-43e6-931d-903ed4b14389",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:41:42",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/92f9b060-1c89-4aef-aae1-0b81e333f213.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/92f9b060-1c89-4aef-aae1-0b81e333f213.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:10:08",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "inverse distance attention",
+    "Polyak-Lojasiewicz inequality",
+    "hyperbolic geometry",
+    "spherical attention",
+    "non-Euclidean neural networks",
+    "attention mechanism theory",
+    "effective rank bound"
+   ],
+   "field": "Attention机制理论分析",
+   "innovations": [
+    "从欧氏到双曲-球面几何的逆距离注意力统一理论框架",
+    "证明IDA在表达能力(O(1) vs Omega((log n)^2))、优化(指数级PL常数优势)和泛化(有效秩与宽度无关)三方面超越softmax",
+    "提出十模块Riemann GeoResolver框架，覆盖Theta(n^2)到Theta(1)复杂度谱系"
+   ]
+  }
+ }
 }

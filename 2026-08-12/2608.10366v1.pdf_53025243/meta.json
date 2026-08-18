@@ -3,5 +3,34 @@
  "batch_id": "53025243-6fde-40b5-9d93-697a0d7f5922",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:01:49",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/d254aeaa-a09e-436d-bb7e-cab52d8fbe9d.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/d254aeaa-a09e-436d-bb7e-cab52d8fbe9d.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:05:46",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Data Science Agent",
+    "GUI Agent",
+    "Benchmark",
+    "End-to-End Workflow",
+    "OS-Level Evaluation",
+    "Vision-Language Model"
+   ],
+   "field": "多模态智能体与计算机交互",
+   "innovations": [
+    "首个在真实OS中评估端到端数据科学工作流的基准DSAgentBench，覆盖275个多阶段任务",
+    "扩展OSWorld集成Jupyter/VS Code/Kaggle/OpenML/SQLite，支持跨工具协同与确定性产出验证",
+    "提出Screenshot与Screenshot+A11y Tree双模态评测协议并揭示接地/编排/推理三重瓶颈"
+   ],
+   "benchmarks": [
+    "DSAgentBench",
+    "OSWorld",
+    "DA-CODE",
+    "DS-1000",
+    "DABStep",
+    "MLAgentBench"
+   ]
+  }
+ }
 }

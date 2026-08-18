@@ -3,5 +3,35 @@
  "batch_id": "9bd2dc98-9c2a-45cd-af56-9dc4f0d7b523",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-12 16:05:19",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/98dad0eb-aff0-43c0-9515-f4f489fc2f0e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/98dad0eb-aff0-43c0-9515-f4f489fc2f0e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:04:37",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "obligation-level auditing",
+    "regulatory responsiveness",
+    "LLM-as-judge",
+    "algorithmic accountability",
+    "public participation",
+    "EPA rulemaking",
+    "text similarity classifier",
+    "administrative equity"
+   ],
+   "field": "计算政策分析与监管文本挖掘",
+   "innovations": [
+    "提出以离散监管义务为单位的响应性审计框架，揭示公众参与不公平的上游结构性来源",
+    "构建可审核的LLM辅助义务抽取-评论匹配-结果分类管道并透明报告验证层次结构",
+    "通过盲审双标注审计揭示余弦相似度分类器在编辑性/实质性修改边界上严重失效的测量效度教训"
+   ],
+   "benchmarks": [
+    "Cohen's kappa for obligation extraction (0.9545 precision, κ=1.0)",
+    "Matched pair addressing κ=1.000 and stance κ=0.953 (n=100 blind audit)",
+    "Outcome classifier SE/MO binary κ=0.137 against human audit (n=150)",
+    "Within-docket OR=1.93 for high-engagement revision (docket-FE logistic, p=0.037)",
+    "Audit-corrected cross-docket OR=4.90 for org-majority editorial outcomes (p=0.044)"
+   ]
+  }
+ }
 }

@@ -3,5 +3,31 @@
  "batch_id": "6c1057b6-4c95-49ab-a34d-f2849595da75",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-12 16:05:17",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/265abedd-26a5-4e6a-94d3-77d170ad2253.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/265abedd-26a5-4e6a-94d3-77d170ad2253.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:12:29",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "推理广度",
+    "多源线索整合",
+    "MPAR-Bench",
+    "多点联想推理",
+    "鲁棒性评测",
+    "overthinking"
+   ],
+   "field": "LLM推理能力评测",
+   "innovations": [
+    "提出首个面向推理广度的多点联想推理基准MPAR-Bench，从0合成的双语1000题集",
+    "构建四轴扰动测试套件（遮蔽/打乱/噪声/多步）量化推理广度鲁棒性",
+    "揭示过度思考现象：扩展推理可能覆盖正确答案，深度≠广度"
+   ],
+   "benchmarks": [
+    "MPAR-Bench",
+    "English Subset (500 items)",
+    "Chinese Subset (500 items)"
+   ]
+  }
+ }
 }

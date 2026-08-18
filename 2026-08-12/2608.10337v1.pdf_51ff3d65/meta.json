@@ -3,5 +3,34 @@
  "batch_id": "51ff3d65-fec3-4af3-baee-1ae3aa1b7987",
  "token": "sk-Ir4JqYCnj...",
  "created_at": "2026-08-12 15:41:46",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/10a7e73f-c244-45bd-9f52-3c3de8f4fc31.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/10a7e73f-c244-45bd-9f52-3c3de8f4fc31.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:05:18",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "creative writing",
+    "human-AI interaction",
+    "narrative keyframing",
+    "characterization",
+    "generative AI",
+    "interactive systems",
+    "perspective-taking"
+   ],
+   "field": "生成式创意写作的人机交互",
+   "innovations": [
+    "提出叙事关键帧交互范式，将动画关键帧思想迁移至创意写作，通过情节/角色/视角三类关键帧实现细粒度控制",
+    "首次将第一人称视角关键帧作为中间表示，通过文本证据选择指导第三人称叙事生成",
+    "设计三视图协同的迭代工作流与双向联动编辑机制，支持角色弧线的显式规划与追溯"
+   ],
+   "benchmarks": [
+    "CoAuthor",
+    "WritingPrompts",
+    "WQRM-PRE automatic evaluator",
+    "Creativity Support Index (CSI)",
+    "AI System Experience survey"
+   ]
+  }
+ }
 }

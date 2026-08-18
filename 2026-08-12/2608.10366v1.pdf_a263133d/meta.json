@@ -3,5 +3,29 @@
  "batch_id": "a263133d-5ccc-4e83-b1dc-38755e2054b9",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-12 16:05:19",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/d254aeaa-a09e-436d-bb7e-cab52d8fbe9d.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/d254aeaa-a09e-436d-bb7e-cab52d8fbe9d.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:06:36",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "数据科学智能体",
+    "GUI Agent",
+    "Benchmark",
+    "端到端工作流",
+    "OS交互",
+    "多模态评估"
+   ],
+   "field": "AI智能体评测基准",
+   "innovations": [
+    "首个在真实操作系统环境中评估端到端数据科学工作流的基准DSAgentBench，覆盖275个跨多工具长周期任务",
+    "扩展OSWorld集成Jupyter/VS Code/Kaggle/OpenML/SQLite等数据科学工具链，支持真实环境下的数据分析流程",
+    "设计确定性+语义化混合评估体系，验证数值正确性、可视化元数据和模型性能而非仅代码执行"
+   ],
+   "benchmarks": [
+    "DSAgentBench"
+   ]
+  }
+ }
 }

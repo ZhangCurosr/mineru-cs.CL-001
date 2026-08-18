@@ -3,5 +3,32 @@
  "batch_id": "a7feedd0-1daf-4c49-91af-190a113d5c46",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 14:58:41",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/98dad0eb-aff0-43c0-9515-f4f489fc2f0e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/98dad0eb-aff0-43c0-9515-f4f489fc2f0e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:04:42",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "regulatory responsiveness",
+    "obligation-level auditing",
+    "LLM-as-judge",
+    "public participation",
+    "EPA rulemaking",
+    "algorithmic accountability",
+    "computational policy analysis"
+   ],
+   "field": "算法问责与监管文本分析",
+   "innovations": [
+    "提出义务级响应审计框架，将分析单位从规则文档降至离散监管义务",
+    "开发并验证可审计的LLM辅助义务提取-匹配-分类管道，揭示文本相似度分类器在编辑/实质性边界的脆弱性",
+    "在EPA大规模语料上发现参与与修订的温和关联、方向不显著、组织/个人跨听证卷宗层面的 outcome 差异"
+   ],
+   "benchmarks": [
+    "FRTracker (Leahey 2026)",
+    "RegData/QuantGov",
+    "Love 2026 human-LLM κ=0.64 calibration anchor"
+   ]
+  }
+ }
 }

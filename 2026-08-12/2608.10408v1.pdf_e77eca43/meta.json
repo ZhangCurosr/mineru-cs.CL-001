@@ -3,5 +3,28 @@
  "batch_id": "e77eca43-e4c6-4e11-97f7-8e8c198dd926",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 14:58:39",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/08299819-40d7-4ddb-af4d-2308ffdde28f.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/08299819-40d7-4ddb-af4d-2308ffdde28f.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:08:09",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "可视化编辑",
+    "多模态基准",
+    "代码生成",
+    "VLM评测",
+    "迭代精修"
+   ],
+   "field": "可视化与数据理解",
+   "innovations": [
+    "提出首个面向多模态反馈的可视化代码编辑基准 VisEditBench",
+    "建立涵盖可执行性与视觉保真度的多维度评估体系",
+    "提出基于渲染反馈的迭代编辑基线 VisEditAgent"
+   ],
+   "benchmarks": [
+    "VisEditBench"
+   ]
+  }
+ }
 }

@@ -3,5 +3,30 @@
  "batch_id": "0a4b6154-669a-4799-adf5-ec848c0a17d3",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-12 15:41:45",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0249a42b-eb4c-494b-a177-4c1a07ec1d9d.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0249a42b-eb4c-494b-a177-4c1a07ec1d9d.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:07:10",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "mixture-of-experts",
+    "token-adaptive computation",
+    "shared experts",
+    "dynamic routing",
+    "domain generalization",
+    "efficient inference"
+   ],
+   "field": "Mixture of Experts 高效计算与动态路由",
+   "innovations": [
+    "揭示 FFN 内部 channel 对齐与路由条件的系统性依赖，提出'先共享再路由剩余'的统一三阶段原则",
+    "UniF-MoE 通过单 token 级共享-剩余预算联合协调共享宽度、共享内容与剩余专家数",
+    "Gram 正则化路由嵌入促进正交归一路由方向，降低专家 co-activation 达 62.9%"
+   ],
+   "benchmarks": [
+    "DomainBed",
+    "GLUE"
+   ]
+  }
+ }
 }

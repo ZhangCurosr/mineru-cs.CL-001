@@ -3,5 +3,30 @@
  "batch_id": "7410ac30-bcd8-43c1-9bd7-9340bbab39ac",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 14:58:18",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/92f9b060-1c89-4aef-aae1-0b81e333f213.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/92f9b060-1c89-4aef-aae1-0b81e333f213.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:09:52",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "inverse distance attention",
+    "Polyak-Lojasiewicz inequality",
+    "hyperbolic geometry",
+    "spherical attention",
+    "efficient attention",
+    "generalization bound",
+    "memory routing"
+   ],
+   "field": "注意力机制理论与高效Transformer",
+   "innovations": [
+    "证明IDA实现O(1)精确检索而softmax需Ω((log n)^2)宽度",
+    "建立IDA的PL不等式常数比softmax大指数级，保证线性收敛无虚假极小",
+    "提出十模块非欧框架：双曲存储HIDA+球面路由SIDA/GSR的统一理论"
+   ],
+   "benchmarks": [
+    "理论分析为主，无实证benchmark"
+   ]
+  }
+ }
 }

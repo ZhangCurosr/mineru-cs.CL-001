@@ -3,5 +3,30 @@
  "batch_id": "6358d932-0ad4-47d8-b45e-6496b40fefb4",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:01:49",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0249a42b-eb4c-494b-a177-4c1a07ec1d9d.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/0249a42b-eb4c-494b-a177-4c1a07ec1d9d.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:07:39",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "mixture of experts",
+    "token-adaptive computation",
+    "shared experts",
+    "dynamic routing",
+    "domain generalization",
+    "FFN decomposition"
+   ],
+   "field": "高效稀疏神经网络架构",
+   "innovations": [
+    "揭示共享建模-细粒度计算-动态路由之间的序贯依赖关系，提出'先共享、后路由'统一原则",
+    "UniF-MoE：通过单一 token 依赖预算耦合共享宽度、共享内容和残差专家数的三阶段统一框架",
+    "Gram 正则化塑造正交归一化路由几何，促进专家多样性并降低共激活率 62.9%"
+   ],
+   "benchmarks": [
+    "DomainBed",
+    "GLUE"
+   ]
+  }
+ }
 }

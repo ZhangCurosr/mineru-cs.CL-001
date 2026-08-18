@@ -3,5 +3,32 @@
  "batch_id": "cd12a200-b025-4d09-80a1-334761e1b53a",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:41:41",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/f6b05fce-676f-4cb8-89ff-aed02150f039.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/f6b05fce-676f-4cb8-89ff-aed02150f039.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:13:23",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Data Contamination Detection",
+    "LLM post-training",
+    "feature calibration",
+    "black-box membership detection",
+    "multi-view shift detection",
+    "bounded feature correction"
+   ],
+   "field": "大语言模型数据污染检测",
+   "innovations": [
+    "提出 CALIBDCD 校准框架，通过多视图偏移检测识别后训练引起的 recurring feature shift 子空间",
+    "设计有界特征校正算子 A=I−λBB^T，在校准集上自适应选择秩与强度，在去除偏移的同时保留有效成员信号",
+    "引入 FPP 作为视图筛选信号并结合跨视图 consensus（平均投影算子特征值阈值 τ=0.95）提高偏移估计稳定性"
+   ],
+   "benchmarks": [
+    "BOOKTECTION",
+    "BOOKMIA",
+    "ARXIVTECTION",
+    "WIKIMIA"
+   ]
+  }
+ }
 }

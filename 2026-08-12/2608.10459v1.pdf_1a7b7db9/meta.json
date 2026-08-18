@@ -3,5 +3,32 @@
  "batch_id": "1a7b7db9-227a-407d-aba7-8dde106d7843",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:01:48",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/e8a63d3d-6668-42d1-9299-f7d6e99342f0.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/e8a63d3d-6668-42d1-9299-f7d6e99342f0.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:12:14",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM-generated text detection",
+    "prototype-based learning",
+    "encoder detector",
+    "distribution shift robustness",
+    "multi-prototype"
+   ],
+   "field": "AI-generated text detection",
+   "innovations": [
+    "Proposes MD-ProTector, an input-only encoder detector using separate trainable prototype banks for human and machine text to model intra-class diversity.",
+    "Introduces Prototype Positioning loss that decouples class-shared direction from within-class variation to guide data-driven prototype placement.",
+    "Demonstrates state-of-the-art performance across five benchmarks covering domain, generator, adversarial, and multilingual generalization."
+   ],
+   "benchmarks": [
+    "MAGE CDCM",
+    "MAGE Unseen Domains",
+    "MAGE Unseen Models",
+    "RAID",
+    "M4"
+   ]
+  }
+ }
 }

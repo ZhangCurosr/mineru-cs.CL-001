@@ -3,5 +3,30 @@
  "batch_id": "cf924af0-9f79-4a56-be43-89b99f4296af",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:01:48",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/92f9b060-1c89-4aef-aae1-0b81e333f213.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/92f9b060-1c89-4aef-aae1-0b81e333f213.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:10:27",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "inverse distance attention",
+    "Polyak-Lojasiewicz inequality",
+    "effective rank",
+    "hyperbolic geometry",
+    "spherical geometry",
+    "dynamic memory",
+    "sparse routing"
+   ],
+   "field": "注意力机制理论",
+   "innovations": [
+    "建立逆距离注意力在欧氏/双曲/球面几何下的统一理论框架，证明其比softmax在表达力、优化与泛化上具有严格优势",
+    "提出十模块Riemann GeoResolver架构，为每个模块提供可证明的复杂度、误差或regret界",
+    "从信息论角度论证双曲存储与球面路由的几何分工必要性"
+   ],
+   "benchmarks": [
+    "理论分析，无实验基准"
+   ]
+  }
+ }
 }

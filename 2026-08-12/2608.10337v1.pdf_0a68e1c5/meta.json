@@ -3,5 +3,31 @@
  "batch_id": "0a68e1c5-2698-4f3b-bb4d-eac178cc1b49",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 14:58:41",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/10a7e73f-c244-45bd-9f52-3c3de8f4fc31.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/10a7e73f-c244-45bd-9f52-3c3de8f4fc31.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:04:26",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Creative Writing",
+    "Human-AI Interaction",
+    "Narrative Keyframing",
+    "Characterization",
+    "First-Person Perspective",
+    "Interactive Systems"
+   ],
+   "field": "AI辅助创意写作",
+   "innovations": [
+    "提出叙事关键帧交互范式，将动画关键帧思想引入创意写作",
+    "首创第一人称视角关键帧作为角色刻画中间表示",
+    "设计双向联动与证据选择机制实现角色特质到叙事文本的可追溯映射"
+   ],
+   "benchmarks": [
+    "CoAuthor",
+    "WritingPrompts",
+    "WQRM-PRE"
+   ]
+  }
+ }
 }

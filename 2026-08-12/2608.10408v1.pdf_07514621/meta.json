@@ -3,5 +3,30 @@
  "batch_id": "07514621-14ad-4db6-8d48-371335634435",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:01:49",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/08299819-40d7-4ddb-af4d-2308ffdde28f.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/08299819-40d7-4ddb-af4d-2308ffdde28f.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:08:15",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "可视化代码编辑",
+    "多模态反馈",
+    "VLM评测基准",
+    "渲染反馈",
+    "VisEditBench",
+    "迭代编辑",
+    "参考风格适配"
+   ],
+   "field": "可视化与数据可视化的多模态代码生成",
+   "innovations": [
+    "提出 VisEditBench：首个多模态反馈驱动的可视化代码编辑基准（1,395任务，8类编辑意图）",
+    "提出 VisEditAgent：渲染反馈驱动的迭代编辑框架，多候选生成+视觉验证+反馈精炼",
+    "系统性评测20个SOTA VLM，揭示可执行性与视觉保真性之间的显著差距"
+   ],
+   "benchmarks": [
+    "VisEditBench"
+   ]
+  }
+ }
 }

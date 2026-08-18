@@ -3,5 +3,32 @@
  "batch_id": "6e38d72c-1260-4a2c-896a-31684210a952",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 14:58:18",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/3ac39fd2-bd93-46c4-a260-96f410b10f76.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/3ac39fd2-bd93-46c4-a260-96f410b10f76.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:10:56",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "acquisition policy",
+    "reward-SNR floor",
+    "structured hypothesis embeddings",
+    "LLM-as-feature",
+    "heterogeneous treatment effects",
+    "design-time regime gate",
+    "faithfulness metric"
+   ],
+   "field": "推荐系统与大语言模型融合",
+   "innovations": [
+    "提出 reward-SNR 可检测性阈值 rho^*(N)~2.8/sqrt(N) 区分均值检测与 per-instance 路由学习",
+    "SHE：冻结LLM输出带置信度与证据索引的结构化意图假设作为late-fusion输入分支",
+    "在三个公开数据集上证明跨粒度学到的acquisition policy均不优于随机，设计时regime gate可替代"
+   ],
+   "benchmarks": [
+    "MIND",
+    "REES46",
+    "Amazon-Beauty"
+   ]
+  }
+ }
 }

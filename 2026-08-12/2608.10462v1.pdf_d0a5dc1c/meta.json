@@ -3,5 +3,32 @@
  "batch_id": "d0a5dc1c-9ca2-4509-b17e-5455fbb2aea5",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-12 14:58:17",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/f6b05fce-676f-4cb8-89ff-aed02150f039.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/f6b05fce-676f-4cb8-89ff-aed02150f039.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:13:01",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "数据污染检测",
+    "特征校准",
+    "大语言模型",
+    "后训练偏移",
+    "黑盒检测",
+    "假阳性抑制"
+   ],
+   "field": "大语言模型安全与评估",
+   "innovations": [
+    "提出 CALIBDCD 通用校准框架，通过多视角偏移检测和有界特征修正提升特征基 DCD 性能",
+    "设计 FPP 排序 + 跨视角共识识别重复偏移子空间",
+    "有界线性修正策略在偏移抑制与信息保留间平衡"
+   ],
+   "benchmarks": [
+    "BOOKTECTION",
+    "BOOKMIA",
+    "ARXIVTECTION",
+    "WIKIMIA"
+   ]
+  }
+ }
 }

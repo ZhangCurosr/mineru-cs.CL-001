@@ -3,5 +3,32 @@
  "batch_id": "7e4b4fd0-efb7-4c2d-8d1b-120cfea37c59",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-12 16:05:17",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/e8a63d3d-6668-42d1-9299-f7d6e99342f0.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/e8a63d3d-6668-42d1-9299-f7d6e99342f0.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:13:36",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM生成文本检测",
+    "原型学习",
+    "编码器检测器",
+    "类内多样性建模",
+    "对抗鲁棒性"
+   ],
+   "field": "AI生成文本检测",
+   "innovations": [
+    "提出仅输入编码器的多原型检测框架，两类文本各自维护可训练原型库",
+    "引入Prototype Positioning Loss，通过类中心残差为每个原型构建数据驱动的独立定位目标",
+    "在MAGE CDCM和RAID基准上取得最高AvgRec，RAID上同时取得最高AU-ROC与最低FPR95"
+   ],
+   "benchmarks": [
+    "MAGE CDCM",
+    "RAID",
+    "M4",
+    "MAGE Unseen Domains",
+    "MAGE Unseen Models"
+   ]
+  }
+ }
 }

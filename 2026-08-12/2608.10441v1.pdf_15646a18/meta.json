@@ -3,5 +3,32 @@
  "batch_id": "15646a18-0e2c-432e-9359-cc30a7225b99",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:41:41",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/3ac39fd2-bd93-46c4-a260-96f410b10f76.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/3ac39fd2-bd93-46c4-a260-96f410b10f76.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:10:48",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "acquisition agent",
+    "reward-SNR",
+    "structured hypothesis embeddings",
+    "LLM-as-feature",
+    "heterogeneous treatment effect",
+    "detectability floor",
+    "recommender system"
+   ],
+   "field": "大语言模型辅助推荐系统",
+   "innovations": [
+    "提出奖励-SNR可检测性下界ρ*(N)≈2.8/√N，区分均值检测与逐样本策略学习",
+    "设计SHE（Structured Hypothesis Embeddings）：冻结LLM生成排序+置信度+证据锚定的意图假设作为推荐器embedding分支",
+    "证明表观in-sample oracle增益可被匹配矩噪声占位符≥100%复现，并提出design-time regime gate部署处方"
+   ],
+   "benchmarks": [
+    "MIND",
+    "REES46",
+    "Amazon-Beauty"
+   ]
+  }
+ }
 }

@@ -3,5 +3,33 @@
  "batch_id": "594c3725-e37c-4f07-a1b9-18f070aa08b3",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-12 15:01:46",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/3ac39fd2-bd93-46c4-a260-96f410b10f76.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-12/3ac39fd2-bd93-46c4-a260-96f410b10f76.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 02:11:41",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "reward-SNR",
+    "acquisition agent",
+    "structured hypothesis embeddings",
+    "LLM-as-feature",
+    "heterogeneous treatment effects",
+    "detectability floor",
+    "regime gate",
+    "recommender systems"
+   ],
+   "field": "LLM-enhanced recommendation and causal inference",
+   "innovations": [
+    "提出 reward-SNR 可检测性下界 rho*(N)≈2.8/sqrt(N)，区分平均效应检测与 per-instance 策略学习",
+    "证明低 SNR 下 in-sample oracle 增益是噪声次序统计量，所有粒度 learned routing 均败给随机",
+    "提出 design-time regime gate 作为不可学习场景的可部署替代方案"
+   ],
+   "benchmarks": [
+    "MIND",
+    "REES46",
+    "Amazon-Beauty"
+   ]
+  }
+ }
 }
