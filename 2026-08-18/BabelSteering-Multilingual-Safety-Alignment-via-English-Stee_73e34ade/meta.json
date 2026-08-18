@@ -4,5 +4,10 @@
  "title": "BabelSteering-Multilingual-Safety-Alignment-via-English-Stee",
  "token": "sk-twhrLv2pG...",
  "created_at": "2026-08-18 02:53:38",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/02633177-6451-429c-92df-a5d89cf2c7cb.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/02633177-6451-429c-92df-a5d89cf2c7cb.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:25:50",
+  "chunks": 1
+ }
 }

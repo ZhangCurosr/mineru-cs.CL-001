@@ -4,5 +4,30 @@
  "title": "A-Scalable-Pipeline-for-LLM-Teacher-Distillation-Labeling-Wo",
  "token": "sk-nY8L7ieIq...",
  "created_at": "2026-08-18 02:57:09",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/f25628d8-cd1d-4534-8dbe-e76ee276a1d3.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/f25628d8-cd1d-4534-8dbe-e76ee276a1d3.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:24:48",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM distillation",
+    "work stealing",
+    "labeling pipeline",
+    "GPU concurrency",
+    "weak supervision",
+    "distributed scheduling"
+   ],
+   "field": "LLM 标注与数据合成",
+   "innovations": [
+    "基于 SQLite 条件写入的工作窃取环池实现无协调者恰好一次任务声明与故障恢复",
+    "显存总量预计算的并发副本数规则避免 OOM 并跨设备尺寸复用代码",
+    "Relabel-gold 质量-成本联合基准方法论"
+   ],
+   "benchmarks": [
+    "SST-2",
+    "tweet_eval irony"
+   ]
+  }
+ }
 }

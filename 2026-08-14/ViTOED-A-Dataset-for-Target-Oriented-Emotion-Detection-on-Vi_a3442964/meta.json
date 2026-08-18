@@ -4,5 +4,10 @@
  "title": "ViTOED-A-Dataset-for-Target-Oriented-Emotion-Detection-on-Vi",
  "token": "sk-nY8L7ieIq...",
  "created_at": "2026-08-14 04:11:26",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/e3a1b0b8-a000-4609-86ab-a090b36b9269.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/e3a1b0b8-a000-4609-86ab-a090b36b9269.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:23:55",
+  "chunks": 1
+ }
 }

@@ -4,5 +4,33 @@
  "title": "ClawGym-II-Exploring-Black-Box-RL-on-Agent-Harness",
  "token": "sk-DXHHyylpH...",
  "created_at": "2026-08-18 02:53:20",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/cf14b0e9-41d3-4289-a6d0-e157403b11e5.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/cf14b0e9-41d3-4289-a6d0-e157403b11e5.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:25:48",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "黑盒强化学习",
+    "Agent Harness",
+    "PPO",
+    "GRPO",
+    "轨迹重建",
+    "训练-推理一致性",
+    "通用Agent"
+   ],
+   "field": "Agent强化学习",
+   "innovations": [
+    "提出统一黑盒RL框架，将harness视为不透明rollout引擎并解耦策略优化",
+    "基于前缀树的碎片化轨迹重建与树结构PPO/GRPO适配",
+    "训练-推理一致性保障：token-in-token-out + token-level importance sampling修正"
+   ],
+   "benchmarks": [
+    "ClawGym-Bench",
+    "PinchBench",
+    "JobBench",
+    "OfficeQA"
+   ]
+  }
+ }
 }

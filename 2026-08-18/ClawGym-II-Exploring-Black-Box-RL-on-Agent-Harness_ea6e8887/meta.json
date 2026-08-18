@@ -4,5 +4,34 @@
  "title": "ClawGym-II-Exploring-Black-Box-RL-on-Agent-Harness",
  "token": "sk-DXHHyylpH...",
  "created_at": "2026-08-18 14:30:48",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/f6951049-4fdb-4e3e-b516-bead799e5cbb.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/f6951049-4fdb-4e3e-b516-bead799e5cbb.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:25:58",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Black-Box RL",
+    "Agent Harness",
+    "Prefix Tree",
+    "Training-Inference Consistency",
+    "Mix-Harness Training",
+    "PPO",
+    "GRPO",
+    "Agent"
+   ],
+   "field": "Agent Reinforcement Learning",
+   "innovations": [
+    "提出统一黑盒RL框架，通过服务代理边界捕获与前缀树轨迹重构实现复杂harness内的稳定策略优化",
+    "设计token-in-token-out与token级importance-sampling校正机制保障训练-推理一致性",
+    "提出mix-harness训练策略，实现异构harness的联合优化"
+   ],
+   "benchmarks": [
+    "ClawGym-Bench",
+    "PinchBench",
+    "JobBench",
+    "OfficeQA"
+   ]
+  }
+ }
 }

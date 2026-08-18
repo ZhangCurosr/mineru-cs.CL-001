@@ -4,5 +4,10 @@
  "title": "CAPO-Constraint-Aware-Prompt-Optimization-for-LLM-Agents",
  "token": "sk-FMTQpgZxg...",
  "created_at": "2026-08-18 02:58:56",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/0bf2dc7f-587a-4c92-a10b-d951e207077a.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/0bf2dc7f-587a-4c92-a10b-d951e207077a.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:27:01",
+  "chunks": 4
+ }
 }

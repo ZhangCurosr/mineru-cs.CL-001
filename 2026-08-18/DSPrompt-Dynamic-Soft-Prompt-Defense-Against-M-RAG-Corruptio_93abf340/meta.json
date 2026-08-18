@@ -4,5 +4,32 @@
  "title": "DSPrompt-Dynamic-Soft-Prompt-Defense-Against-M-RAG-Corruptio",
  "token": "sk-Wt6bONApk...",
  "created_at": "2026-08-18 14:31:13",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/4425a346-6fad-4fff-972b-a5069704fa7a.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/4425a346-6fad-4fff-972b-a5069704fa7a.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:27:55",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "M-RAG Security",
+    "Adversarial Defense",
+    "Soft Prompt Tuning",
+    "Contrastive Retrieval",
+    "Poisoning Attack",
+    "Min-Max Training"
+   ],
+   "field": "多模态大模型安全与鲁棒性",
+   "innovations": [
+    "离线训练轻量软提示重塑冻结多模态检索器嵌入语义以防御中毒攻击",
+    "动态min-max对抗训练结合在线文本选择与图像扰动提升泛化性",
+    "浅至深提示容量调度聚焦跨模态对齐层实现高效防御"
+   ],
+   "benchmarks": [
+    "Places365",
+    "ImageNet",
+    "WebQA",
+    "InfoSeek"
+   ]
+  }
+ }
 }

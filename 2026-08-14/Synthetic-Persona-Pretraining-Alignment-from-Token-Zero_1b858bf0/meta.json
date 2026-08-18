@@ -4,5 +4,29 @@
  "title": "Synthetic-Persona-Pretraining-Alignment-from-Token-Zero",
  "token": "sk-ZHrWl9Czg...",
  "created_at": "2026-08-14 04:08:19",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/75711555-ecda-44ad-8226-b6da23f5dc3a.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/75711555-ecda-44ad-8226-b6da23f5dc3a.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:22:36",
+  "chunks": 4,
+  "meta": {
+   "keywords": [
+    "synthetic persona",
+    "pretraining alignment",
+    "safety evaluation",
+    "Rule 5",
+    "zero-token",
+    "multi-level scoring"
+   ],
+   "field": "AI 安全与对齐",
+   "innovations": [
+    "零 token 合成 Persona 预训练框架，无需真实语料种子",
+    "Rule 5 多级安全评估体系，覆盖混乱/误信息/防御性框架等细粒度场景",
+    "八锚点标准化评分 + 四步决策程序，提升评测一致性与可比性"
+   ],
+   "benchmarks": [
+    "Rule 5 Safety Evaluation Framework"
+   ]
+  }
+ }
 }

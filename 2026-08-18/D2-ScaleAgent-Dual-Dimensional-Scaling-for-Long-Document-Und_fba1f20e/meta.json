@@ -4,5 +4,34 @@
  "title": "D2-ScaleAgent-Dual-Dimensional-Scaling-for-Long-Document-Und",
  "token": "sk-JqniBRrr0...",
  "created_at": "2026-08-18 02:55:09",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/ded16d6e-0e96-48db-8863-d768c50d9c35.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/ded16d6e-0e96-48db-8863-d768c50d9c35.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:27:48",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "长文档理解",
+    "多模态RAG",
+    "多智能体系统",
+    "检索增强生成",
+    "双维缩放",
+    "证据驱动"
+   ],
+   "field": "多模态长文档理解",
+   "innovations": [
+    "提出Verifier驱动的动态闭环路由机制，将长文档理解重构为按需计算的双维缩放问题",
+    "设计属性分解检索缩放模块，通过多视角并行检索+排名加权融合+稳定性收敛替代固定Top-K",
+    "构建成本分层推理缩放工具集（Surveyor/Locator/Extractor三级子智能体），按需精细提取多粒度证据"
+   ],
+   "benchmarks": [
+    "MMLongBench-Doc",
+    "LongDocURL",
+    "PaperTab",
+    "FetaTab",
+    "ViDoSeek",
+    "UniDoc-Bench"
+   ]
+  }
+ }
 }

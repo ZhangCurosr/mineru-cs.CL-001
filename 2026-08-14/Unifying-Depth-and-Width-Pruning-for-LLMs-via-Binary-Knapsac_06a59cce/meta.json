@@ -4,5 +4,46 @@
  "title": "Unifying-Depth-and-Width-Pruning-for-LLMs-via-Binary-Knapsac",
  "token": "sk-Ir4JqYCnj...",
  "created_at": "2026-08-14 14:48:57",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/8602940a-4178-40ce-9ef1-69b005226f97.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/8602940a-4178-40ce-9ef1-69b005226f97.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:23:47",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "structured pruning",
+    "LLM compression",
+    "knapsack optimization",
+    "dual-axis pruning",
+    "depth pruning",
+    "width pruning",
+    "model efficiency"
+   ],
+   "field": "大语言模型压缩与高效推理",
+   "innovations": [
+    "提出SNIPER双轴剪枝框架，用0/1背包DP替代贪心实现条件最优深度剪枝",
+    "引入CRAFT度量量化预算遵从度，解决现有方法33%压缩比偏差问题",
+    "设计迭代边际重要性估计与GLU-MLP敏感列剪枝启发式，兼顾精度与推理加速"
+   ],
+   "benchmarks": [
+    "WikiText-2",
+    "LAMBADA",
+    "PIQA",
+    "PROST",
+    "CommonsenseQA",
+    "ARC-Easy",
+    "ARC-Challenge",
+    "MathQA",
+    "OpenBookQA",
+    "MedQA",
+    "BLiMP",
+    "BoolQ",
+    "Winogrande",
+    "CoQA",
+    "TruthfulQA",
+    "Winogender",
+    "Moral Stories"
+   ]
+  }
+ }
 }

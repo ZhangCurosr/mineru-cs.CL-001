@@ -4,5 +4,31 @@
  "title": "The-Embedder-s-Dilemma-LLMs-Are-Better-but-at-What-Cost",
  "token": "sk-aEeqX9tmP...",
  "created_at": "2026-08-14 04:11:38",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/bda999dd-4208-4eca-88ad-2cf08ff7ff96.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/bda999dd-4208-4eca-88ad-2cf08ff7ff96.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:22:39",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "文本嵌入模型",
+    "大语言模型",
+    "检索增强生成",
+    "成本-性能权衡",
+    "MTEB基准",
+    "推理效率"
+   ],
+   "field": "文本表示与检索",
+   "innovations": [
+    "提出MTEB(LLM)基准，首次在同源任务上公平对比LLM与嵌入模型的性能与成本",
+    "发现推理token税（thinking-token tax），揭示LLM成本的主要来源",
+    "实证支持混合架构：嵌入模型用于候选检索，LLM用于推理密集型重排"
+   ],
+   "benchmarks": [
+    "MTEB(LLM)",
+    "BEIR",
+    "BRIGHT"
+   ]
+  }
+ }
 }

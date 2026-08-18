@@ -4,5 +4,33 @@
  "title": "Clause-Encounters-of-the-Third-Kind-Can-LLMs-Replace-Languag",
  "token": "sk-n7iJ0Z1Ol...",
  "created_at": "2026-08-18 14:31:15",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/57e366a0-4a60-4e77-8e9b-1ff4719960b4.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/57e366a0-4a60-4e77-8e9b-1ff4719960b4.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:25:33",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "large language models",
+    "ESP",
+    "corrective feedback",
+    "retrieval-augmented generation",
+    "grammatical error correction",
+    "terminology detection",
+    "language pedagogy"
+   ],
+   "field": "AI in Language Education / ESP",
+   "innovations": [
+    "揭示 LLM 语法纠错可靠但 ESP 术语检测高度依赖提示语境的结构化能力断层",
+    "证明提示词学科/语域指定对术语激活的效果超过模型选择或超参调优",
+    "提出结合自动化指标与人类专家评判的双轨教学法适切性评估框架"
+   ],
+   "benchmarks": [
+    "GLEU",
+    "BERTScore",
+    "Human Expert Judgment",
+    "ESP Terminology Detection Rate"
+   ]
+  }
+ }
 }

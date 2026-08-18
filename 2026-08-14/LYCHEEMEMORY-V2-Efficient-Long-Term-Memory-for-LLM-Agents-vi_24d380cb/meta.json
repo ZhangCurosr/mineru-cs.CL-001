@@ -4,5 +4,29 @@
  "title": "LYCHEEMEMORY-V2-Efficient-Long-Term-Memory-for-LLM-Agents-vi",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-14 04:07:34",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/10d8a6bb-1229-4ee4-8200-302238fc5403.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/10d8a6bb-1229-4ee4-8200-302238fc5403.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:21:25",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM Agent",
+    "长期记忆",
+    "语义片段整合",
+    "检索增强生成",
+    "记忆效率"
+   ],
+   "field": "LLM Agent 记忆系统",
+   "innovations": [
+    "用语义片段级整合替代逐轮急切整合以降低构建令牌成本",
+    "类型化自包含记忆记录配合跨片段轻量消歧维持长期一致性",
+    "单次规划多路非生成检索解耦查询理解与证据收集"
+   ],
+   "benchmarks": [
+    "LoCoMo",
+    "LongMemEval-S"
+   ]
+  }
+ }
 }

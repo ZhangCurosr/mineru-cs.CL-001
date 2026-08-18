@@ -4,5 +4,31 @@
  "title": "Synthetic-Persona-Pretraining-Alignment-from-Token-Zero",
  "token": "sk-ZHrWl9Czg...",
  "created_at": "2026-08-14 14:49:07",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/2ce4a9f4-1b4c-40f4-8632-6e86365f67ff.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/2ce4a9f4-1b4c-40f4-8632-6e86365f67ff.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:23:09",
+  "chunks": 4,
+  "meta": {
+   "keywords": [
+    "synthetic-pretraining",
+    "alignment",
+    "reflection-injection",
+    "constitutional-ai",
+    "data-mixture",
+    "safety-classification"
+   ],
+   "field": "大模型安全对齐与预训练",
+   "innovations": [
+    "提出SPP框架：在预训练语料中插入LLM生成的reflection以注入安全宪法知识",
+    "Bresenham双層交错调度保证对照组与实验组严格对齐",
+    "RoPE位置alias技术消除reflection插入导致的位置偏移"
+   ],
+   "benchmarks": [
+    "OR-Bench",
+    "XSTest",
+    "ConstitutionEval"
+   ]
+  }
+ }
 }

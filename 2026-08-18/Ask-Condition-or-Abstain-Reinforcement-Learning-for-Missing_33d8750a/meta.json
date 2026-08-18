@@ -4,5 +4,36 @@
  "title": "Ask-Condition-or-Abstain-Reinforcement-Learning-for-Missing",
  "token": "sk-07nfPn8BZ...",
  "created_at": "2026-08-18 14:31:13",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/8ee8f04f-b050-435c-9c36-705c917b48f9.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/8ee8f04f-b050-435c-9c36-705c917b48f9.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:24:58",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "reinforcement learning",
+    "missing-premise reasoning",
+    "abstention",
+    "uncertainty",
+    "behavioral reward",
+    "data synthesis"
+   ],
+   "field": "大语言模型推理与鲁棒性",
+   "innovations": [
+    "提出推理图引导的结构化数据合成流水线生成缺失前提训练样本",
+    "设计五类响应行为的层次化奖励函数替代二元答案奖励",
+    "构建 MPB 人工验证基准评估模型在缺失前提下的建设性响应能力"
+   ],
+   "benchmarks": [
+    "MPB",
+    "UMWP",
+    "SUM",
+    "GSM8K",
+    "MATH-500",
+    "AIME'24",
+    "LiveBench",
+    "SciBench"
+   ]
+  }
+ }
 }

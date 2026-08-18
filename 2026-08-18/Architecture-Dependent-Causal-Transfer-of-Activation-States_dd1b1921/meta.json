@@ -4,5 +4,33 @@
  "title": "Architecture-Dependent-Causal-Transfer-of-Activation-States",
  "token": "sk-1FwfANuN8...",
  "created_at": "2026-08-18 14:30:58",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/1d18f606-81e3-4aa0-8141-a324d24f0e5c.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/1d18f606-81e3-4aa0-8141-a324d24f0e5c.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:24:55",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "跨模型表示对齐",
+    "激活状态转移",
+    "因果干预",
+    "大语言模型",
+    "柏拉图表示假说",
+    "表征载体",
+    "AI安全",
+    "端到端测试"
+   ],
+   "field": "大语言模型内部表征与跨模型交互",
+   "innovations": [
+    "系统性验证了跨架构LLM激活状态转移的因果可行性，并明确其架构依赖性",
+    "提出并实施了一个包含预注册标准、负控制和多种对齐度量对比的严格实验框架",
+    "揭示了量化表征度量（CKA/Procrustes）易受superposition扭曲，倡导使用更稳健的互k-NN度量"
+   ],
+   "benchmarks": [
+    "12对相关概念对与12对同义词对",
+    "跨模型投影网络top-1检索准确率（5%随机基线）",
+    "端到端因果状态转移生成检索准确率（McNemar检验）"
+   ]
+  }
+ }
 }

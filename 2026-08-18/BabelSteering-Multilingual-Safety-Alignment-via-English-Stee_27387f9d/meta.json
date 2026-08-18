@@ -4,5 +4,30 @@
  "title": "BabelSteering-Multilingual-Safety-Alignment-via-English-Stee",
  "token": "sk-twhrLv2pG...",
  "created_at": "2026-08-18 14:30:52",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/02633177-6451-429c-92df-a5d89cf2c7cb.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/02633177-6451-429c-92df-a5d89cf2c7cb.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:25:15",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "multilingual safety",
+    "activation steering",
+    "refusal direction",
+    "over-refusal",
+    "LLM alignment",
+    "cross-lingual transfer"
+   ],
+   "field": "多语言大模型安全对齐",
+   "innovations": [
+    "提出BabelSteering：将英语提取的真拒绝与正交化假拒绝向量组合为推理时干预，无需训练即可跨语言提升拒答率",
+    "联合评测安全/过度拒绝/通用能力三维指标，揭示低资源语言在安全增益与过度拒答代价上的非对称性"
+   ],
+   "benchmarks": [
+    "MultiJail",
+    "OR-Bench",
+    "Global MMLU"
+   ]
+  }
+ }
 }

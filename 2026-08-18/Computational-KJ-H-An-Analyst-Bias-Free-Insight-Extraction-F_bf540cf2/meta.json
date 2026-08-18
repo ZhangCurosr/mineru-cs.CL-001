@@ -4,5 +4,10 @@
  "title": "Computational-KJ-H-An-Analyst-Bias-Free-Insight-Extraction-F",
  "token": "sk-dKfLTOMDH...",
  "created_at": "2026-08-18 02:54:36",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/6bb36a2a-60a5-4983-b206-7738787452cd.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/6bb36a2a-60a5-4983-b206-7738787452cd.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:27:08",
+  "chunks": 1
+ }
 }

@@ -4,5 +4,31 @@
  "title": "Counting-Documents-Is-Not-Counting-Text-Unit-Bias-in-Web-PDF",
  "token": "sk-oJ013oevc...",
  "created_at": "2026-08-18 02:54:27",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/4c40acd9-68eb-468b-8707-81d09ca87217.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/4c40acd9-68eb-468b-8707-81d09ca87217.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:27:53",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "PDF语料库",
+    "数据质量评估",
+    "截断损失",
+    "token分布",
+    "单位偏差",
+    "Common Crawl"
+   ],
+   "field": "大规模语料构建与评估",
+   "innovations": [
+    "首次对Web-PDF语料进行token加权统计，揭示文档级与token级指标的严重偏差",
+    "量化Common Crawl截断策略的文本损失（55-62%）及5MiB政策的增量收益",
+    "提出双引擎提取对比方法精确测量截断恢复率"
+   ],
+   "benchmarks": [
+    "CC-MAIN-2021-31-PDF-UNTRUNCATED",
+    "PyMuPDF",
+    "PDFium"
+   ]
+  }
+ }
 }

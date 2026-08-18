@@ -4,5 +4,38 @@
  "title": "Tracing-Provenance-and-Detecting-Tampering-with-Complementar",
  "token": "sk-dY4OBV5wM...",
  "created_at": "2026-08-14 04:11:40",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/16f69e21-30d8-4066-914d-a5de01548b2a.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/16f69e21-30d8-4066-914d-a5de01548b2a.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:23:08",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM watermark",
+    "provenance",
+    "tamper evidence",
+    "piggyback spoofing",
+    "unbiased reweighting",
+    "text authentication",
+    "green-red list",
+    "dual-signal watermark"
+   ],
+   "field": "大语言模型水印与安全",
+   "innovations": [
+    "双信号解耦：共嵌入鲁棒与脆弱信号实现溯源与篡改证据统一",
+    "归一化文本锚定种子：使篡改证据针对读者可见内容而非 token ID",
+    "无偏轮次周期分配：以碰撞熵为预算的可调 round ratio 控制双信号强度比"
+   ],
+   "benchmarks": [
+    "C4 realnewslike",
+    "LFQA",
+    "Llama-3.2-1B",
+    "Gemma-3-4B",
+    "Paraphrase (Dipper)",
+    "Round-trip Translation (opus-mt)",
+    "Sentiment Flip",
+    "Homoglyph Substitution"
+   ]
+  }
+ }
 }

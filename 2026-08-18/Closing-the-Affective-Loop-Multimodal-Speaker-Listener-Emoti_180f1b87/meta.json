@@ -4,5 +4,29 @@
  "title": "Closing-the-Affective-Loop-Multimodal-Speaker-Listener-Emoti",
  "token": "sk-Jd4ujJMnj...",
  "created_at": "2026-08-18 02:53:51",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/1087d0f4-ec14-452c-a758-9b2569b190e1.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/1087d0f4-ec14-452c-a758-9b2569b190e1.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:26:14",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "empathetic dialogue systems",
+    "speaker-listener affective loop",
+    "multimodal emotion dynamics",
+    "embodied social robots",
+    "VAD-based emotion tracking",
+    "incremental spoken dialogue"
+   ],
+   "field": "具身共情对话系统",
+   "innovations": [
+    "提出说话者-听者双通道情绪 conditioning 框架并实现闭合情绪回路",
+    "在真实机器人平台上验证情绪动态建模对共情回应与用户满意度的提升",
+    "定义 dyadic affective alignment 与 distress recovery 两个过程指标评估共情交互质量"
+   ],
+   "benchmarks": [
+    "pilot within-subject user study with 5 participants"
+   ]
+  }
+ }
 }

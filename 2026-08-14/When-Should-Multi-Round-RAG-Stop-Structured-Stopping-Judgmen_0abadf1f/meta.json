@@ -4,5 +4,29 @@
  "title": "When-Should-Multi-Round-RAG-Stop-Structured-Stopping-Judgmen",
  "token": "sk-JqniBRrr0...",
  "created_at": "2026-08-14 04:07:50",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/874d6ad7-df0f-44a8-b0c0-50542f47ee89.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/874d6ad7-df0f-44a8-b0c0-50542f47ee89.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:24:02",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "multi-round RAG",
+    "stopping policy",
+    "structured judgment",
+    "Search-R1",
+    "retrieval reduction",
+    "non-inferiority test"
+   ],
+   "field": "检索增强生成的停止决策与效率优化",
+   "innovations": [
+    "将S2G结构化裁判适配到冻结Search-R1管道，仅调整停止时间",
+    "提出轨迹感知四层次评估框架（可达性-排名-最早穿越-系统质量成本）",
+    "在预设非劣效性边界内实证检索调用减少3.70%且EM损失0.625pp"
+   ],
+   "benchmarks": [
+    "HotpotQA distractor development set"
+   ]
+  }
+ }
 }

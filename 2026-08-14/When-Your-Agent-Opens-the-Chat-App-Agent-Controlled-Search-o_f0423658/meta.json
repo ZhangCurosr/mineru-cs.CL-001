@@ -4,5 +4,31 @@
  "title": "When-Your-Agent-Opens-the-Chat-App-Agent-Controlled-Search-o",
  "token": "sk-FMTQpgZxg...",
  "created_at": "2026-08-14 04:11:24",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/2efff360-ec8f-4ee6-b9e2-1643933fd902.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/2efff360-ec8f-4ee6-b9e2-1643933fd902.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:24:24",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "agent memory",
+    "conversational retrieval",
+    "BM25",
+    "ReAct",
+    "structured vs unstructured memory",
+    "long-context QA",
+    "information refinding"
+   ],
+   "field": "Agent 记忆与信息检索",
+   "innovations": [
+    "零 LLM 结构构建的 Agent 可控多轮词表检索接口 ReFind",
+    "四组聊天原生控制（RRF 会话融合/上下文扩展/时间过滤/已访会话去重）与迭代 Agent 控制的因果对照",
+    "在匹配骨干下超越全部图/树/向量结构化记忆基线的实证"
+   ],
+   "benchmarks": [
+    "MemoryAgentBench",
+    "LongMemEval-S/M"
+   ]
+  }
+ }
 }

@@ -4,5 +4,31 @@
  "title": "Toward-a-Gricean-Retreat-Probing-LLMs-for-Knowledge-Boundari",
  "token": "sk-Jd4ujJMnj...",
  "created_at": "2026-08-14 04:07:45",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/6b13b95b-f703-49d3-acd0-01b9ffd83de9.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/6b13b95b-f703-49d3-acd0-01b9ffd83de9.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:23:15",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "知识边界",
+    "幻觉",
+    "Gricean对齐",
+    "线性探测",
+    "指称特异性",
+    "LLM内在表征"
+   ],
+   "field": "大语言模型可解释性与可靠性",
+   "innovations": [
+    "构建同时变体实体熟悉度与指称特异性的Gricean retreat评估基准",
+    "系统证明LLM隐层激活编码知识边界感知与特异性预判两种信号但生成策略未利用",
+    "提出Gricean对齐范式——将边界感知与特异性选择在生成端显式耦合"
+   ],
+   "benchmarks": [
+    "T-REx (LAMA partition)",
+    "Pythia 70M-12B",
+    "infini-gram + The Pile"
+   ]
+  }
+ }
 }

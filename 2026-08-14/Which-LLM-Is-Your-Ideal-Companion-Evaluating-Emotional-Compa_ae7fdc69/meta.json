@@ -4,5 +4,30 @@
  "title": "Which-LLM-Is-Your-Ideal-Companion-Evaluating-Emotional-Compa",
  "token": "sk-9ieZJEGxv...",
  "created_at": "2026-08-14 14:48:51",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/303426e1-a509-4d65-9233-81bccc717a5a.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/303426e1-a509-4d65-9233-81bccc717a5a.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:24:22",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "成人依恋理论",
+    "ECR-R",
+    "ECBench",
+    "情感陪伴",
+    "LLM评测",
+    "双模型对话"
+   ],
+   "field": "LLM心理测量与情感陪伴评测",
+   "innovations": [
+    "首次用成人依恋理论与ECR-R刻画LLM亲密关系中的依恋倾向",
+    "构建覆盖四类场景与两种关系的多维对话基准ECBench",
+    "通过风格引导与三源盲评建立依恋风格与陪伴质量的行间证据链"
+   ],
+   "benchmarks": [
+    "ECBench",
+    "ECR-R依恋风格分类"
+   ]
+  }
+ }
 }

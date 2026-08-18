@@ -4,5 +4,31 @@
  "title": "Computational-KJ-H-An-Analyst-Bias-Free-Insight-Extraction-F",
  "token": "sk-dKfLTOMDH...",
  "created_at": "2026-08-18 14:30:56",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/6bb36a2a-60a5-4983-b206-7738787452cd.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/6bb36a2a-60a5-4983-b206-7738787452cd.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 17:26:30",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "KJ法",
+    "定性分析",
+    "大语言模型",
+    "领域专业化",
+    "消费者洞察",
+    "溯因推理",
+    "WEIRD问题"
+   ],
+   "field": "计算定性分析与HCI",
+   "innovations": [
+    "将日本KJ法计算化并整合扎根理论与溯因推理为数据驱动解释生成框架",
+    "通过CPT重塑营销研究嵌入空间后接SFT的双阶段领域专用LLM训练策略",
+    "提出InsightExtraction-F1与MarketingQA两个面向消费者洞察质量的领域定制评估指标"
+   ],
+   "benchmarks": [
+    "MarketingQA",
+    "InsightExtraction-F1"
+   ]
+  }
+ }
 }
