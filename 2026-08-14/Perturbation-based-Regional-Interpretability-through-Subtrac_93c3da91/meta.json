@@ -4,5 +4,34 @@
  "title": "Perturbation-based-Regional-Interpretability-through-Subtrac",
  "token": "sk-aknYEUs8O...",
  "created_at": "2026-08-14 04:11:50",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/7fa9be45-7b3c-4bb7-a70d-b42f8e02f073.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/7fa9be45-7b3c-4bb7-a70d-b42f8e02f073.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:46:47",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "mechanistic interpretability",
+    "perturbation analysis",
+    "subtraction mapping",
+    "lesion-symptom mapping",
+    "transformer layers",
+    "aphasia",
+    "TFCE",
+    "neuroscience-methods-transfer"
+   ],
+   "field": "LLM可解释性与脑科学交叉",
+   "innovations": [
+    "将fMRI减数分析与TFCE移植到扰动Transformer层轴分析，构建seed-as-subject双层结构",
+    "双底物（LLM与213名失语患者）平行匹配设计，在受试者/空间/阈值化维度上严格对齐",
+    "引入Stage 2层序排列置换验证与Stage 2.5剂量-反应分析，分别验证TFCE有效性与扰动-病灶类比"
+   ],
+   "benchmarks": [
+    "Philadelphia Naming Test (PNT)",
+    "JHU left-hemisphere ROI atlas (64 regions)",
+    "BLUM patient cohort N=213",
+    "LLaVA-1.6-Vicuna-13B (40-layer, 13B parameters)"
+   ]
+  }
+ }
 }

@@ -4,5 +4,31 @@
  "title": "OmniScientist-An-Omni-Modal-Omni-Discipline-AI-Scientist",
  "token": "sk-aQHhxC28I...",
  "created_at": "2026-08-14 14:48:43",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/229ad4a6-92d0-4368-ab79-70fc856b7cc3.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/229ad4a6-92d0-4368-ab79-70fc856b7cc3.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:46:28",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "AI Scientist",
+    "Multimodal Agents",
+    "Autonomous Research",
+    "Scientific Discovery",
+    "LLM Agents",
+    "Tool Use"
+   ],
+   "field": "多模态自主科研Agent",
+   "innovations": [
+    "感知优先的三代理架构，原始观测贯穿研究全生命周期",
+    "代码级执行检查机制强制验证新颖性、统计有效性和防HARKing",
+    "学科无关的证据家族分类实现跨模态通用性"
+   ],
+   "benchmarks": [
+    "36-case cross-discipline demonstration suite",
+    "7-dimension peer-review rubric",
+    "Blind vs perception ablation"
+   ]
+  }
+ }
 }

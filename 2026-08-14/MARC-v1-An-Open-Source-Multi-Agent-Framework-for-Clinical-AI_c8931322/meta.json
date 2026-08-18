@@ -4,5 +4,32 @@
  "title": "MARC-v1-An-Open-Source-Multi-Agent-Framework-for-Clinical-AI",
  "token": "sk-331OfnzjD...",
  "created_at": "2026-08-14 14:49:07",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/07206f8b-0a5c-43ce-911a-4b1c329142f1.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/07206f8b-0a5c-43ce-911a-4b1c329142f1.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:44:55",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "多智能体框架",
+    "临床AI推理",
+    "可解释LLM",
+    "Prompt自动化",
+    "YAML配置编排",
+    "MedGemma",
+    "RAG"
+   ],
+   "field": "临床AI多智能体系统",
+   "innovations": [
+    "YAML驱动的可配置多智能体编排层，实现无需代码修改的流程定制与模型替换",
+    "Decomposer模块利用MedGemma 4B从自然语言任务描述自动生成结构化Agent提示模板",
+    "确定性顺序执行配合显式变量绑定与标准化判词行，实现阶段可追溯的临床推理流水线"
+   ],
+   "benchmarks": [
+    "PubMedQA",
+    "MedQA USMLE",
+    "胸部CT放射学报告生成"
+   ]
+  }
+ }
 }

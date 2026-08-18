@@ -4,5 +4,30 @@
  "title": "LigBench-A-Unified-and-Human-Aligned-Benchmark-for-LLM-based",
  "token": "sk-1FwfANuN8...",
  "created_at": "2026-08-14 04:08:07",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/18bebad4-4823-4e43-a873-9e4f7afc52e3.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/18bebad4-4823-4e43-a873-9e4f7afc52e3.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:44:12",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Research Idea Generation",
+    "LLM Evaluation",
+    "Benchmark",
+    "Pairwise Comparison",
+    "Elo Rating",
+    "Scientific Creativity"
+   ],
+   "field": "LLM科研助手与自动化科学发现",
+   "innovations": [
+    "统一配对比较+Elo迭代评估框架",
+    "PAIR-IQ去偏研究想法数据集",
+    "四维想法形式化与新颖性量化评估"
+   ],
+   "benchmarks": [
+    "LigBench",
+    "PAIR-IQ"
+   ]
+  }
+ }
 }

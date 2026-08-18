@@ -4,5 +4,33 @@
  "title": "ReconSpan-Reconstruction-Guided-Adaptive-Latent-Tokenization",
  "token": "sk-OZiRtsQic...",
  "created_at": "2026-08-14 04:11:26",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/3a0554cf-de3f-4b55-a1c9-3dff97dc4c10.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/3a0554cf-de3f-4b55-a1c9-3dff97dc4c10.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:48:21",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "adaptive latent tokenization",
+    "backward reconstruction",
+    "continuous representation",
+    "context compression",
+    "language model tokenization",
+    "granularity control"
+   ],
+   "field": "自适应词元化与序列压缩",
+   "innovations": [
+    "以向后重建保真度作为分块分配准则，替代固定位置/前向熵/语义相似度信号",
+    "单自编码器支持训练后通过停止规则连续调节平均块长度（6.5–12.2）",
+    "系统区分自编码器保留信息与下游读者可访问信息，揭示主题易读而精确细节难提取的差距"
+   ],
+   "benchmarks": [
+    "WikiText",
+    "LAMBADA",
+    "AG News",
+    "HotpotQA",
+    "MTEB (STSBenchmark, STS17, SICK-R, NFCorpus)"
+   ]
+  }
+ }
 }

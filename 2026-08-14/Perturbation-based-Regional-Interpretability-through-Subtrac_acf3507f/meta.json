@@ -4,5 +4,34 @@
  "title": "Perturbation-based-Regional-Interpretability-through-Subtrac",
  "token": "sk-aknYEUs8O...",
  "created_at": "2026-08-14 14:49:23",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/7fa9be45-7b3c-4bb7-a70d-b42f8e02f073.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/7fa9be45-7b3c-4bb7-a70d-b42f8e02f073.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:46:47",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "mechanistic interpretability",
+    "perturbation mapping",
+    "subtraction analysis",
+    "TFCE",
+    "lesion-symptom mapping",
+    "transformer layers",
+    "aphasia",
+    "Philadelphia Naming Test"
+   ],
+   "field": "大语言模型机械可解释性与脑科学交叉",
+   "innovations": [
+    "将神经影像学减法分析与TFCE移植到Transformer层扰动分析，提出PRISM跨基底可解释性框架",
+    "在同一样本内对LLM扰动和213名失语症患者执行结构匹配的平行减法分析，实现跨基底可证伪的功能专门化检验",
+    "引入层序置换检验和剂量-响应分析，验证TFCE层轴推断的有效性和扰动作为分级病灶类比的合理性"
+   ],
+   "benchmarks": [
+    "Philadelphia Naming Test (PNT)",
+    "LLaVA-1.6-Vicuna-13B",
+    "JHU左半球64 ROI图谱",
+    "C-STAR慢性脑卒中后失语症队列"
+   ]
+  }
+ }
 }

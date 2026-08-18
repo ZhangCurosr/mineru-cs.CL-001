@@ -4,5 +4,34 @@
  "title": "Refusing-Intent-Not-Form-Wrapper-Based-Intent-Group-Supervis",
  "token": "sk-kdPBKi9MQ...",
  "created_at": "2026-08-14 14:48:48",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/7295432a-ef52-4da6-9b03-5bfcea02c1c6.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/7295432a-ef52-4da6-9b03-5bfcea02c1c6.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:49:24",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM安全对齐",
+    "拒绝微调",
+    "意图组监督",
+    "过度拒绝",
+    "安全增强"
+   ],
+   "field": "大语言模型安全与对齐",
+   "innovations": [
+    "WIFA自动意图组增强方法，无需外部教师或手动标注",
+    "A-GCRT锚定组一致性正则化，通过决策分数一致性塑造安全-过度拒绝权衡",
+    "WIFA-Boost两阶段训练路线，先建立意图-形式结构再校准良性合规"
+   ],
+   "benchmarks": [
+    "HarmBench",
+    "SORRY-Bench",
+    "OR-Bench",
+    "XSTest",
+    "StrongREJECT",
+    "MMLU",
+    "GSM8K"
+   ]
+  }
+ }
 }

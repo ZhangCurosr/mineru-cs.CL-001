@@ -4,5 +4,29 @@
  "title": "WHO-WOULD-YOU-VOTE-FOR-AUDITING-POLITICAL-ALIGNMENT-IN-LLMS",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-13 07:10:32",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/affe89bb-219c-4819-9ff8-b9ec4cb69512.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/affe89bb-219c-4819-9ff8-b9ec4cb69512.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:42:53",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "political alignment",
+    "LLM auditing",
+    "persona prompting",
+    "political bias",
+    "multi-party systems"
+   ],
+   "field": "LLM政治对齐审计",
+   "innovations": [
+    "多维度描述性标准框架用于政治实体审计",
+    "政党-领导人分离评估揭示隐藏差异",
+    "人格正交操控量化政治身份对模型输出的定向偏移"
+   ],
+   "benchmarks": [
+    "Italian Parliament parties and leaders (21 entities)",
+    "6-model cross-model agreement (Kendall's W=0.78)"
+   ]
+  }
+ }
 }

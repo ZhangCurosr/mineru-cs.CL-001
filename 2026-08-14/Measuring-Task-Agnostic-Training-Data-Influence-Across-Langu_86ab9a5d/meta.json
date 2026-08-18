@@ -4,5 +4,10 @@
  "title": "Measuring-Task-Agnostic-Training-Data-Influence-Across-Langu",
  "token": "sk-dQ65jxzP4...",
  "created_at": "2026-08-14 14:49:06",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/19acf55c-4534-475b-ad01-7260a22e39d7.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/19acf55c-4534-475b-ad01-7260a22e39d7.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:45:36",
+  "chunks": 1
+ }
 }

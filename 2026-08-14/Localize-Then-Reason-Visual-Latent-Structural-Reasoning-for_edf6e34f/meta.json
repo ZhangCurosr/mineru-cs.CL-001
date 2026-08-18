@@ -4,5 +4,31 @@
  "title": "Localize-Then-Reason-Visual-Latent-Structural-Reasoning-for",
  "token": "sk-dKfLTOMDH...",
  "created_at": "2026-08-14 04:07:51",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/b4f83dfa-a42d-44ea-acc8-15422e91e977.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/b4f83dfa-a42d-44ea-acc8-15422e91e977.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:44:39",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "分子性质推理",
+    "视觉-语言模型",
+    "潜推理",
+    "化学定位",
+    "Molecular Property Reasoning",
+    "Latent Reasoning",
+    "Visual Localization"
+   ],
+   "field": "化学信息学与视觉推理",
+   "innovations": [
+    "提出 localize-then-reason 范式，从分子图像像素中端到端学习定位-推理，不依赖预定义结构注解输入",
+    "设计角色分离的结构化潜工作区（EDIT/PROP/EFFECT），跳过中间文本生成实现高效推理",
+    "三阶段训练（CPT+SFT+GRPO）配合 scaffold-controlled 数据划分，显著提升泛化与推理效率"
+   ],
+   "benchmarks": [
+    "FGBench-Scaffold",
+    "Schrödinger FEP Ligand Comparison (Zero-shot)"
+   ]
+  }
+ }
 }

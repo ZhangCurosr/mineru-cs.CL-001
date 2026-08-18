@@ -4,5 +4,31 @@
  "title": "MLLM-Routed-Heterogeneous-Ensembles-for-Robust-Cross-Dataset",
  "token": "sk-AsgiqoBdE...",
  "created_at": "2026-08-14 14:48:45",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/7d14a07c-ece3-448d-a28a-4c2323bebf27.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/7d14a07c-ece3-448d-a28a-4c2323bebf27.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:45:02",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "跨域图像分类",
+    "多模态大语言模型",
+    "异构集成",
+    "动态路由",
+    "零样本推理"
+   ],
+   "field": "多模态视觉理解",
+   "innovations": [
+    "提出 ARMDIL 框架，首次将 MLLM 作为零样本元分类器用于跨域异构视觉集成路由",
+    "引入图像质量统计辅助 MLLM 推理，提升跨域路由准确率",
+    "验证提示工程可实现即插即用域扩展，无需重新训练路由器"
+   ],
+   "benchmarks": [
+    "CIFAR10",
+    "FER2013",
+    "EuroSAT",
+    "OrganAMNIST"
+   ]
+  }
+ }
 }

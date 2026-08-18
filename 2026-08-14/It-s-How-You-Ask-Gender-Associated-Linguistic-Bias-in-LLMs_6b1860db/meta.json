@@ -4,5 +4,32 @@
  "title": "It-s-How-You-Ask-Gender-Associated-Linguistic-Bias-in-LLMs",
  "token": "sk-07nfPn8BZ...",
  "created_at": "2026-08-14 04:07:48",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/1f030a7b-7e10-43b4-85aa-006ac09ffc7d.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/1f030a7b-7e10-43b4-85aa-006ac09ffc7d.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:43:44",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM bias",
+    "gender language",
+    "mechanistic interpretability",
+    "prompt engineering",
+    "fairness in NLP",
+    "sociolinguistics",
+    "activation patching",
+    "linguistic register"
+   ],
+   "field": "LLM公平性与偏差",
+   "innovations": [
+    "首次系统性揭示LLM对用户提示中性别关联语言特征的隐式响应偏差，证明其强于显式性别标记",
+    "构建WALF/MALF受控配对扰动框架并双重人工验证，分离语言注册效应与镜像效应",
+    "结合线性探针与激活Patching揭示语言特征在transformer早期层的编码与因果机制"
+   ],
+   "benchmarks": [
+    "WildChat-4.8M",
+    "Mila AI usage dataset"
+   ]
+  }
+ }
 }

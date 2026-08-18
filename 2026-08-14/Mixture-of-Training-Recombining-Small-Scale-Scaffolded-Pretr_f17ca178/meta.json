@@ -4,5 +4,30 @@
  "title": "Mixture-of-Training-Recombining-Small-Scale-Scaffolded-Pretr",
  "token": "sk-Wt6bONApk...",
  "created_at": "2026-08-14 14:48:48",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/479beb49-08e9-4d0b-b8f1-0ba71d535dba.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/479beb49-08e9-4d0b-b8f1-0ba71d535dba.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:45:29",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "modular pretraining",
+    "scaffolded training",
+    "language model composition",
+    "Mixture of Training",
+    "efficient LLM training",
+    "model stitching"
+   ],
+   "field": "高效语言模型预训练",
+   "innovations": [
+    "提出脚手架模块化预训练框架，通过冻结对齐器保证独立训练层块的重组兼容性",
+    "首次系统量化模块化预训练的计算、token暴露和关键路径账目，引入对齐器摊销模型",
+    "小规模机制证明：1.3B模型上独立训练层片可重组达单片基线质量"
+   ],
+   "benchmarks": [
+    "C4 (English)",
+    "Perplexity (C4 held-out)"
+   ]
+  }
+ }
 }

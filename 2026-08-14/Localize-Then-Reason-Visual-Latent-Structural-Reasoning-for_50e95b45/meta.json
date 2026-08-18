@@ -4,5 +4,31 @@
  "title": "Localize-Then-Reason-Visual-Latent-Structural-Reasoning-for",
  "token": "sk-dKfLTOMDH...",
  "created_at": "2026-08-14 14:49:09",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/b4f83dfa-a42d-44ea-acc8-15422e91e977.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/b4f83dfa-a42d-44ea-acc8-15422e91e977.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:44:40",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "分子性质推理",
+    "视觉定位",
+    "潜空间推理",
+    "化学大模型",
+    "分子图像理解",
+    "隐式推理"
+   ],
+   "field": "化学信息学与分子视觉推理",
+   "innovations": [
+    "提出先定位后推理的端到端分子性质推理框架VLSR，联合学习区域定位与性质推理",
+    "构建结构化潜工作区，用专用潜token组织结构证据与性质效应，替代文本CoT实现9.6倍吞吐提升",
+    "从2D分子图像零样本迁移至蛋白条件配体结合亲和力方向比较，较SMILES基线提升6.3pp"
+   ],
+   "benchmarks": [
+    "FGBench-Scaffold",
+    "Schrödinger JACS/Merck配体对比",
+    "蛋白条件FEP衍 ligand comparison"
+   ]
+  }
+ }
 }

@@ -4,5 +4,33 @@
  "title": "LittleLearner-Language-Models-Under-Pedagogically-Controlled",
  "token": "sk-EqwJR1nOB...",
  "created_at": "2026-08-14 14:49:06",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/685929f1-e964-4bab-8d32-4b38501a706e.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/685929f1-e964-4bab-8d32-4b38501a706e.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:44:32",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "受控预训练",
+    "知识边界",
+    "教育分级语料",
+    "能力扩展",
+    "LLM沙盒",
+    "post-training",
+    "in-context learning"
+   ],
+   "field": "大语言模型训练与控制实验",
+   "innovations": [
+    "提出教育分级约束的受控预训练语料库 LITTLECURRICULUM 与模型沙盒 LITTLELEARNER",
+    "在固定架构下首次隔离验证缩放/SFT+GRPO/ICL 均无法突破已定义的知识边界",
+    "构建 AoA+LLMJ+分类器+符号+频率采样的多阶段高精度过滤管道并验证边界锐度"
+   ],
+   "benchmarks": [
+    "MathCAMPS",
+    "Jeopardy (NGSS分级)",
+    "CoMTA",
+    "CLEAR"
+   ]
+  }
+ }
 }

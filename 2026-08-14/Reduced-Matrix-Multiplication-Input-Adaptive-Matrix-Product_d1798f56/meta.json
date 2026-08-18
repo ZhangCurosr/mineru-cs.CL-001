@@ -4,5 +4,43 @@
  "title": "Reduced-Matrix-Multiplication-Input-Adaptive-Matrix-Product",
  "token": "sk-F7cBp1IrI...",
  "created_at": "2026-08-14 14:49:08",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/1cd0d54c-0120-406a-bef7-9443fe8a9899.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/1cd0d54c-0120-406a-bef7-9443fe8a9899.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:49:00",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "inference acceleration",
+    "matrix multiplication",
+    "input-adaptive pruning",
+    "Transformer",
+    "training-free optimization"
+   ],
+   "field": "大语言模型高效推理",
+   "innovations": [
+    "提出RMM，沿矩阵乘法收缩轴动态选择TopK激活维度以训练自由方式削减计算",
+    "证明TopK by column norm在信息不对称下的minimax最优性",
+    "揭示Attention侧与MLP侧冗余度的结构性非对称，提出组件感知异质保留策略"
+   ],
+   "benchmarks": [
+    "ARC-Challenge",
+    "ARC-Easy",
+    "COPA",
+    "PIQA",
+    "CommonsenseQA",
+    "GSM8K",
+    "HumanEval",
+    "MMLU",
+    "WikiText",
+    "BookCorpus",
+    "CNN/DailyMail",
+    "RULER",
+    "POPE",
+    "Blink Art Style",
+    "Blink Forensic Detection",
+    "Blink Counting"
+   ]
+  }
+ }
 }

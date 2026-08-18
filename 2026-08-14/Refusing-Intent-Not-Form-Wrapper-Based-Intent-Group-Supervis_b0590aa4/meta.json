@@ -4,5 +4,10 @@
  "title": "Refusing-Intent-Not-Form-Wrapper-Based-Intent-Group-Supervis",
  "token": "sk-kdPBKi9MQ...",
  "created_at": "2026-08-14 04:08:06",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/7295432a-ef52-4da6-9b03-5bfcea02c1c6.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/7295432a-ef52-4da6-9b03-5bfcea02c1c6.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:50:20",
+  "chunks": 1
+ }
 }

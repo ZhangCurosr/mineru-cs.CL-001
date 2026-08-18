@@ -4,5 +4,29 @@
  "title": "Measuring-Task-Agnostic-Training-Data-Influence-Across-Langu",
  "token": "sk-dQ65jxzP4...",
  "created_at": "2026-08-14 04:07:45",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/19acf55c-4534-475b-ad01-7260a22e39d7.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/19acf55c-4534-475b-ad01-7260a22e39d7.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:45:28",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "training data influence",
+    "task-agnostic attribution",
+    "pretraining trajectory",
+    "checkPoint approximation",
+    "domain crossover"
+   ],
+   "field": "大语言模型预训练分析",
+   "innovations": [
+    "提出基于最终参数距离的任务无关贡献度量",
+    "推导检查点后验近似公式（式4）",
+    "揭示文献→STEM跨期贡献cross-over模式"
+   ],
+   "benchmarks": [
+    "Pythia-Deduped (70M-12B)",
+    "PolyPythia (160M/410M)"
+   ]
+  }
+ }
 }

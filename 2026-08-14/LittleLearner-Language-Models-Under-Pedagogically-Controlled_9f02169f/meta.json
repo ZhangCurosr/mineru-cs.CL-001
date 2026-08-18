@@ -4,5 +4,34 @@
  "title": "LittleLearner-Language-Models-Under-Pedagogically-Controlled",
  "token": "sk-EqwJR1nOB...",
  "created_at": "2026-08-14 04:07:43",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/bcfe540c-b7fa-4aad-a0cc-6bf1e1405cce.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/bcfe540c-b7fa-4aad-a0cc-6bf1e1405cce.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:44:26",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "知识边界",
+    "受控预训练",
+    "LLM沙盒",
+    "教学约束",
+    "能力上限",
+    "强化学习",
+    "上下文学习",
+    "语料过滤"
+   ],
+   "field": "LLM知识习得与能力边界",
+   "innovations": [
+    "构建首个基于教学标准的K-5精确概念边界语料库LITTLECURRICULUM，实现pretraining分布的可控约束",
+    "在受控沙盒中首次系统验证模型缩放、GRPO后训练、ICL均无法突破预训练知识边界，预训练分布是能力上限的主导因素",
+    "发现小规模模型在受限领域具有专业化优势，0.6B LITTLELEARNER在K-5范围内超过同架构UNFILTERED"
+   ],
+   "benchmarks": [
+    "MathCAMPS",
+    "CLEAR",
+    "CoMTA",
+    "Jeopardy Science (NGSS-aligned)"
+   ]
+  }
+ }
 }

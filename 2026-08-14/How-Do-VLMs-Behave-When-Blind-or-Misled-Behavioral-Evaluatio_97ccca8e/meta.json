@@ -4,5 +4,37 @@
  "title": "How-Do-VLMs-Behave-When-Blind-or-Misled-Behavioral-Evaluatio",
  "token": "sk-jywkrqzJV...",
  "created_at": "2026-08-14 14:49:09",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/c6d01c9b-1f78-4fb0-ad92-30b0c8def8f3.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/c6d01c9b-1f78-4fb0-ad92-30b0c8def8f3.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:43:13",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "VLM 评测",
+    "科学图表理解",
+    "行为可靠性",
+    "幻觉评估",
+    "A-R-I 框架",
+    "SCIFIGBENCH",
+    "选择性模糊",
+    "抗拒探针"
+   ],
+   "field": "多模态大模型评测与可靠性",
+   "innovations": [
+    "提出 SCIFIGBENCH 基准，联合评估感知/推理/行为可靠性三个维度",
+    "提出 A-R-I 行为框架（承认-抵抗-推断）量化不确定性下 VLM 行为",
+    "揭示高感知/推理准确率与行为可靠性的解耦现象"
+   ],
+   "benchmarks": [
+    "SCIFIGBENCH",
+    "ChartQA",
+    "SciFIBench",
+    "CharXiv",
+    "ChartMuseum",
+    "CHAOS",
+    "CHART-NOISe"
+   ]
+  }
+ }
 }

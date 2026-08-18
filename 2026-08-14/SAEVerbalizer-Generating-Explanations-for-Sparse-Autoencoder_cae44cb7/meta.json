@@ -4,5 +4,33 @@
  "title": "SAEVerbalizer-Generating-Explanations-for-Sparse-Autoencoder",
  "token": "sk-xjs1Z4GZW...",
  "created_at": "2026-08-14 14:48:42",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/1492e516-61cb-4e4c-9227-1fc627cb518a.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/1492e516-61cb-4e4c-9227-1fc627cb518a.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:49:44",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Sparse Autoencoder",
+    "Representation Verbalization",
+    "LLM Interpretability",
+    "Feature Explanation",
+    "Cross-LLM Transfer",
+    "Activation Intervention"
+   ],
+   "field": "大语言模型可解释性",
+   "innovations": [
+    "将SAE解码器方向直接注入LLM表示并通过微调下游层生成自然语言解释，绕过外部激活示例推断",
+    "证明verbalization能力可在同一表示空间跨SAE词典直接复用，无需额外微调",
+    "引入轻量级仿射适配器实现跨LLM的SAE特征解释迁移"
+   ],
+   "benchmarks": [
+    "Gemma Scope 2 width-262k",
+    "Gemma Scope 2 width-65k",
+    "GTS",
+    "LIG",
+    "GG"
+   ]
+  }
+ }
 }

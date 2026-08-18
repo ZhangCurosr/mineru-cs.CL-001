@@ -4,5 +4,43 @@
  "title": "Intern-S2-Preview-Scientific-Agentic-Foundation-Model",
  "token": "sk-qKu2Cn1y4...",
  "created_at": "2026-08-14 14:49:07",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/96fd8e2a-2357-4bcf-b4a7-f54f998bedab.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/96fd8e2a-2357-4bcf-b4a7-f54f998bedab.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:43:10",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "科学智能体",
+    "多模态基础模型",
+    "强化学习",
+    "Memory Decoder",
+    "时间序列预测",
+    "智能体RL",
+    "在线投机解码",
+    "on-policy蒸馏"
+   ],
+   "field": "科学人工智能与智能体系统",
+   "innovations": [
+    "统一后训练流水线：SFT+多任务RL+黑/白盒智能体RL+on-policy蒸馏整合为单一流程",
+    "Memory Decoder可插拔适配器：冻结397B主干上附加参数化记忆实现生物学专项提升（56.92→60.32）",
+    "部分rollout+off-policy校正+自适应长度正则化+GEPO的多任务RL稳定训练机制"
+   ],
+   "benchmarks": [
+    "Biology-Instructions",
+    "Mol-Instructions",
+    "MolecularIQ",
+    "SciReasoner",
+    "TOMG-Bench",
+    "MP20",
+    "ProteinBinder-9",
+    "SciTS",
+    "SWE-Bench-Pro",
+    "Terminal-Bench 2.1",
+    "MMLU-Pro",
+    "MMMU-Pro",
+    "ResearchClawBench"
+   ]
+  }
+ }
 }

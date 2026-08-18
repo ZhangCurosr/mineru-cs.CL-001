@@ -4,5 +4,10 @@
  "title": "SAEVerbalizer-Generating-Explanations-for-Sparse-Autoencoder",
  "token": "sk-xjs1Z4GZW...",
  "created_at": "2026-08-14 04:07:43",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/1492e516-61cb-4e4c-9227-1fc627cb518a.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/1492e516-61cb-4e4c-9227-1fc627cb518a.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:50:19",
+  "chunks": 1
+ }
 }

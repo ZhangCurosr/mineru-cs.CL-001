@@ -4,5 +4,30 @@
  "title": "It-s-How-You-Ask-Gender-Associated-Linguistic-Bias-in-LLMs",
  "token": "sk-07nfPn8BZ...",
  "created_at": "2026-08-14 14:48:48",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/191760a4-7b2e-435d-9976-512dbf9aa250.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/191760a4-7b2e-435d-9976-512dbf9aa250.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:43:44",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM偏见",
+    "性别语言",
+    "机制可解释性",
+    "语言注册",
+    "激活插值",
+    "社会语言学",
+    "职场沟通"
+   ],
+   "field": "大语言模型公平性与可解释性",
+   "innovations": [
+    "发现女性关联语言特征隐式导致LLM生成更简短低复杂度的职场回复，且效应强于显式性别标记",
+    "通过线性探测+激活插值+Steering三合一方法定位偏置在Layer 0-7的因果编码",
+    "证明隐式语言注册与显式性别线索编码于同层正交子空间，解释了为何模型使用前者而忽略后者"
+   ],
+   "benchmarks": [
+    "WildChat-4.8M"
+   ]
+  }
+ }
 }

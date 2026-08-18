@@ -4,5 +4,32 @@
  "title": "Reconcile-Once-Write-Anytime-A-Trust-Tiered-Librarian-and-a",
  "token": "sk-9BdnpHblK...",
  "created_at": "2026-08-14 04:09:23",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/57bb022b-5600-4668-bed3-7a7e0ef6e70c.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/57bb022b-5600-4668-bed3-7a7e0ef6e70c.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:48:38",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "trust-tiered retrieval",
+    "multi-agent writing",
+    "point-in-time evaluation",
+    "cross-section drift",
+    "deterministic QC gate",
+    "long-form report generation",
+    "metric ledger"
+   ],
+   "field": "面向可信长文生成的多Agent系统与溯源架构",
+   "innovations": [
+    "信任分层账本+声明图解耦存储与生成，实现跨节零漂移",
+    "六项确定性QC门禁经缺陷注入meta-eval验证",
+    "红队refutation回写驱动图书馆自修正闭环"
+   ],
+   "benchmarks": [
+    "SEC EDGAR 6130 sources",
+    "BLS macro releases 672",
+    "Wikipedia 61 articles"
+   ]
+  }
+ }
 }

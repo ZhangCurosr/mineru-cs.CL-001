@@ -4,5 +4,35 @@
  "title": "LATENT-ON-POLICY-SELF-DISTILLATION",
  "token": "sk-haVkJ3VAf...",
  "created_at": "2026-08-14 04:07:32",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/e01c20e4-f850-4c51-b8cb-bf3c89c63c19.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/e01c20e4-f850-4c51-b8cb-bf3c89c63c19.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:43:48",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "on-policy self-distillation",
+    "latent privileged context",
+    "experience learning",
+    "agent self-evolution",
+    "reverse KL distillation",
+    "privileged-margin constraint"
+   ],
+   "field": "大语言模型自我改进与自蒸馏",
+   "innovations": [
+    "将OPSD特权上下文从人工设计artifacts转化为端到端可学习的连续潜变量基底",
+    "提出privileged-margin约束防止蒸馏过程中教师分布坍缩向学生",
+    "实现无需推理时特权上下文的经验内化范式"
+   ],
+   "benchmarks": [
+    "EnvScaler",
+    "BFCL-v3",
+    "ACEBench",
+    "LiveCodeBench",
+    "HumanEval+",
+    "MBPP+",
+    "TACO/DeepCoder"
+   ]
+  }
+ }
 }

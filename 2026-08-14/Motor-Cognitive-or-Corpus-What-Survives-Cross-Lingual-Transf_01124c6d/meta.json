@@ -4,5 +4,32 @@
  "title": "Motor-Cognitive-or-Corpus-What-Survives-Cross-Lingual-Transf",
  "token": "sk-TTQuLp2ot...",
  "created_at": "2026-08-14 14:48:47",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/af24dce0-d641-4611-953e-adb55c2a8b5b.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/af24dce0-d641-4611-953e-adb55c2a8b5b.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:46:03",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Parkinson's disease",
+    "self-supervised learning",
+    "cross-lingual transfer",
+    "speech biomarkers",
+    "domain shift",
+    "distribution shift"
+   ],
+   "field": "语音生物标志物与神经退行性疾病检测",
+   "innovations": [
+    "提出五场景递进式分布偏移评估框架量化SSL表示的跨语言迁移能力",
+    "首次系统证明跨语言迁移后判别信号缺乏PD特异性，仅保留通用患者-健康分离",
+    "揭示最优表征层选择高度依赖语料库而非SSL架构本身"
+   ],
+   "benchmarks": [
+    "CZ (Czech)",
+    "ES (Spanish)",
+    "DE (German)",
+    "TREND (German dementia+PD cohort)"
+   ]
+  }
+ }
 }

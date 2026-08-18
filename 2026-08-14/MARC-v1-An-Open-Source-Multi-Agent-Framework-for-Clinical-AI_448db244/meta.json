@@ -4,5 +4,31 @@
  "title": "MARC-v1-An-Open-Source-Multi-Agent-Framework-for-Clinical-AI",
  "token": "sk-331OfnzjD...",
  "created_at": "2026-08-14 04:07:46",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/5971085d-a96f-41fa-a7ff-cf439364485a.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/5971085d-a96f-41fa-a7ff-cf439364485a.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:44:54",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "多智能体",
+    "临床AI",
+    "可解释LLM",
+    "声明式编排",
+    "Decomposer",
+    "医学推理"
+   ],
+   "field": "临床AI / 多智能体系统",
+   "innovations": [
+    "YAML声明式多智能体编排框架，无需代码修改即可配置临床推理流水线",
+    "Decomposer模块将自然语言任务描述自动分解为角色化智能体提示模板",
+    "VERDICT结构化交接协议实现阶段级失败归因与可追溯推理"
+   ],
+   "benchmarks": [
+    "PubMedQA",
+    "MedQA USMLE",
+    "chest CT radiology report generation"
+   ]
+  }
+ }
 }

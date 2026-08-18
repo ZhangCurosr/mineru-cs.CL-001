@@ -4,5 +4,25 @@
  "title": "Prompts-in-the-Wild-A-Large-Analyzed-Collection-of-Transacti",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-14 04:11:23",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/96f915c3-393b-4ea3-93ad-6b745c28fcab.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/96f915c3-393b-4ea3-93ad-6b745c28fcab.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:49:12",
+  "chunks": 4,
+  "meta": {
+   "keywords": [
+    "prompts",
+    "transactional prompts",
+    "prompt ontology",
+    "automated annotation",
+    "multilingual prompts"
+   ],
+   "field": "提示工程与大语言模型分析",
+   "innovations": [
+    "构建首个大规模事务性提示词数据集（57,640条）",
+    "设计多维结构化本体论与自动化标注流水线",
+    "系统评估标注精度并揭示错误模式"
+   ]
+  }
+ }
 }

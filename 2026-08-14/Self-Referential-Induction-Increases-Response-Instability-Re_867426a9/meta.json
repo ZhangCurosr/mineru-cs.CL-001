@@ -4,5 +4,30 @@
  "title": "Self-Referential-Induction-Increases-Response-Instability-Re",
  "token": "sk-4GZLsbGFG...",
  "created_at": "2026-08-14 14:48:50",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/dc6dd9f5-201d-4250-8c12-cfb2167ab74a.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/dc6dd9f5-201d-4250-8c12-cfb2167ab74a.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 16:50:01",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "self-referential induction",
+    "response instability",
+    "language model introspection",
+    "semantic consistency",
+    "subjective experience report",
+    "prompting methods"
+   ],
+   "field": "大语言模型可解释性与自我认知",
+   "innovations": [
+    "首次量化测量LLM自我指涉诱导报告的响应不稳定性",
+    "建立三组对照问题分类体系并提供定量基线",
+    "揭示自我指涉诱导与哲学不确定性的输出分布差异"
+   ],
+   "benchmarks": [
+    "Gemini API",
+    "Sentence-BERT embedding"
+   ]
+  }
+ }
 }
