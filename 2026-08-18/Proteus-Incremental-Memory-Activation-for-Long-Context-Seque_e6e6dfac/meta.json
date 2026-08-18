@@ -4,5 +4,43 @@
  "title": "Proteus-Incremental-Memory-Activation-for-Long-Context-Seque",
  "token": "sk-aQHhxC28I...",
  "created_at": "2026-08-18 02:54:44",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/83c4ab0e-2f57-4f43-bdbf-99b9777d9c6b.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/83c4ab0e-2f57-4f43-bdbf-99b9777d9c6b.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:53:55",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "增量记忆激活",
+    "长上下文建模",
+    "线性RNN",
+    "关联记忆",
+    "容量调度",
+    "Proteus",
+    "Needle-in-a-Haystack"
+   ],
+   "field": "长上下文序列建模",
+   "innovations": [
+    "提出增量记忆激活范式，通过渐进解锁记忆分块调度有效容量，解决静态记忆的早期污染与后期干扰问题",
+    "Proteus轻量分块门控机制，零额外参数嵌入SWLA/Comba/Titans/Hope-Attention四种SOTA架构",
+    "在长上下文检索和长度外推任务上实现一致提升，增益随上下文长度单调增长"
+   ],
+   "benchmarks": [
+    "Wikitext",
+    "LAMBADA",
+    "Needle-in-a-Haystack (4K/8K/16K)",
+    "LongBench",
+    "PIQA",
+    "HellaSwag",
+    "WinoGrande",
+    "ARC-Easy",
+    "ARC-Challenge",
+    "SIQA",
+    "BoolQ",
+    "SWDE",
+    "SQuAD",
+    "FDA"
+   ]
+  }
+ }
 }

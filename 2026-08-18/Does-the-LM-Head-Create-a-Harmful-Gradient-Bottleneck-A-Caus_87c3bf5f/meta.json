@@ -4,5 +4,29 @@
  "title": "Does-the-LM-Head-Create-a-Harmful-Gradient-Bottleneck-A-Caus",
  "token": "sk-ZHrWl9Czg...",
  "created_at": "2026-08-18 14:30:50",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/c83af2a6-b189-4a99-a411-909480710a10.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/c83af2a6-b189-4a99-a411-909480710a10.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:53:20",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LM Head",
+    "梯度瓶颈",
+    "因果推断",
+    "反向传播",
+    "低秩近似",
+    "反馈对齐"
+   ],
+   "field": "语言模型训练动力学",
+   "innovations": [
+    "提出仅降低反向梯度秩的因果控制实验以分离前向/反向效应",
+    "证明投影残差通过LM Head更新间接贡献训练而非被丢弃"
+   ],
+   "benchmarks": [
+    "WikiText-2",
+    "SpamLang合成任务"
+   ]
+  }
+ }
 }

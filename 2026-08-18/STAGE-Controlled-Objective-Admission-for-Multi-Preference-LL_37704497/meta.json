@@ -4,5 +4,47 @@
  "title": "STAGE-Controlled-Objective-Admission-for-Multi-Preference-LL",
  "token": "sk-CZoysi7P5...",
  "created_at": "2026-08-18 02:53:39",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/576a0273-63f3-4aaa-b246-8a5b17e0a8f5.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/576a0273-63f3-4aaa-b246-8a5b17e0a8f5.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:54:49",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "RLHF",
+    "multi-preference alignment",
+    "curriculum learning",
+    "objective admission",
+    "active-set controller",
+    "PPO",
+    "reward scalarization"
+   ],
+   "field": "多目标强化学习与LLM对齐",
+   "innovations": [
+    "将多偏好RLHF建模为时序目标准入问题，提出稳定性门控的主动集控制器STAGE",
+    "设计探测驱动的难度排序与双门控（ISG+WSG）推进机制，实现累积保留的偏好维度逐步扩展",
+    "在15维度×16基准设置下，STAGE较最佳基线平均提升5.23-5.92分，验证时序控制的有效性"
+   ],
+   "benchmarks": [
+    "OrBench (OrB, OrB-h)",
+    "TruthfulQA-MC1",
+    "AlpacaEval",
+    "Arena-Hard",
+    "LUN",
+    "CG",
+    "Jigsaw",
+    "Satirical News",
+    "HSOL",
+    "Assassin",
+    "Enron",
+    "EDE",
+    "FAS",
+    "MorBench",
+    "TQA(MC1)",
+    "Alp.",
+    "Are-h",
+    "Are-c"
+   ]
+  }
+ }
 }

@@ -4,5 +4,30 @@
  "title": "The-Commercial-Tax-Rent-vs-Own-Blind-Spots-in-Multi-Hop-Retr",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-18 14:31:04",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/6768615b-e8a4-4af5-b38b-886d6b7a57ba.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/6768615b-e8a4-4af5-b38b-886d6b7a57ba.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:56:26",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "retrieval-augmented generation",
+    "multi-hop question answering",
+    "embedding models",
+    "software licensing",
+    "benchmark reproducibility",
+    "cost disclosure"
+   ],
+   "field": "检索增强生成与多跳问答评估",
+   "innovations": [
+    "首次系统性审计多跳检索基准的商业许可证盲点，发现NV-Embed-v2为非商用anchor且3个领先系统均未披露",
+    "在同一harness上公平测量13款embedder，发现Nemotron-3-Embed-8B以+0.24 Recall@5追平非商用anchor",
+    "建立两轴标准化成本模型（一次性索引成本 vs 持续回答成本），揭示GraphRAG在1TB尺度下存在11倍配置相关的不确定性（$428K–$4.6M）"
+   ],
+   "benchmarks": [
+    "MuSiQue",
+    "2WikiMultihopQA"
+   ]
+  }
+ }
 }

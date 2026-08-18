@@ -4,5 +4,29 @@
  "title": "QUMem-Personalized-Memory-for-Query-Conditioned-User-State-I",
  "token": "sk-Ir4JqYCnj...",
  "created_at": "2026-08-18 02:56:33",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/561e160f-7a72-4613-8422-dbac13ff0de4.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/561e160f-7a72-4613-8422-dbac13ff0de4.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:53:50",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "个性化记忆",
+    "LLM Agent",
+    "查询条件推理",
+    "长程对话",
+    "检索增强生成"
+   ],
+   "field": "LLM Agent 长期记忆",
+   "innovations": [
+    "语义连续性驱动的动态对话片段构建",
+    "事实/偏好/可迁移洞察三层记忆类型分解",
+    "查询条件驱动的三智能体联合用户状态推理"
+   ],
+   "benchmarks": [
+    "PersonaMem",
+    "KnowU-Bench"
+   ]
+  }
+ }
 }

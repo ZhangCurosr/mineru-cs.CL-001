@@ -4,5 +4,32 @@
  "title": "Unadapted-Multilingual-ASR-on-a-Garrusi-Kurdish-Evaluation-S",
  "token": "sk-MljcAo9Bd...",
  "created_at": "2026-08-18 02:53:26",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/943994df-d0e4-4ad2-9eba-7f59ca9a896b.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/943994df-d0e4-4ad2-9eba-7f59ca9a896b.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:56:58",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Kurdish ASR",
+    "low-resource speech recognition",
+    "cross-script evaluation",
+    "common-reference scoring",
+    "staged normalization",
+    "MMS multilingual model",
+    "script conversion",
+    "Garrusi Kurdish"
+   ],
+   "field": "低资源语音识别与跨脚本评测",
+   "innovations": [
+    "提出共同参考分阶段归一化设计，分离归一化步骤与识别误差的可观测量",
+    "公开可核验的固定参考与段落级S/D/I/H明细，解决跨研究数值不可比问题",
+    "在同音频上对比Central Kurdish适配器与Southern Kurdish微调系统，揭示跨方言迁移与管线伪影的混合影响"
+   ],
+   "benchmarks": [
+    "Garrusi Kurdish Phase 1 elicited questionnaire (5 speakers, 1,722 segments)",
+    "aranemini/southern-kurdish-asr re-evaluation on same audio"
+   ]
+  }
+ }
 }

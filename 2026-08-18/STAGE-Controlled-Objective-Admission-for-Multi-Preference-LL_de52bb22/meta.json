@@ -4,5 +4,30 @@
  "title": "STAGE-Controlled-Objective-Admission-for-Multi-Preference-LL",
  "token": "sk-CZoysi7P5...",
  "created_at": "2026-08-18 14:30:53",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/576a0273-63f3-4aaa-b246-8a5b17e0a8f5.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/576a0273-63f3-4aaa-b246-8a5b17e0a8f5.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:54:49",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "RLHF",
+    "multi-preference alignment",
+    "curriculum learning",
+    "objective admission",
+    "stability gate",
+    "active set"
+   ],
+   "field": "大模型对齐与偏好优化",
+   "innovations": [
+    "提出STAGE稳定性门控控制器，将目标准入时序作为显式控制变量",
+    "设计ISG/WSG双门 + 耐心预算机制控制偏好维度进入时机",
+    "通过短探测阶段估计偏好难度顺序形成难→易课程"
+   ],
+   "benchmarks": [
+    "16 held-out benchmark columns across 6 categories",
+    "OrB, OrB-h, AlpacaEval, Arena-Hard, TruthfulQA-MC1"
+   ]
+  }
+ }
 }

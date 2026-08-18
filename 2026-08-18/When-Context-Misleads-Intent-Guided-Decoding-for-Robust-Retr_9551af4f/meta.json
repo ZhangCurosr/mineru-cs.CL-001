@@ -4,5 +4,35 @@
  "title": "When-Context-Misleads-Intent-Guided-Decoding-for-Robust-Retr",
  "token": "sk-jywkrqzJV...",
  "created_at": "2026-08-18 14:30:55",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/46449fa2-8ec6-484f-8775-341608fba510.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/46449fa2-8ec6-484f-8775-341608fba510.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:56:51",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Retrieval-Augmented Generation",
+    "Intent-Guided Decoding",
+    "Factuality",
+    "Faithfulness",
+    "Source Arbitration",
+    "Token-Level Correction",
+    "Context-Memory Conflict"
+   ],
+   "field": "检索增强生成的可信推理",
+   "innovations": [
+    "提出两级粒度解码时源仲裁框架（答案级过滤+Token级校正），根据用户意图动态平衡事实性与忠实性",
+    "设计基于JSD冲突激活门控与可靠性缩放的Token级校正机制，仅在上下文-记忆分支存在分布冲突时保守干预",
+    "在六个基准（3忠实+3事实冲突）上系统性验证，事实冲突基准最大提升65.4pp且保持STRICT模式上下文遵循行为"
+   ],
+   "benchmarks": [
+    "KILT-NQ",
+    "TriviaQA",
+    "SQuAD",
+    "ConflictBank",
+    "NQ-Swap",
+    "CounterFact"
+   ]
+  }
+ }
 }

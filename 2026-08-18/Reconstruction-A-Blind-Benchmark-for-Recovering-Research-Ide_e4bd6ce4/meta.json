@@ -4,5 +4,32 @@
  "title": "Reconstruction-A-Blind-Benchmark-for-Recovering-Research-Ide",
  "token": "sk-Yw2JG3IRJ...",
  "created_at": "2026-08-18 02:53:22",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/02f9692e-c73a-436e-ad05-2f3685840c61.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/02f9692e-c73a-436e-ad05-2f3685840c61.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:54:52",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "blind benchmark",
+    "research idea recovery",
+    "multi-agent LLM",
+    "anti-leakage protocol",
+    "Swiss tournament",
+    "scientific discovery"
+   ],
+   "field": "大模型科研理解与假说生成评估",
+   "innovations": [
+    "提出严格时间截止+匿名引用的盲基准Reconstruction，测量LLM仅凭前置参考文献还原论文核心思想的能力",
+    "设计跨模型交叉评审+Swiss锦标赛筛选的多智能体管道，在无外部搜索条件下将Match率从13.3%提升至36.0%",
+    "提出候选池分析框架（A/B/C/D四档Bound）与论文级Bootstrap+Sign Test统计论证"
+   ],
+   "benchmarks": [
+    "Reconstruction",
+    "IdeaBench",
+    "RINoBench",
+    "HindSight"
+   ]
+  }
+ }
 }

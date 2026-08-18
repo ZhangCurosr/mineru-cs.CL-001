@@ -4,5 +4,42 @@
  "title": "Proteus-Incremental-Memory-Activation-for-Long-Context-Seque",
  "token": "sk-aQHhxC28I...",
  "created_at": "2026-08-18 14:30:47",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/f5054292-0d7f-43f4-a513-dc24e70d6f28.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/f5054292-0d7f-43f4-a513-dc24e70d6f28.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:53:53",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "incremental memory activation",
+    "long-context sequence modeling",
+    "associative memory",
+    "Proteus",
+    "recurrent state-space models",
+    "capacity scheduling"
+   ],
+   "field": "长上下文序列建模与高效记忆架构",
+   "innovations": [
+    "提出增量记忆激活范式，将记忆有效容量按位置单调扩展以兼顾早期压缩与后期低干扰",
+    "设计 Proteus 分块门控机制，同步作用于在线记忆状态与 MLP 参数，零额外参数即可接入多种架构",
+    "在四种前沿记忆模型与双尺度上统一提升语言建模/常识推理/NIAH/长理解，并揭示分块粒度的非单调效应"
+   ],
+   "benchmarks": [
+    "Wikitext",
+    "LAMBADA",
+    "PIQA",
+    "HellaSwag",
+    "WinoGrande",
+    "ARC-Easy",
+    "ARC-Challenge",
+    "SIQA",
+    "BoolQ",
+    "SQuAD",
+    "SWDE",
+    "FDA",
+    "LongBench",
+    "Needle-in-a-Haystack (S-NIAH-1/2/3, MK/MQ/MV variants)"
+   ]
+  }
+ }
 }

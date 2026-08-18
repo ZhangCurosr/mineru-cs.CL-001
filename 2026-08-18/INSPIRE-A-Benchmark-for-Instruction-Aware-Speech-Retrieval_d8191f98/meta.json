@@ -4,5 +4,32 @@
  "title": "INSPIRE-A-Benchmark-for-Instruction-Aware-Speech-Retrieval",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-18 14:31:02",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/057568f3-0bd0-404d-8e55-22927a4e2efd.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/057568f3-0bd0-404d-8e55-22927a4e2efd.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:53:29",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "instruction-aware retrieval",
+    "speech retrieval",
+    "multimodal",
+    "self-supervised speech",
+    "large audio-language models",
+    "paralinguistic attributes"
+   ],
+   "field": "语音检索与多模态理解",
+   "innovations": [
+    "提出首个指令感知语音检索基准INSPIRE，覆盖语义/说话人/风格/环境音多属性",
+    "系统评估四种检索范式并揭示模态特化差异与失败模式",
+    "构建异构四子集数据集并提供细粒度失败分析"
+   ],
+   "benchmarks": [
+    "INSPIRE",
+    "DailyTalk",
+    "VCTK",
+    "Expresso"
+   ]
+  }
+ }
 }

@@ -4,5 +4,32 @@
  "title": "Toward-Better-Assessment-of-LLMs-Performance-in-Clinical-Err",
  "token": "sk-F7cBp1IrI...",
  "created_at": "2026-08-18 14:31:12",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/ff943130-2547-4d33-8065-edfef512f621.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/ff943130-2547-4d33-8065-edfef512f621.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:56:30",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "clinical error detection",
+    "paired evaluation",
+    "bias diagnosis",
+    "contrastive evaluation",
+    "LLM benchmarking",
+    "signal detection theory"
+   ],
+   "field": "临床自然语言处理评测",
+   "innovations": [
+    "提出BCR（Both-Correct Rate）将配对对比一致性引入临床错误检测评测，分离判别力与响应偏差",
+    "引入Independence Ratio量化配对内系统性依赖，揭示F1与BCR被同一偏差反向驱动的结构性矛盾",
+    "提出Evidence Contrastive Analysis（ECA）在后验诊断中区分定位失败与判断失败"
+   ],
+   "benchmarks": [
+    "MEDEC MS-Test",
+    "MedErrBench-EN",
+    "MedErrBench-CN",
+    "MedRECT-JA"
+   ]
+  }
+ }
 }

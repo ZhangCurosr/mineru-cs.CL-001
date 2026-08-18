@@ -4,5 +4,30 @@
  "title": "Listen-Reason-and-Segment-Aligning-LALMs-with-Editorial-Judg",
  "token": "sk-kdPBKi9MQ...",
  "created_at": "2026-08-18 02:55:22",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/d3e3d29f-f35c-458d-900e-806533b9308c.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/d3e3d29f-f35c-458d-900e-806533b9308c.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:53:28",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "音频章节化",
+    "大音频语言模型",
+    "GRPO",
+    "链式思考",
+    "强化学习对齐",
+    "媒体分析"
+   ],
+   "field": "音频理解与多媒体分析",
+   "innovations": [
+    "提出AudioChaps两阶段对齐框架（CoT SFT冷启动+GRPO校准）实现LALM主观编辑判断对齐",
+    "构建音频-文本模态桥接的三阶段CoT数据合成流水线",
+    "首个端到端纯音频章节化基准与跨四声学模态的最强性能"
+   ],
+   "benchmarks": [
+    "AudioChaps-Eval",
+    "VidChapters-7M"
+   ]
+  }
+ }
 }

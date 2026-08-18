@@ -4,5 +4,30 @@
  "title": "TOWARDS-COMPUTATIONAL-PROVENANCE-CARRYING-CAUSAL-STATE-EVIDE",
  "token": "sk-WJrSFDicB...",
  "created_at": "2026-08-18 02:53:20",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/b466780e-0a12-46c0-ad55-6fd60aded27d.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/b466780e-0a12-46c0-ad55-6fd60aded27d.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:55:56",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "computational provenance",
+    "causal state",
+    "text watermarking",
+    "concept bottleneck",
+    "interpretable AI",
+    "model verification"
+   ],
+   "field": "可解释AI与模型溯源",
+   "innovations": [
+    "通过认证离散状态在生成文本中嵌入可检测统计信号，实现答案等价但路径不同的溯源",
+    "跨前馈网络与Transformer架构复现因果通路，端到端验证准确率达100%",
+    "在受控实验中证明预训练Transformer不会自然涌现符合标准的离散因果状态"
+   ],
+   "benchmarks": [
+    "自制算术任务 (16进制模运算)",
+    "128对公开与密封保护端到端评估"
+   ]
+  }
+ }
 }

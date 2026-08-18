@@ -4,5 +4,34 @@
  "title": "When-Do-Explanations-Help-In-Context-Learning-A-Comparative",
  "token": "sk-TTQuLp2ot...",
  "created_at": "2026-08-18 14:31:12",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/95917cd3-e5c5-42f3-aae0-3065359056de.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/95917cd3-e5c5-42f3-aae0-3065359056de.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:57:28",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "in-context learning",
+    "natural language explanations",
+    "faithfulness",
+    "few-shot prompting",
+    "explainable NLP",
+    "self-explanations"
+   ],
+   "field": "可解释自然语言处理",
+   "innovations": [
+    "系统比较三种NLE来源在ICL中的预测效用",
+    "揭示忠实性度量间的重大分歧（约50%）及其对选择策略的影响",
+    "引入语义不对齐压力测试评估NLE-augmented ICL的鲁棒性"
+   ],
+   "benchmarks": [
+    "ECQA",
+    "e-SNLI",
+    "SNARKS",
+    "BOOLEAN",
+    "Causal Judgment",
+    "GSM8K"
+   ]
+  }
+ }
 }

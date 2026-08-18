@@ -4,5 +4,33 @@
  "title": "STEP-LEVEL-ON-POLICY-DISTILLATION-INTERPOLATING-BETWEEN-ON-P",
  "token": "sk-rnwM2rvcl...",
  "created_at": "2026-08-18 14:30:59",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/8aaaffa9-b7f9-4b54-a905-3ae357b9a3e6.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/8aaaffa9-b7f9-4b54-a905-3ae357b9a3e6.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:55:22",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "on-policy distillation",
+    "knowledge distillation",
+    "step-level supervision",
+    "reinforcement learning",
+    "agent training",
+    "mathematical reasoning"
+   ],
+   "field": "大语言模型高效训练与对齐",
+   "innovations": [
+    "提出步级策略内蒸馏(SOPD)框架，在学生轨迹的每个自然步骤前独立请求教师生成多token修正目标",
+    "证明SOPD在单步极限下退化为SFT，在单token极限下近似于采样前向KL的OPD，统一两者视角",
+    "设计步平衡损失与并行打包注意力掩码，在保证on-policy状态覆盖的同时提供连贯监督并提升训练效率"
+   ],
+   "benchmarks": [
+    "ALFWorld",
+    "AIME24",
+    "AIME25",
+    "HMMT25",
+    "DeepMath"
+   ]
+  }
+ }
 }

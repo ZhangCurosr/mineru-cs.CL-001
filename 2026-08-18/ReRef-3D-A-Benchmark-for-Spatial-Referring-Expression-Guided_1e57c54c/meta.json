@@ -4,5 +4,31 @@
  "title": "ReRef-3D-A-Benchmark-for-Spatial-Referring-Expression-Guided",
  "token": "sk-Hms67LeAf...",
  "created_at": "2026-08-18 02:57:50",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/b1b1e3ef-8e5e-49bc-8b26-a77b0e5cfa99.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/b1b1e3ef-8e5e-49bc-8b26-a77b0e5cfa99.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:54:25",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "3D 场景重组",
+    "空间指代表达",
+    "3D 视觉-语言模型",
+    "语言引导放置",
+    "场景图验证",
+    "ReRef-3D"
+   ],
+   "field": "3D 视觉-语言空间推理",
+   "innovations": [
+    "定义场景指代放置任务：模型需在同一自包含指令中同时解析目标物体与锚点并预测合法连续放置位置",
+    "提出插入后重算场景图的关系级评测体系，同时度量关系满足与物理合法性",
+    "将 8 类放置家族与 4 类参考复杂度正交解耦构建可控难度的程序化基准"
+   ],
+   "benchmarks": [
+    "ReRef-3D",
+    "CLEVR-Ref+",
+    "PlaceIt3D"
+   ]
+  }
+ }
 }

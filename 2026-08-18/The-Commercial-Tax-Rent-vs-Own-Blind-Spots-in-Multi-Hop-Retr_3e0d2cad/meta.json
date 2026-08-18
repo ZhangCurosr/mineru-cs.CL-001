@@ -4,5 +4,33 @@
  "title": "The-Commercial-Tax-Rent-vs-Own-Blind-Spots-in-Multi-Hop-Retr",
  "token": "sk-Ar06zcDAy...",
  "created_at": "2026-08-18 02:56:07",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/6768615b-e8a4-4af5-b38b-886d6b7a57ba.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/6768615b-e8a4-4af5-b38b-886d6b7a57ba.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:56:03",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "retrieval-augmented generation",
+    "multi-hop question answering",
+    "embedding models",
+    "software licensing",
+    "cost disclosure",
+    "benchmark reproducibility",
+    "commercial tax"
+   ],
+   "field": "检索增强生成系统评估与成本分析",
+   "innovations": [
+    "首次系统性审计多跳检索基准的许可证披露盲区，发现领先系统依赖非商业许可模型",
+    "量化并追踪商业税效应的闭合：Nemotron-3-Embed-8B追平非商业锚点性能",
+    "建立标准化成本模型，分离一次性索引与recurring回答成本，揭示GraphRAG百万美元级配置不确定性"
+   ],
+   "benchmarks": [
+    "MuSiQue",
+    "HippoRAG-2 Protocol",
+    "2WikiMultihopQA",
+    "Harvey Legal Agent Benchmark (LAB)"
+   ]
+  }
+ }
 }

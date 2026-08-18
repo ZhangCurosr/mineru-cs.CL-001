@@ -4,5 +4,33 @@
  "title": "STEP-LEVEL-ON-POLICY-DISTILLATION-INTERPOLATING-BETWEEN-ON-P",
  "token": "sk-rnwM2rvcl...",
  "created_at": "2026-08-18 02:53:42",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/e06759f8-87b3-46ad-8c38-d260d3b9b1b2.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-18/e06759f8-87b3-46ad-8c38-d260d3b9b1b2.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 18:55:05",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "on-policy distillation",
+    "step-level supervision",
+    "SFT-OPD interpolation",
+    "black-box distillation",
+    "reasoning",
+    "agent tasks"
+   ],
+   "field": "大语言模型蒸馏与后训练",
+   "innovations": [
+    "提出SOPD，在学生轨迹的自然步骤起点生成教师目标，插值于SFT与OPD之间",
+    "建立SFT与forward-KL OPD的理论联系框架",
+    "无需教师logits的黑盒蒸馏支持"
+   ],
+   "benchmarks": [
+    "ALFWorld",
+    "AIME24",
+    "AIME25",
+    "HMMT25-Feb",
+    "HMMT25-Nov"
+   ]
+  }
+ }
 }
