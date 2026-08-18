@@ -4,5 +4,31 @@
  "title": "Explanatory-Engagement-Under-Rare-Anomalous-Failure",
  "token": "sk-rnwM2rvcl...",
  "created_at": "2026-08-14 04:08:08",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/0e3dd85f-3c6e-48bb-a9f5-8031b6a9d367.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/0e3dd85f-3c6e-48bb-a9f5-8031b6a9d367.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:59:14",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "稀有事件检测",
+    "语言模型行为",
+    "解释性参与度",
+    "引出条件",
+    "自报置信度",
+    "异常识别",
+    "渐近稀有性",
+    "工具调用失败"
+   ],
+   "field": "LLM 行为分析与对齐评估",
+   "innovations": [
+    "引出结构作为检测阈值效应的首要调节变量，揭示聚合分析可能掩盖关键行为模式",
+    "形式化定义空尾伪影与识别-参与度分离，为稀有事件模型行为研究提供方法论框架",
+    "发现 llama3.1:8b 在无提示条件下自发产生结构化置信度报告并逐步侵蚀的模型特异性自监控行为"
+   ],
+   "benchmarks": [
+    "本地开源模型测试套件（qwen3:8b/llama3.1:8b/mistral:7b），八级失败概率调度"
+   ]
+  }
+ }
 }

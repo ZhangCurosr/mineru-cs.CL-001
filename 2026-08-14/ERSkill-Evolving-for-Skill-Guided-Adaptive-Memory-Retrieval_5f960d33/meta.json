@@ -4,5 +4,29 @@
  "title": "ERSkill-Evolving-for-Skill-Guided-Adaptive-Memory-Retrieval",
  "token": "sk-mBuyDYvkR...",
  "created_at": "2026-08-14 04:11:39",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/421d18d9-78a1-4a59-8d19-fc9fc9e52c0d.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/421d18d9-78a1-4a59-8d19-fc9fc9e52c0d.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:58:41",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Agent Memory",
+    "Self-Evolving",
+    "Retrieval Skill",
+    "RAG",
+    "LLM Agents"
+   ],
+   "field": "Agent记忆与检索增强",
+   "innovations": [
+    "以检索技能为核心的自进化记忆框架",
+    "经验前缀树与双前沿机制实现技能-路由器协同进化"
+   ],
+   "benchmarks": [
+    "LoCoMo",
+    "LongMemEval",
+    "PerLTQA"
+   ]
+  }
+ }
 }

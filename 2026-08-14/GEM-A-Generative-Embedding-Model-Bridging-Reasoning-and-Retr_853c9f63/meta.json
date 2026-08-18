@@ -4,5 +4,33 @@
  "title": "GEM-A-Generative-Embedding-Model-Bridging-Reasoning-and-Retr",
  "token": "sk-oJ013oevc...",
  "created_at": "2026-08-14 04:08:06",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/51243d1b-90f0-4164-aa3b-08d488695ad9.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/51243d1b-90f0-4164-aa3b-08d488695ad9.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 14:00:15",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "generative embedding",
+    "reasoning-intensive retrieval",
+    "instruction-following retrieval",
+    "contrastive learning",
+    "test-time compute scaling",
+    "dense retrieval"
+   ],
+   "field": "信息检索与表示学习",
+   "innovations": [
+    "在单模型中联合优化因果语言建模与对比嵌入，以专用embedding token对齐自生成推理",
+    "基于验证推理的响应筛选与正/硬负文档生成流程，使相关性定义与推理显式绑定",
+    "支持通过提示控制生成长度的测试时计算扩展并在复用KV cache下保持编码延迟稳定"
+   ],
+   "benchmarks": [
+    "BRIGHT",
+    "FollowIR",
+    "InstructIR",
+    "TREC-DL-2019",
+    "TREC-DL-2020"
+   ]
+  }
+ }
 }

@@ -4,5 +4,31 @@
  "title": "From-Atomic-Evidence-to-Logical-Composition-Structured-Compo",
  "token": "sk-mtKOSZtKc...",
  "created_at": "2026-08-14 04:11:39",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/0c24b3dc-2ae9-4fab-8e8c-b81f1b3712ca.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/0c24b3dc-2ae9-4fab-8e8c-b81f1b3712ca.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:59:49",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "logical composition",
+    "compound answer reasoning",
+    "structured inference",
+    "integer linear programming",
+    "calibration",
+    "LLM reasoning",
+    "compositionality gap"
+   ],
+   "field": "大语言模型逻辑推理",
+   "innovations": [
+    "原子-算子分离的结构化框架：LLM只产局部证据，组合由算子约束ILP完成",
+    "相对校准：利用instance内原子排名/标准化/最大距离修正跨算子混合场景下的系统性偏差",
+    "对比假设Paired MC证据收集：正负对立假设同prompt二选一，优于独立评估/采样/语义化自信度"
+   ],
+   "benchmarks": [
+    "LOGICAL-COMMONSENSEQA",
+    "LOGICAL-SATA"
+   ]
+  }
+ }
 }

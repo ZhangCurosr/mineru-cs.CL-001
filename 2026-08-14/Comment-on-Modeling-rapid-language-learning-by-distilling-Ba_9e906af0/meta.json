@@ -4,5 +4,32 @@
  "title": "Comment-on-Modeling-rapid-language-learning-by-distilling-Ba",
  "token": "sk-7NOZt17oN...",
  "created_at": "2026-08-14 14:49:09",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/598644ff-29ac-40d2-bbc6-9f69ae5749ca.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/598644ff-29ac-40d2-bbc6-9f69ae5749ca.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:56:17",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "meta-learning",
+    "MAML",
+    "Bayesian prior",
+    "formal language learning",
+    "overfitting",
+    "early stopping",
+    "systematic generalization"
+   ],
+   "field": "形式语言学习与元学习交叉",
+   "innovations": [
+    "揭示MAML仅转移初始化而非蒸馏先验的本质差异",
+    "通过扩展训练epoch证明M&G模型存在系统性过拟合",
+    "提出EOS timing指标暴露M&G在计数泛化上的严重缺陷"
+   ],
+   "benchmarks": [
+    "Y&P 56-formal-language benchmark",
+    "AnBn counting generalization",
+    "AnBnCn counting generalization"
+   ]
+  }
+ }
 }

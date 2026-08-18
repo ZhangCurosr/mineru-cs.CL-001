@@ -4,5 +4,10 @@
  "title": "Falsehood-and-Impossibility-Are-Diferent-Directions-in-an-AI",
  "token": "sk-zybFjYcVd...",
  "created_at": "2026-08-14 14:49:00",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/fbd350ac-802d-4c5e-a872-ebdbc3e3d753.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/fbd350ac-802d-4c5e-a872-ebdbc3e3d753.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 14:01:46",
+  "chunks": 1
+ }
 }

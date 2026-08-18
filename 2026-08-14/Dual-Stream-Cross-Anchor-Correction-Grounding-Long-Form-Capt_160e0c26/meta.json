@@ -4,5 +4,33 @@
  "title": "Dual-Stream-Cross-Anchor-Correction-Grounding-Long-Form-Capt",
  "token": "sk-sKVjU65N5...",
  "created_at": "2026-08-14 14:49:22",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/ece49686-bc37-456c-8900-4244e6db2195.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/ece49686-bc37-456c-8900-4244e6db2195.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:57:24",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "object hallucination",
+    "multimodal large language models",
+    "contrastive learning",
+    "cross-attention",
+    "vision-language grounding",
+    "hallucination mitigation"
+   ],
+   "field": "多模态大语言模型幻觉缓解",
+   "innovations": [
+    "首次将物体级视觉锚点注入语言模型训练过程，使 grounding 成为生成结构性约束",
+    "发现感知流与认知流符号反转的非additive协同机制",
+    "提出可证伪的域条件性假设，划定方法有效性的语义边界"
+   ],
+   "benchmarks": [
+    "POPE",
+    "CHAIR-500",
+    "MME-Hallucination",
+    "HallusionBench",
+    "MMHal-Bench"
+   ]
+  }
+ }
 }

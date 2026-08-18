@@ -4,5 +4,31 @@
  "title": "From-Atomic-Evidence-to-Logical-Composition-Structured-Compo",
  "token": "sk-mtKOSZtKc...",
  "created_at": "2026-08-14 14:49:10",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/0c24b3dc-2ae9-4fab-8e8c-b81f1b3712ca.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/0c24b3dc-2ae9-4fab-8e8c-b81f1b3712ca.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:59:57",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "组合性推理",
+    "复合答案",
+    "整数线性规划",
+    "大语言模型",
+    "逻辑推理",
+    "对比评估",
+    "置信度校准"
+   ],
+   "field": "大语言模型逻辑推理",
+   "innovations": [
+    "从原子证据到算子约束ILP的两阶段结构化复合推理框架",
+    "在同prompt中配对正负假设进行对比式局部证据提取",
+    "引入实例内相对排名的相对校准方法纠正跨算子系统性偏差"
+   ],
+   "benchmarks": [
+    "LOGICAL-COMMONSENSEQA",
+    "LOGICAL-SATA"
+   ]
+  }
+ }
 }

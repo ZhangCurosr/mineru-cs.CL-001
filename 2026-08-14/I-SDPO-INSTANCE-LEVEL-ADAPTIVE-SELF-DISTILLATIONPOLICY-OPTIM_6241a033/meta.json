@@ -4,5 +4,10 @@
  "title": "I-SDPO-INSTANCE-LEVEL-ADAPTIVE-SELF-DISTILLATIONPOLICY-OPTIM",
  "token": "sk-ovHaiDbC4...",
  "created_at": "2026-08-14 04:09:23",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/85c2d63e-a3d4-4b0c-adec-2e6d1cd7972f.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/85c2d63e-a3d4-4b0c-adec-2e6d1cd7972f.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 14:01:33",
+  "chunks": 1
+ }
 }

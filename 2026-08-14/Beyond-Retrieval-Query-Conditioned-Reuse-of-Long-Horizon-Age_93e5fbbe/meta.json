@@ -4,5 +4,32 @@
  "title": "Beyond-Retrieval-Query-Conditioned-Reuse-of-Long-Horizon-Age",
  "token": "sk-RdV3tP4AZ...",
  "created_at": "2026-08-14 14:49:00",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/9484515a-ff44-4b70-8051-625a66182ea7.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/9484515a-ff44-4b70-8051-625a66182ea7.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:55:09",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Agent Memory",
+    "Trajectory Reuse",
+    "Retrieval-Augmented Agents",
+    "Long-Horizon Planning",
+    "Query-Conditioned Reuse",
+    "WebArena",
+    "AppWorld"
+   ],
+   "field": "Agent 记忆与经验复用",
+   "innovations": [
+    "提出查询条件复用（QCR）框架，将检索与复用解耦并专门评估后检索阶段的经验利用",
+    "构建跨环境统一冻结记忆库与绑定漂移目标实例，提供可归因的记忆效用评测协议",
+    "设计极简四字段支持模板（工作流不变量/需重获绑定/适用条件/验证护栏），在保持高成功率的同时显著降低在线 Token 消耗"
+   ],
+   "benchmarks": [
+    "WebArena",
+    "WorkArena",
+    "AppWorld"
+   ]
+  }
+ }
 }

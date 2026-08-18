@@ -4,5 +4,35 @@
  "title": "TELLME-Test-Enhanced-Learning-for-Language-Model-Enrichment",
  "token": "sk-45Ifw5Iq3...",
  "created_at": "2026-08-13 14:56:21",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/bdf8f082-21c6-4341-b750-4080d8fef10f.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/bdf8f082-21c6-4341-b750-4080d8fef10f.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:54:27",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "持续预训练",
+    "测试增强学习",
+    "领域适配",
+    "问答合成",
+    "长期记忆",
+    "大语言模型"
+   ],
+   "field": "大语言模型持续学习",
+   "innovations": [
+    "将教育心理学中的测试增强学习（TEL）原理首次迁移至LLM持续预训练，通过屏蔽问题损失促发内部知识检索",
+    "低成本（$12/100K样本）生成不依赖原文的外部知识型描述QA数据管线",
+    "提出单样本融合结构（文本+QA）配合特定损失掩码策略，验证其在效率与长期记忆保持上的优势"
+   ],
+   "benchmarks": [
+    "FOMC",
+    "NIFTY",
+    "MMLU-F",
+    "HeadQA",
+    "MedMCQA",
+    "MMLU-C",
+    "KoBEST"
+   ]
+  }
+ }
 }

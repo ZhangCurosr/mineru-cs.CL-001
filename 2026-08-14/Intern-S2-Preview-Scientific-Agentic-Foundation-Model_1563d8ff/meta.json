@@ -4,5 +4,10 @@
  "title": "Intern-S2-Preview-Scientific-Agentic-Foundation-Model",
  "token": "sk-qKu2Cn1y4...",
  "created_at": "2026-08-14 04:07:44",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/f6937c28-5649-457e-bd5f-acbb346a8f25.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/f6937c28-5649-457e-bd5f-acbb346a8f25.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 14:01:38",
+  "chunks": 1
+ }
 }

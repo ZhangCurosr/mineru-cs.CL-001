@@ -4,5 +4,32 @@
  "title": "Decoupled-Contrastive-Decoding-via-Expert-Aligned-Drafting",
  "token": "sk-owp49a3rO...",
  "created_at": "2026-08-14 14:48:58",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/a2839fe1-bb6d-41ae-8a24-48f3f8509d6f.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/a2839fe1-bb6d-41ae-8a24-48f3f8509d6f.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:57:39",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "contrastive decoding",
+    "speculative decoding",
+    "inference acceleration",
+    "decoding algorithms",
+    "large language models"
+   ],
+   "field": "LLM 推理加速",
+   "innovations": [
+    "提出三种投机对比解码草稿对齐路径并系统比较",
+    "通过 Cross-α 与双草稿器分解诊断证明对比感知草稿的系统性劣势",
+    "DCD 解耦方案在保持无损性的同时实现 1.65–1.95× 平均加速"
+   ],
+   "benchmarks": [
+    "GSM8K",
+    "MMLU",
+    "HumanEval",
+    "CNN/DailyMail",
+    "Spec-Bench"
+   ]
+  }
+ }
 }

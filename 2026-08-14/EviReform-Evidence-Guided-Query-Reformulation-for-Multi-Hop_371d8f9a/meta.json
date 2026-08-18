@@ -4,5 +4,31 @@
  "title": "EviReform-Evidence-Guided-Query-Reformulation-for-Multi-Hop",
  "token": "sk-n7iJ0Z1Ol...",
  "created_at": "2026-08-14 04:08:20",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/c15b7fc9-af4e-4a36-9608-3c43f406b326.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/c15b7fc9-af4e-4a36-9608-3c43f406b326.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:58:47",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "multi-hop retrieval",
+    "graph RAG",
+    "query reformulation",
+    "evidence-guided retrieval",
+    "proposition retrieval"
+   ],
+   "field": "多跳检索与知识图谱RAG",
+   "innovations": [
+    "将证据观察后的查询重构与图传播分离为两个独立操作",
+    "双通道信号（原始问题种子+残差查询信号）分别归一化后加权融合再经共享实体传播",
+    "命题-实体单层关联图替代命题-命题边以降低建图开销并保留跨段落聚合能力"
+   ],
+   "benchmarks": [
+    "2WikiMultiHopQA",
+    "HotpotQA",
+    "MuSiQue",
+    "GraphRAG-Bench (Medical)"
+   ]
+  }
+ }
 }

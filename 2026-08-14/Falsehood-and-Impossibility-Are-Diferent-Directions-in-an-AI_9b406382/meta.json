@@ -4,5 +4,29 @@
  "title": "Falsehood-and-Impossibility-Are-Diferent-Directions-in-an-AI",
  "token": "sk-zybFjYcVd...",
  "created_at": "2026-08-14 04:11:08",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/66e47e63-db8d-4102-8409-ce9bf8bf95ec.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/66e47e63-db8d-4102-8409-ce9bf8bf95ec.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:59:04",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "mechanistic interpretability",
+    "truth probing",
+    "impossibility",
+    "sparse autoencoders",
+    "semantic anomaly",
+    "representation geometry"
+   ],
+   "field": "语言模型可解释性",
+   "innovations": [
+    "发现AI内部真理性与不可能性方向近似正交，不可能命题不表现为极端虚假",
+    "构建五条件对照刺激集首次实验检验模型对不可能性的表征"
+   ],
+   "benchmarks": [
+    "Modality Set (15 topic families × 5 conditions)",
+    "Philosophical Set (17 seed families, 85 prompts)"
+   ]
+  }
+ }
 }

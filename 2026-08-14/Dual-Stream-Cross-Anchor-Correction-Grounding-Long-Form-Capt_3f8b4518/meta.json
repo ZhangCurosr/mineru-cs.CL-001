@@ -4,5 +4,33 @@
  "title": "Dual-Stream-Cross-Anchor-Correction-Grounding-Long-Form-Capt",
  "token": "sk-sKVjU65N5...",
  "created_at": "2026-08-14 04:11:39",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/08f8c8f7-ac99-4893-8547-addb463d5668.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/08f8c8f7-ac99-4893-8547-addb463d5668.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:57:43",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "object hallucination",
+    "multimodal large language models",
+    "contrastive grounding",
+    "curriculum fine-tuning",
+    "domain-conditionality",
+    "cross-attention injection"
+   ],
+   "field": "多模态大模型幻觉缓解",
+   "innovations": [
+    "首个在LLM内部训练期注入对象级视觉锚点的双流架构，打破短图注-低幻觉的隐式权衡",
+    "揭示感知流与认知流的非线性协同（单独有害，叠加后符号逆转）",
+    "提出可预测、可证伪的域条件性边界：双流协同严格受限于COCO物体语义域"
+   ],
+   "benchmarks": [
+    "POPE",
+    "CHAIR-500",
+    "MME-Hallucination",
+    "HallusionBench",
+    "MMHal-Bench"
+   ]
+  }
+ }
 }

@@ -4,5 +4,10 @@
  "title": "CRAFT-LLM-Based-Iterative-Refinement-for-Temporal-Reasoning",
  "token": "sk-5WOIsMt5v...",
  "created_at": "2026-08-14 04:11:26",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/d87292ef-e773-48ed-a31c-d93f15b341cd.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/d87292ef-e773-48ed-a31c-d93f15b341cd.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:56:00",
+  "chunks": 1
+ }
 }

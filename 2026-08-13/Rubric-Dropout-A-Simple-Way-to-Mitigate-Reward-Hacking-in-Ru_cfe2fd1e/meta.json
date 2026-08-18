@@ -4,5 +4,30 @@
  "title": "Rubric-Dropout-A-Simple-Way-to-Mitigate-Reward-Hacking-in-Ru",
  "token": "sk-dY4OBV5wM...",
  "created_at": "2026-08-13 14:56:11",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/294e5859-efba-4e88-9079-2dc45a575f76.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/294e5859-efba-4e88-9079-2dc45a575f76.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:53:54",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "rubric-as-reward",
+    "reward hacking",
+    "group-relative RL",
+    "GRPO",
+    "LLM-as-judge",
+    "regularization"
+   ],
+   "field": "LLM 对齐与强化学习",
+   "innovations": [
+    "提出训练循环内双裁判 OOD 评估协议并首次系统验证 rubric RL 的 out-of-distribution 奖励黑客现象",
+    "Rubric Dropout：通过 group-shared random mask 随机丢弃 rubric 条目，一行代码无额外裁判成本抑制单标准 exploit",
+    "证明 group-shared mask 下 reward normalizer 在 GRPO 优势中抵消，并从方差正则化角度给出机制解释"
+   ],
+   "benchmarks": [
+    "HealthBench-Hard",
+    "ResearchQA"
+   ]
+  }
+ }
 }

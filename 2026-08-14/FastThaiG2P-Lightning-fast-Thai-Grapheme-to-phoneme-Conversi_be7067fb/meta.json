@@ -4,5 +4,30 @@
  "title": "FastThaiG2P-Lightning-fast-Thai-Grapheme-to-phoneme-Conversi",
  "token": "sk-NnOQ8YDzm...",
  "created_at": "2026-08-14 14:49:01",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/8a14066c-62c9-4bf0-95ec-ce85e9c77455.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/8a14066c-62c9-4bf0-95ec-ce85e9c77455.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:59:15",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "G2P",
+    "泰语语音合成",
+    "音素转换",
+    "低延迟 TTS",
+    "CPU推理",
+    "词典构建"
+   ],
+   "field": "多语言语音合成与音素化处理",
+   "innovations": [
+    "62k词条IPA词典结合LLM生成与人工覆盖构建",
+    "正则缓存优化实现15倍延迟下降",
+    "IPA到Kokoro的五声调映射适配方案"
+   ],
+   "benchmarks": [
+    "27,242条合成utterance延迟基准",
+    "Som-TTS 20小时数据集"
+   ]
+  }
+ }
 }

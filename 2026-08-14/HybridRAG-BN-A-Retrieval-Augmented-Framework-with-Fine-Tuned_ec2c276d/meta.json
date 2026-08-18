@@ -4,5 +4,31 @@
  "title": "HybridRAG-BN-A-Retrieval-Augmented-Framework-with-Fine-Tuned",
  "token": "sk-LV19Ft0NN...",
  "created_at": "2026-08-14 14:48:55",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/8aedfde0-7eb2-4ce6-9592-60f83ad93e42.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/8aedfde0-7eb2-4ce6-9592-60f83ad93e42.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 14:00:58",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "KBQA",
+    "RAG",
+    "Bangla NLP",
+    "LoRA Fine-tuning",
+    "Hybrid Retrieval",
+    "Low-resource QA"
+   ],
+   "field": "低资源语言知识库问答",
+   "innovations": [
+    "LoRA微调的答案验证与精炼模块，解耦生成与纠错流程",
+    "混合检索+交叉编码器重排序在Bangla KBQA中的系统性应用",
+    "两级检索重试与外部DuckDuckGo回退的后处理机制"
+   ],
+   "benchmarks": [
+    "Indic-RAG-Suite",
+    "Public Leaderboard F1=0.71654",
+    "Private Leaderboard F1=0.72912"
+   ]
+  }
+ }
 }

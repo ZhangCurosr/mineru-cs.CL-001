@@ -4,5 +4,38 @@
  "title": "DFM-Mimir-v1-An-Open-HRM-Delivering-Frontier-Performance-at",
  "token": "sk-DXHHyylpH...",
  "created_at": "2026-08-14 14:48:44",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/0e587674-af71-413c-ab59-865f7c798bd5.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/0e587674-af71-413c-ab59-865f7c798bd5.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:56:57",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "HRM",
+    "Hierarchical Reasoning Model",
+    "permissible data",
+    "low-resource language",
+    "post-training",
+    "synthetic data",
+    "Danish NLP",
+    "open-source LLM"
+   ],
+   "field": "高效语言模型训练与低资源NLP",
+   "innovations": [
+    "仅用可许可后训练数据从零训练的1B HRM模型实现前沿性能",
+    "合成移植数据集替代不可许可数据的方案",
+    "面向自由生成任务的多样化数据配比策略"
+   ],
+   "benchmarks": [
+    "GSM8K",
+    "MATH",
+    "HumanEval",
+    "MMLU",
+    "DROP",
+    "BoolQ",
+    "DaLA",
+    "WikiQA"
+   ]
+  }
+ }
 }

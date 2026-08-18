@@ -4,5 +4,30 @@
  "title": "Beyond-Local-Accuracy-A-Protocol-Level-Identifiability-Audit",
  "token": "sk-CZoysi7P5...",
  "created_at": "2026-08-14 14:48:48",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/07a58e48-90c7-4127-9dde-b1e7e90334c7.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/07a58e48-90c7-4127-9dde-b1e7e90334c7.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:54:33",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "protocol identifiability",
+    "LLM evaluation",
+    "intervention response fidelity",
+    "collision audit",
+    "minimum identifying support"
+   ],
+   "field": "LLM 评估与基准设计",
+   "innovations": [
+    "在有限策略类上证明协议观测支持的点可识别性充要条件并合成最小识别支持",
+    "通过留一碰撞见证构造性证明 target/sham/readout/mapping 四组件必要性",
+    "揭示零模型调用审计可分离局部准确率与干预响应保真度"
+   ],
+   "benchmarks": [
+    "solver-grounded signed-Horn 三值推理",
+    "Qwen2.5-7B-Instruct",
+    "Llama-3.1-8B-Instruct"
+   ]
+  }
+ }
 }

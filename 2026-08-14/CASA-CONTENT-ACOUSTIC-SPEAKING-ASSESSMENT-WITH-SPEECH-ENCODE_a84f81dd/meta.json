@@ -4,5 +4,31 @@
  "title": "CASA-CONTENT-ACOUSTIC-SPEAKING-ASSESSMENT-WITH-SPEECH-ENCODE",
  "token": "sk-JdJPQj6CY...",
  "created_at": "2026-08-14 04:07:52",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/97fcf482-1dc3-4382-9670-d4a36d8212bb.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/97fcf482-1dc3-4382-9670-d4a36d8212bb.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:55:32",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "自动口语评估",
+    "ASA",
+    "speech LLM",
+    "Whisper",
+    "Qwen",
+    "CEFR",
+    "双分支架构"
+   ],
+   "field": "自动口语评估 (ASA)",
+   "innovations": [
+    "双分支解耦架构显式分离语音交付与内容信息，以半参数量达到 SOTA",
+    "LoRA 跨层适配 + 容忍度辅助损失提供互补监督，稳定声学表征学习",
+    "利用冻结 LLM 实现零样本训练无关内容切题验证"
+   ],
+   "benchmarks": [
+    "Speak & Improve Corpus 2025",
+    "S&I Test Set"
+   ]
+  }
+ }
 }

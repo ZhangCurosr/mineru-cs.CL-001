@@ -4,5 +4,30 @@
  "title": "Beyond-Local-Accuracy-A-Protocol-Level-Identifiability-Audit",
  "token": "sk-CZoysi7P5...",
  "created_at": "2026-08-14 04:07:48",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/07a58e48-90c7-4127-9dde-b1e7e90334c7.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/07a58e48-90c7-4127-9dde-b1e7e90334c7.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:54:41",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "LLM评估",
+    "协议可识别性",
+    "benchmark有效性",
+    "碰撞分析",
+    "最小识别支持",
+    "干预响应保真度",
+    "三值推理"
+   ],
+   "field": "LLM评估与测量效度",
+   "innovations": [
+    "提出协议层面点可识别性审计框架，将评估有效性转化为有限策略类上的碰撞枚举检验",
+    "基于碰撞结构综合最小识别支持O*，将识别预算转化为命中集优化问题",
+    "在冻结策略类上证明base-only支撑将所有策略坍缩为单等价类，揭示局部准确率与干预响应保真度的系统性分离"
+   ],
+   "benchmarks": [
+    "solver-grounded signed-Horn三值推理数据集 (Qwen2.5-7B-Instruct, Llama-3.1-8B-Instruct, 24诊断cluster + 48平衡cluster + 1确定性第二源)"
+   ]
+  }
+ }
 }

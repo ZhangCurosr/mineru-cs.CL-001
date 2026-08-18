@@ -4,5 +4,28 @@
  "title": "I-SDPO-INSTANCE-LEVEL-ADAPTIVE-SELF-DISTILLATIONPOLICY-OPTIM",
  "token": "sk-ovHaiDbC4...",
  "created_at": "2026-08-14 14:48:57",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/588ccea5-5c67-4568-bdc9-b594adc619f0.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-14/588ccea5-5c67-4568-bdc9-b594adc619f0.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 14:01:33",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "Group Relative Policy Optimization",
+    "Self-Distillation",
+    "Reinforcement Learning",
+    "Knowledge Distillation",
+    "Policy Optimization"
+   ],
+   "field": "大语言模型强化学习训练",
+   "innovations": [
+    "实例级自适应路由：全错组启用特权自蒸馏，否则保留GRPO",
+    "能力依赖教师信任：期望蒸馏率随成功率自动退火",
+    "熵感知动态加权：低熵token位置赋予更高蒸馏权重"
+   ],
+   "benchmarks": [
+    "SciKnowEval"
+   ]
+  }
+ }
 }

@@ -4,5 +4,30 @@
  "title": "LEMUR-Latent-Entropy-aware-Multimodal-Unlearning-via-Visual",
  "token": "sk-mBuyDYvkR...",
  "created_at": "2026-08-13 14:56:22",
- "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/e2e8e8f7-4d0a-4b48-8e88-37b412fc800a.zip"
+ "result_url": "https://cdn-mineru.openxlab.org.cn/pdf/2026-08-13/e2e8e8f7-4d0a-4b48-8e88-37b412fc800a.zip",
+ "summarized": {
+  "model": "agnes-2.5-flash",
+  "at": "2026-08-18 13:53:25",
+  "chunks": 1,
+  "meta": {
+   "keywords": [
+    "机器遗忘",
+    "多模态大推理模型",
+    "推理链隐私泄露",
+    "推理时干预",
+    "熵动力学",
+    "无需训练的方法"
+   ],
+   "field": "多模态大模型安全与隐私",
+   "innovations": [
+    "首次揭示RL训练多模态推理模型的推理链隐私泄露问题及独特两阶段熵签名",
+    "提出LEMUR——首个专为RL-trained MLRM设计的训练自由推理时遗忘框架，利用熵调控视觉锚点注入重定向推理轨迹",
+    "设计熵自适应注入强度与动态退出机制，在抑制推理级泄露的同时保持推理能力"
+   ],
+   "benchmarks": [
+    "MLLMU-Bench",
+    "VQAv2"
+   ]
+  }
+ }
 }
